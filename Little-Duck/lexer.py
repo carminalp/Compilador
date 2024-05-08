@@ -11,22 +11,6 @@ regulares previamente definidas.
 """
 import ply.lex as lex
 
-# Reserved Words
-reserved = {
-    'program': 'PROGRAM',
-    'main': 'MAIN',
-    'end': 'END',
-    'void': 'VOID',
-    'var': 'VAR',
-    'print': 'PRINT',
-    'while': 'WHILE',
-    'do': 'DO',
-    'if': 'IF',
-    'else': 'ELSE',
-    'int': 'INT',
-    'float': 'FLOAT'
-}
-
 # List of Tokens
 tokens = [
     # Operadores
@@ -41,6 +25,7 @@ tokens = [
     # Separadores
     'COMMA',
     'SEMICOLON',
+    'COLON',
     # Delimitadores
     'LEFT_BRACE',
     'RIGHT_BRACE',
@@ -53,10 +38,28 @@ tokens = [
     'CTE_INT',
     'CTE_FLOAT',
     'CTE_STRING'
-] + list(reserved.values())
+]
+
+# Reserved Words
+reserved_words = {
+    'program': 'PROGRAM',
+    'main': 'MAIN',
+    'end': 'END',
+    'void': 'VOID',
+    'var': 'VAR',
+    'print': 'PRINT',
+    'while': 'WHILE',
+    'do': 'DO',
+    'if': 'IF',
+    'else': 'ELSE',
+    'int': 'INT',
+    'float': 'FLOAT'
+}
+
+# Added reserved words token
+tokens = tokens + list(reserved_words.values())
 
 # Regular expression rules for simple tokens
-
 # Defines a token (USSING the prefix t_)
 # And they are written using Python raw strings
 t_EQUAL = r'='
@@ -69,6 +72,7 @@ t_MULTIPLICATION = r'\*'
 t_DIVISION = r'/'
 t_COMMA = r','
 t_SEMICOLON = r';'
+t_COLON = r'\:'
 t_LEFT_BRACE = r'{'
 t_RIGHT_BRACE = r'}'
 t_LEFT_PARENTHESIS = r'\('
@@ -79,7 +83,7 @@ t_RIGHT_BRACKET = r'\]'
 # Regular expression rule for ID
 def t_ID(t):
     r'[a-z][a-zA-Z0-9_]*'
-    t.type = reserved.get(t.value, 'ID')  # Revisar si es una palabra reservada
+    t.type = reserved_words.get(t.value, 'ID')  # Check if it's a reserved word
     return t
 
 # Regular expression rule for float numbers
@@ -104,7 +108,7 @@ def t_newline(t):
     r'\n+'
     t.lexer.lineno += len(t.value)
 
-# A string containing ignored characters (spaces and tabs)
+#ignored characters (spaces and tabs)
 t_ignore  = ' \t'
 
 # Error handling rule
@@ -115,6 +119,7 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
+"""
 # Test
 data = '''
 program main;
@@ -134,3 +139,4 @@ while True:
     if not tok:
         break
     print(tok)
+"""
