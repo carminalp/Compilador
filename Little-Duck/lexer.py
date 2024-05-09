@@ -119,12 +119,17 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
-"""
 # Test
 data = '''
 program carmina;
-void caca ()[ var carmina:int; {ok}];
+void caca (kk:int)[ 
+    var carmina:int; 
+    {ok}
+];
 main
+{ 
+    ll= 
+}
 end
 '''
 
@@ -137,4 +142,3 @@ while True:
     if not tok:
         break
     print(tok)
-"""

@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftMULTIPLICATIONDIVISIONCOLON COMMA CTE_FLOAT CTE_INT CTE_STRING DIVISION DO ELSE END EQUAL FLOAT GREATER_THAN ID IF INT LEFT_BRACE LEFT_BRACKET LEFT_PARENTHESIS LESS_THAN MAIN MINUS MULTIPLICATION NOT_EQUAL PLUS PRINT PROGRAM RIGHT_BRACE RIGHT_BRACKET RIGHT_PARENTHESIS SEMICOLON VAR VOID WHILEPROGRAMA : PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN ENDDEC_VARS : empty\n                | VARSSOLO_FUNCS : FUNCS MAS_FUNCSMAS_FUNCS : empty\n                 | SOLO_FUNCSDEC_FUNCS : empty\n                 | SOLO_FUNCSVARS : VAR LISTA_VARLISTA_VAR : LISTA_ID COLON TYPE SEMICOLON MAS_VARMAS_VAR : empty\n               | LISTA_VARLISTA_ID : ID MAS_IDMAS_ID : COMMA LISTA_ID\n              | emptyTYPE : INT\n            | FLOATFUNCS : VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLONPARAMETROS : empty\n                  | DEC_PARAMETROSDEC_PARAMETROS : ID COLON TYPE LISTA_PARAMETROSLISTA_PARAMETROS : empty\n                        | COMMA DEC_PARAMETROSVARS_FUNC : empty\n                 | VARSBODY : LEFT_BRACE ID RIGHT_BRACEempty :'
+_lr_signature = 'leftPLUSMINUSleftMULTIPLICATIONDIVISIONCOLON COMMA CTE_FLOAT CTE_INT CTE_STRING DIVISION DO ELSE END EQUAL FLOAT GREATER_THAN ID IF INT LEFT_BRACE LEFT_BRACKET LEFT_PARENTHESIS LESS_THAN MAIN MINUS MULTIPLICATION NOT_EQUAL PLUS PRINT PROGRAM RIGHT_BRACE RIGHT_BRACKET RIGHT_PARENTHESIS SEMICOLON VAR VOID WHILEPROGRAMA : PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY ENDDEC_VARS : epsilon\n                | VARSSOLO_FUNCS : FUNCS MAS_FUNCSMAS_FUNCS : epsilon\n                 | SOLO_FUNCSDEC_FUNCS : epsilon\n                 | SOLO_FUNCSVARS : VAR LISTA_VARLISTA_VAR : LISTA_ID COLON TYPE SEMICOLON MAS_VARMAS_VAR : epsilon\n               | LISTA_VARLISTA_ID : ID MAS_IDMAS_ID : COMMA LISTA_ID\n              | epsilonTYPE : INT\n            | FLOATFUNCS : VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLONPARAMETROS : epsilon\n                  | DEC_PARAMETROSDEC_PARAMETROS : ID COLON TYPE LISTA_PARAMETROSLISTA_PARAMETROS : epsilon\n                        | COMMA DEC_PARAMETROSVARS_FUNC : epsilon\n                 | VARSBODY : LEFT_BRACE DEC_STATEMENTS RIGHT_BRACEDEC_STATEMENTS : epsilon\n                      | LISTA_STATEMENTSLISTA_STATEMENTS : STATEMENT MAS_STATEMENTSMAS_STATEMENTS : epsilon\n                      | LISTA_STATEMENTSSTATEMENT : ASSIGNASSIGN : ID EQUAL EXPRESION SEMICOLONEXPRESION : EXP MAS_EXPRESIONESMAS_EXPRESIONES : epsilon\n                       | OPERADORES EXPOPERADORES : GREATER_THAN\n                  | LESS_THAN\n                  | NOT_EQUALEXP : IDepsilon :'
     
-_lr_action_items = {'PROGRAM':([0,],[2,]),'$end':([1,26,],[0,-1,]),'ID':([2,8,13,24,27,36,46,52,],[3,16,21,16,32,16,32,54,]),'SEMICOLON':([3,28,29,30,53,],[4,36,-16,-17,55,]),'VOID':([4,5,6,7,12,14,36,39,40,41,55,],[-27,13,-2,-3,13,-9,-27,-10,-11,-12,-18,]),'MAIN':([4,5,6,7,9,10,11,12,14,18,19,20,36,39,40,41,55,],[-27,-27,-2,-3,17,-7,-8,-27,-9,-4,-5,-6,-27,-10,-11,-12,-18,]),'VAR':([4,43,],[8,8,]),'LEFT_BRACE':([14,36,39,40,41,43,47,48,49,],[-9,-27,-10,-11,-12,-27,52,-24,-25,]),'COLON':([15,16,23,25,31,32,],[22,-27,-13,-15,-14,37,]),'COMMA':([16,29,30,42,],[24,-16,-17,46,]),'END':([17,],[26,]),'LEFT_PARENTHESIS':([21,],[27,]),'INT':([22,37,],[29,29,]),'FLOAT':([22,37,],[30,30,]),'RIGHT_PARENTHESIS':([27,29,30,33,34,35,42,44,45,50,],[-27,-16,-17,38,-19,-20,-27,-21,-22,-23,]),'LEFT_BRACKET':([38,],[43,]),'RIGHT_BRACKET':([51,56,],[53,-26,]),'RIGHT_BRACE':([54,],[56,]),}
+_lr_action_items = {'PROGRAM':([0,],[2,]),'$end':([1,33,],[0,-1,]),'ID':([2,8,13,24,27,28,37,38,44,49,60,63,64,65,66,69,],[3,16,21,16,39,40,39,-32,16,55,-33,55,-37,-38,-39,40,]),'SEMICOLON':([3,29,30,31,55,56,57,61,62,73,76,],[4,44,-16,-17,-40,60,-41,-34,-35,-36,77,]),'VOID':([4,5,6,7,12,14,44,52,53,54,77,],[-41,13,-2,-3,13,-9,-41,-10,-11,-12,-18,]),'MAIN':([4,5,6,7,9,10,11,12,14,18,19,20,44,52,53,54,77,],[-41,-41,-2,-3,17,-7,-8,-41,-9,-4,-5,-6,-41,-10,-11,-12,-18,]),'VAR':([4,59,],[8,8,]),'LEFT_BRACE':([14,17,44,52,53,54,59,70,71,72,],[-9,27,-41,-10,-11,-12,-41,27,-24,-25,]),'COLON':([15,16,23,25,32,40,],[22,-41,-13,-15,-14,50,]),'COMMA':([16,30,31,58,],[24,-16,-17,69,]),'LEFT_PARENTHESIS':([21,],[28,]),'INT':([22,50,],[30,30,]),'FLOAT':([22,50,],[31,31,]),'END':([26,45,],[33,-26,]),'RIGHT_BRACE':([27,34,35,36,37,38,46,47,48,60,],[-41,45,-27,-28,-41,-32,-29,-30,-31,-33,]),'RIGHT_PARENTHESIS':([28,30,31,41,42,43,58,67,68,74,],[-41,-16,-17,51,-19,-20,-41,-21,-22,-23,]),'EQUAL':([39,],[49,]),'RIGHT_BRACKET':([45,75,],[-26,76,]),'LEFT_BRACKET':([51,],[59,]),'GREATER_THAN':([55,57,],[-40,64,]),'LESS_THAN':([55,57,],[-40,65,]),'NOT_EQUAL':([55,57,],[-40,66,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'PROGRAMA':([0,],[1,]),'DEC_VARS':([4,],[5,]),'empty':([4,5,12,16,27,36,42,43,],[6,10,19,25,34,40,45,48,]),'VARS':([4,43,],[7,49,]),'DEC_FUNCS':([5,],[9,]),'SOLO_FUNCS':([5,12,],[11,20,]),'FUNCS':([5,12,],[12,12,]),'LISTA_VAR':([8,36,],[14,41,]),'LISTA_ID':([8,24,36,],[15,31,15,]),'MAS_FUNCS':([12,],[18,]),'MAS_ID':([16,],[23,]),'TYPE':([22,37,],[28,42,]),'PARAMETROS':([27,],[33,]),'DEC_PARAMETROS':([27,46,],[35,50,]),'MAS_VAR':([36,],[39,]),'LISTA_PARAMETROS':([42,],[44,]),'VARS_FUNC':([43,],[47,]),'BODY':([47,],[51,]),}
+_lr_goto_items = {'PROGRAMA':([0,],[1,]),'DEC_VARS':([4,],[5,]),'epsilon':([4,5,12,16,27,28,37,44,57,58,59,],[6,10,19,25,35,42,47,53,62,68,71,]),'VARS':([4,59,],[7,72,]),'DEC_FUNCS':([5,],[9,]),'SOLO_FUNCS':([5,12,],[11,20,]),'FUNCS':([5,12,],[12,12,]),'LISTA_VAR':([8,44,],[14,54,]),'LISTA_ID':([8,24,44,],[15,32,15,]),'MAS_FUNCS':([12,],[18,]),'MAS_ID':([16,],[23,]),'BODY':([17,70,],[26,75,]),'TYPE':([22,50,],[29,58,]),'DEC_STATEMENTS':([27,],[34,]),'LISTA_STATEMENTS':([27,37,],[36,48,]),'STATEMENT':([27,37,],[37,37,]),'ASSIGN':([27,37,],[38,38,]),'PARAMETROS':([28,],[41,]),'DEC_PARAMETROS':([28,69,],[43,74,]),'MAS_STATEMENTS':([37,],[46,]),'MAS_VAR':([44,],[52,]),'EXPRESION':([49,],[56,]),'EXP':([49,63,],[57,73,]),'MAS_EXPRESIONES':([57,],[61,]),'OPERADORES':([57,],[63,]),'LISTA_PARAMETROS':([58,],[67,]),'VARS_FUNC':([59,],[70,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,31 +27,45 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> PROGRAMA","S'",1,None,None,None),
-  ('PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN END','PROGRAMA',7,'p_program','parser.py',17),
-  ('DEC_VARS -> empty','DEC_VARS',1,'p_dec_vars','parser.py',22),
+  ('PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END','PROGRAMA',8,'p_program','parser.py',17),
+  ('DEC_VARS -> epsilon','DEC_VARS',1,'p_dec_vars','parser.py',22),
   ('DEC_VARS -> VARS','DEC_VARS',1,'p_dec_vars','parser.py',23),
   ('SOLO_FUNCS -> FUNCS MAS_FUNCS','SOLO_FUNCS',2,'p_solo_funcs','parser.py',31),
-  ('MAS_FUNCS -> empty','MAS_FUNCS',1,'p_mas_funcs','parser.py',36),
+  ('MAS_FUNCS -> epsilon','MAS_FUNCS',1,'p_mas_funcs','parser.py',36),
   ('MAS_FUNCS -> SOLO_FUNCS','MAS_FUNCS',1,'p_mas_funcs','parser.py',37),
-  ('DEC_FUNCS -> empty','DEC_FUNCS',1,'p_dec_funcs','parser.py',45),
+  ('DEC_FUNCS -> epsilon','DEC_FUNCS',1,'p_dec_funcs','parser.py',45),
   ('DEC_FUNCS -> SOLO_FUNCS','DEC_FUNCS',1,'p_dec_funcs','parser.py',46),
   ('VARS -> VAR LISTA_VAR','VARS',2,'p_vars','parser.py',56),
   ('LISTA_VAR -> LISTA_ID COLON TYPE SEMICOLON MAS_VAR','LISTA_VAR',5,'p_lista_var','parser.py',61),
-  ('MAS_VAR -> empty','MAS_VAR',1,'p_mas_var','parser.py',66),
+  ('MAS_VAR -> epsilon','MAS_VAR',1,'p_mas_var','parser.py',66),
   ('MAS_VAR -> LISTA_VAR','MAS_VAR',1,'p_mas_var','parser.py',67),
   ('LISTA_ID -> ID MAS_ID','LISTA_ID',2,'p_lista_id','parser.py',75),
   ('MAS_ID -> COMMA LISTA_ID','MAS_ID',2,'p_mas_id','parser.py',80),
-  ('MAS_ID -> empty','MAS_ID',1,'p_mas_id','parser.py',81),
+  ('MAS_ID -> epsilon','MAS_ID',1,'p_mas_id','parser.py',81),
   ('TYPE -> INT','TYPE',1,'p_type','parser.py',91),
   ('TYPE -> FLOAT','TYPE',1,'p_type','parser.py',92),
-  ('FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON','FUNCS',10,'p_funcs','parser.py',100),
-  ('PARAMETROS -> empty','PARAMETROS',1,'p_parametros','parser.py',107),
-  ('PARAMETROS -> DEC_PARAMETROS','PARAMETROS',1,'p_parametros','parser.py',108),
-  ('DEC_PARAMETROS -> ID COLON TYPE LISTA_PARAMETROS','DEC_PARAMETROS',4,'p_dec_parametros','parser.py',116),
-  ('LISTA_PARAMETROS -> empty','LISTA_PARAMETROS',1,'p_lista_parametros','parser.py',120),
-  ('LISTA_PARAMETROS -> COMMA DEC_PARAMETROS','LISTA_PARAMETROS',2,'p_lista_parametros','parser.py',121),
-  ('VARS_FUNC -> empty','VARS_FUNC',1,'p_vars_func','parser.py',128),
-  ('VARS_FUNC -> VARS','VARS_FUNC',1,'p_vars_func','parser.py',129),
-  ('BODY -> LEFT_BRACE ID RIGHT_BRACE','BODY',3,'p_body','parser.py',139),
-  ('empty -> <empty>','empty',0,'p_empty','parser.py',143),
+  ('FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON','FUNCS',10,'p_funcs','parser.py',99),
+  ('PARAMETROS -> epsilon','PARAMETROS',1,'p_parametros','parser.py',104),
+  ('PARAMETROS -> DEC_PARAMETROS','PARAMETROS',1,'p_parametros','parser.py',105),
+  ('DEC_PARAMETROS -> ID COLON TYPE LISTA_PARAMETROS','DEC_PARAMETROS',4,'p_dec_parametros','parser.py',113),
+  ('LISTA_PARAMETROS -> epsilon','LISTA_PARAMETROS',1,'p_lista_parametros','parser.py',118),
+  ('LISTA_PARAMETROS -> COMMA DEC_PARAMETROS','LISTA_PARAMETROS',2,'p_lista_parametros','parser.py',119),
+  ('VARS_FUNC -> epsilon','VARS_FUNC',1,'p_vars_func','parser.py',127),
+  ('VARS_FUNC -> VARS','VARS_FUNC',1,'p_vars_func','parser.py',128),
+  ('BODY -> LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE','BODY',3,'p_body','parser.py',138),
+  ('DEC_STATEMENTS -> epsilon','DEC_STATEMENTS',1,'p_dec_staments','parser.py',143),
+  ('DEC_STATEMENTS -> LISTA_STATEMENTS','DEC_STATEMENTS',1,'p_dec_staments','parser.py',144),
+  ('LISTA_STATEMENTS -> STATEMENT MAS_STATEMENTS','LISTA_STATEMENTS',2,'p_lista_staments','parser.py',152),
+  ('MAS_STATEMENTS -> epsilon','MAS_STATEMENTS',1,'p_mas_staments','parser.py',157),
+  ('MAS_STATEMENTS -> LISTA_STATEMENTS','MAS_STATEMENTS',1,'p_mas_staments','parser.py',158),
+  ('STATEMENT -> ASSIGN','STATEMENT',1,'p_statement','parser.py',168),
+  ('ASSIGN -> ID EQUAL EXPRESION SEMICOLON','ASSIGN',4,'p_assign','parser.py',175),
+  ('EXPRESION -> EXP MAS_EXPRESIONES','EXPRESION',2,'p_expression','parser.py',182),
+  ('MAS_EXPRESIONES -> epsilon','MAS_EXPRESIONES',1,'p_more_expressions','parser.py',186),
+  ('MAS_EXPRESIONES -> OPERADORES EXP','MAS_EXPRESIONES',2,'p_more_expressions','parser.py',187),
+  ('OPERADORES -> GREATER_THAN','OPERADORES',1,'p_operators','parser.py',194),
+  ('OPERADORES -> LESS_THAN','OPERADORES',1,'p_operators','parser.py',195),
+  ('OPERADORES -> NOT_EQUAL','OPERADORES',1,'p_operators','parser.py',196),
+  ('EXP -> ID','EXP',1,'p_exp','parser.py',203),
+  ('epsilon -> <empty>','epsilon',0,'p_epsilon','parser.py',208),
 ]

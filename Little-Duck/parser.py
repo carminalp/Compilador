@@ -14,12 +14,12 @@ precedence = (
 ## <Programa> ##
 #--------------#
 def p_program(p):
-    '''PROGRAMA : PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN END'''
-    p[0] = p[2], p[4], p[5] 
+    '''PROGRAMA : PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END'''
+    p[0] = p[2], p[4], p[5], p[7] 
 
 # <DEC_VARS>
 def p_dec_vars(p):
-    '''DEC_VARS : empty
+    '''DEC_VARS : epsilon
                 | VARS'''
     if len(p) == 2:
         p[0] = ('DEC_VARS', p[1])
@@ -33,7 +33,7 @@ def p_solo_funcs(p):
 
 # <MAS_FUNCS>
 def p_mas_funcs(p):
-    '''MAS_FUNCS : empty
+    '''MAS_FUNCS : epsilon
                  | SOLO_FUNCS'''
     if len(p) >= 2:
         p[0] = ('MAS_FUNCS', p[1])
@@ -42,7 +42,7 @@ def p_mas_funcs(p):
 
 # <DEC_FUNCS>
 def p_dec_funcs(p):
-    '''DEC_FUNCS : empty
+    '''DEC_FUNCS : epsilon
                  | SOLO_FUNCS'''
     if len(p) == 2:
         p[0] = ('DEC_FUNCS', p[1])
@@ -63,7 +63,7 @@ def p_lista_var(p):
 
 # <MAS_VAR>
 def p_mas_var(p):
-    '''MAS_VAR : empty
+    '''MAS_VAR : epsilon
                | LISTA_VAR'''
     if len(p) >= 2:
         p[0] = ('MAS_VAR', p[1])
@@ -78,7 +78,7 @@ def p_lista_id(p):
 # <MAS_ID>
 def p_mas_id(p):
     '''MAS_ID : COMMA LISTA_ID
-              | empty'''
+              | epsilon'''
     if len(p) > 2:
         p[0] = ('MAS_ID', p[2])
     else:
@@ -95,14 +95,13 @@ def p_type(p):
 #-----------#
 ## <FUNCS> ##
 #-----------#
-# AGREGAR EL BODY
 def p_funcs(p):
     '''FUNCS : VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON'''
     p[0] = ('FUNCS', p[2], p[4], p[7], p[8])
 
 # <PARAMETROS>
 def p_parametros(p):
-    '''PARAMETROS : empty
+    '''PARAMETROS : epsilon
                   | DEC_PARAMETROS'''
     if len(p) == 2:
         p[0] = ('PARAMETROS', p[1])
@@ -114,31 +113,99 @@ def p_dec_parametros(p):
     '''DEC_PARAMETROS : ID COLON TYPE LISTA_PARAMETROS'''
     p[0] = ('DEC_PARAMETROS', p[1], p[3], p[4])
 
+# <LISTA_PARAMETROS>
 def p_lista_parametros(p):
-    '''LISTA_PARAMETROS : empty
+    '''LISTA_PARAMETROS : epsilon
                         | COMMA DEC_PARAMETROS'''
     if len(p) > 2:
         p[0] = ('LISTA_PARAMETROS', p[2])
     else:
         p[0] = None
 
+# <VARS_FUNC>
 def p_vars_func(p):
-    '''VARS_FUNC : empty
+    '''VARS_FUNC : epsilon
                  | VARS'''
     if len(p) == 2:
         p[0] = ('VARS_FUNC', p[1])
     else:
         p[0] = None
  
-#-----------#
+#----------#
 ## <BODY> ##
-#-----------#
+#----------#
 def p_body(p):
-    '''BODY : LEFT_BRACE ID RIGHT_BRACE'''
+    '''BODY : LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE'''
     p[0] = ('BODY', p[2])
 
-def p_empty(p):
-    'empty :'
+# <DEC_STATEMENTS>
+def p_dec_staments(p):
+    '''DEC_STATEMENTS : epsilon
+                      | LISTA_STATEMENTS'''
+    if len(p) == 2:
+        p[0] = ('DEC_STATEMENTS', p[1])
+    else:
+        p[0] = None
+
+# <LISTA_STATEMENTS>
+def p_lista_staments(p):
+    '''LISTA_STATEMENTS : STATEMENT MAS_STATEMENTS'''
+    p[0] = ('LISTA_STATEMENTS', p[1], p[2])
+
+# <MAS_STATEMENTS>
+def p_mas_staments(p):
+    '''MAS_STATEMENTS : epsilon
+                      | LISTA_STATEMENTS'''
+    if len(p) >= 2:
+        p[0] = ('MAS_STATEMENTS', p[1])
+    else:
+        p[0] = None
+
+#---------------#
+## <STATEMENT> ##
+#---------------#
+def p_statement(p):
+    '''STATEMENT : ASSIGN'''
+    p[0] = ('STATEMENT', p[1])
+
+#------------#
+## <ASSIGN> ##
+#------------#
+def p_assign(p):
+    'ASSIGN : ID EQUAL EXPRESION SEMICOLON'
+    p[0] = ('ASSIGN', p[1], p[3])
+
+
+## <EXPRESIÓN> ##
+#---------------#
+def p_expression(p):
+    '''EXPRESION : EXP MAS_EXPRESIONES'''
+    p[0] = ('EXPRESION', p[1], p[2])
+
+def p_more_expressions(p):
+    '''MAS_EXPRESIONES : epsilon
+                       | OPERADORES EXP'''
+    if len(p) > 2:
+        p[0] = ('MAS_EXPRESIONES', p[1], p[2])
+    else:
+        p[0] = None
+
+def p_operators(p):
+    '''OPERADORES : GREATER_THAN
+                  | LESS_THAN
+                  | NOT_EQUAL'''
+    p[0] = ('OPERADORES', p[1])
+
+#---------#
+## <EXP> ##
+#---------#
+def p_exp(p):
+    '''EXP : ID'''
+    p[0] = ('EXP', p[1])
+
+# Epsilon
+def p_epsilon(p):
+    'epsilon :'
     pass
     
 
@@ -146,9 +213,12 @@ data = '''
 program carmina;
 void caca (kk:int)[ 
     var carmina:int; 
-    {ok}
+    {ll = kk > i;}
 ];
 main
+{ 
+    ll = kk < i; 
+}
 end
 '''
 
