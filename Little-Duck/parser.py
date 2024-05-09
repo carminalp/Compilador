@@ -169,6 +169,7 @@ def p_statement(p):
                  | CONDITION
                  | CYCLE
                  | F_CALL
+                 | PRINT_STMT
     '''
     p[0] = ('STATEMENT', p[1])
 
@@ -334,6 +335,28 @@ def p_lista_exp(p):
     else:
         p[0] = None
 
+#-----------------#
+## <PRINT_STMT>  ##
+#----------------#
+def p_print_stmt(p):
+    '''PRINT_STMT : PRINT LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON'''
+    p[0] = ('PRINT_STMT', p[3])
+
+# <PARAMETROS_PRINT>
+def p_parametros_print(p):
+    '''PARAMETROS_PRINT : CTE_STRING MAS_PRINT
+                        | EXPRESION MAS_PRINT'''
+    p[0] = ('PARAMETROS_PRINT', p[1], p[2])                    
+
+# <MAS_PRINT>
+def p_mas_print(p):
+    '''MAS_PRINT : epsilon
+                 | COMMA PARAMETROS_PRINT'''
+    if len(p) > 2:
+        p[0] = ('MAS_PRINT', p[2])
+    else:
+        p[0] = None
+
 # Epsilon
 def p_epsilon(p):
     'epsilon :'
@@ -360,6 +383,8 @@ main
 
     while {lol = yolo;} do (ll);
     jojo(b,50);
+    print("hola");
+    print(4);
 }
 end
 '''
