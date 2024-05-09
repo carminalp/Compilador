@@ -165,7 +165,9 @@ def p_mas_staments(p):
 ## <STATEMENT> ##
 #---------------#
 def p_statement(p):
-    '''STATEMENT : ASSIGN'''
+    '''STATEMENT : ASSIGN
+                 | CONDITION
+    '''
     p[0] = ('STATEMENT', p[1])
 
 #------------#
@@ -277,6 +279,22 @@ def p_cte(p):
            | CTE_FLOAT'''
     p[0] = ('CTE', p[1])
 
+#---------------#
+## <CONDITION> ##
+#---------------#
+def p_condition(p):
+    '''CONDITION : IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS BODY ELSE_CONDITION'''
+    p[0] = ('CONDITION', p[3], p[5], p[6])
+
+# <ELSE_CONDITION>
+def p_else(p):
+    '''ELSE_CONDITION : epsilon
+                      | ELSE BODY'''
+    if len(p) == 3:
+        p[0] = ('ELSE_CONDITION', p[2])
+    else:
+        p[0] = None
+
 # Epsilon
 def p_epsilon(p):
     'epsilon :'
@@ -296,6 +314,10 @@ main
     assignacion = factor * otro_factor + termino > uno; 
     factor = (1 * 30 + 5.0);
     factor = (1 * 30 + 5.0 > 6);
+
+    if (5 > 2) {
+
+    }
 }
 end
 '''
