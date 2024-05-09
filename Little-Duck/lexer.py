@@ -122,11 +122,9 @@ lexer = lex.lex()
 """
 # Test
 data = '''
-program main;
-var a, b;
-a = 10;
-b = 20;
-print("La suma es:", a + b);
+program carmina;
+void caca ()[ var carmina:int; {ok}];
+main
 end
 '''
 

@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftMULTIPLICATIONDIVISIONCOLON COMMA CTE_FLOAT CTE_INT CTE_STRING DIVISION DO ELSE END EQUAL FLOAT GREATER_THAN ID IF INT LEFT_BRACE LEFT_BRACKET LEFT_PARENTHESIS LESS_THAN MAIN MINUS MULTIPLICATION NOT_EQUAL PLUS PRINT PROGRAM RIGHT_BRACE RIGHT_BRACKET RIGHT_PARENTHESIS SEMICOLON VAR VOID WHILEPROGRAMA : PROGRAM ID SEMICOLON DEC_VARS ENDDEC_VARS : empty\n                | VARSVARS : VAR LISTA_VARLISTA_VAR : LISTA_ID COLON TYPE SEMICOLON MAS_VARMAS_VAR : empty\n               | LISTA_VARLISTA_ID : ID MAS_IDMAS_ID : COMMA LISTA_ID\n              | emptyTYPE : INT\n            | FLOATempty :'
+_lr_signature = 'leftPLUSMINUSleftMULTIPLICATIONDIVISIONCOLON COMMA CTE_FLOAT CTE_INT CTE_STRING DIVISION DO ELSE END EQUAL FLOAT GREATER_THAN ID IF INT LEFT_BRACE LEFT_BRACKET LEFT_PARENTHESIS LESS_THAN MAIN MINUS MULTIPLICATION NOT_EQUAL PLUS PRINT PROGRAM RIGHT_BRACE RIGHT_BRACKET RIGHT_PARENTHESIS SEMICOLON VAR VOID WHILEPROGRAMA : PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN ENDDEC_VARS : empty\n                | VARSSOLO_FUNCS : FUNCS MAS_FUNCSMAS_FUNCS : empty\n                 | SOLO_FUNCSDEC_FUNCS : empty\n                 | SOLO_FUNCSVARS : VAR LISTA_VARLISTA_VAR : LISTA_ID COLON TYPE SEMICOLON MAS_VARMAS_VAR : empty\n               | LISTA_VARLISTA_ID : ID MAS_IDMAS_ID : COMMA LISTA_ID\n              | emptyTYPE : INT\n            | FLOATFUNCS : VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLONPARAMETROS : empty\n                  | DEC_PARAMETROSDEC_PARAMETROS : ID COLON TYPE LISTA_PARAMETROSLISTA_PARAMETROS : empty\n                        | COMMA DEC_PARAMETROSVARS_FUNC : empty\n                 | VARSBODY : LEFT_BRACE ID RIGHT_BRACEempty :'
     
-_lr_action_items = {'PROGRAM':([0,],[2,]),'$end':([1,9,],[0,-1,]),'ID':([2,8,15,21,],[3,12,12,12,]),'SEMICOLON':([3,17,18,19,],[4,21,-11,-12,]),'END':([4,5,6,7,10,21,22,23,24,],[-13,9,-2,-3,-4,-13,-5,-6,-7,]),'VAR':([4,],[8,]),'COLON':([11,12,14,16,20,],[13,-13,-8,-10,-9,]),'COMMA':([12,],[15,]),'INT':([13,],[18,]),'FLOAT':([13,],[19,]),}
+_lr_action_items = {'PROGRAM':([0,],[2,]),'$end':([1,26,],[0,-1,]),'ID':([2,8,13,24,27,36,46,52,],[3,16,21,16,32,16,32,54,]),'SEMICOLON':([3,28,29,30,53,],[4,36,-16,-17,55,]),'VOID':([4,5,6,7,12,14,36,39,40,41,55,],[-27,13,-2,-3,13,-9,-27,-10,-11,-12,-18,]),'MAIN':([4,5,6,7,9,10,11,12,14,18,19,20,36,39,40,41,55,],[-27,-27,-2,-3,17,-7,-8,-27,-9,-4,-5,-6,-27,-10,-11,-12,-18,]),'VAR':([4,43,],[8,8,]),'LEFT_BRACE':([14,36,39,40,41,43,47,48,49,],[-9,-27,-10,-11,-12,-27,52,-24,-25,]),'COLON':([15,16,23,25,31,32,],[22,-27,-13,-15,-14,37,]),'COMMA':([16,29,30,42,],[24,-16,-17,46,]),'END':([17,],[26,]),'LEFT_PARENTHESIS':([21,],[27,]),'INT':([22,37,],[29,29,]),'FLOAT':([22,37,],[30,30,]),'RIGHT_PARENTHESIS':([27,29,30,33,34,35,42,44,45,50,],[-27,-16,-17,38,-19,-20,-27,-21,-22,-23,]),'LEFT_BRACKET':([38,],[43,]),'RIGHT_BRACKET':([51,56,],[53,-26,]),'RIGHT_BRACE':([54,],[56,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'PROGRAMA':([0,],[1,]),'DEC_VARS':([4,],[5,]),'empty':([4,12,21,],[6,16,23,]),'VARS':([4,],[7,]),'LISTA_VAR':([8,21,],[10,24,]),'LISTA_ID':([8,15,21,],[11,20,11,]),'MAS_ID':([12,],[14,]),'TYPE':([13,],[17,]),'MAS_VAR':([21,],[22,]),}
+_lr_goto_items = {'PROGRAMA':([0,],[1,]),'DEC_VARS':([4,],[5,]),'empty':([4,5,12,16,27,36,42,43,],[6,10,19,25,34,40,45,48,]),'VARS':([4,43,],[7,49,]),'DEC_FUNCS':([5,],[9,]),'SOLO_FUNCS':([5,12,],[11,20,]),'FUNCS':([5,12,],[12,12,]),'LISTA_VAR':([8,36,],[14,41,]),'LISTA_ID':([8,24,36,],[15,31,15,]),'MAS_FUNCS':([12,],[18,]),'MAS_ID':([16,],[23,]),'TYPE':([22,37,],[28,42,]),'PARAMETROS':([27,],[33,]),'DEC_PARAMETROS':([27,46,],[35,50,]),'MAS_VAR':([36,],[39,]),'LISTA_PARAMETROS':([42,],[44,]),'VARS_FUNC':([43,],[47,]),'BODY':([47,],[51,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,17 +27,31 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> PROGRAMA","S'",1,None,None,None),
-  ('PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS END','PROGRAMA',5,'p_program','lexer.py',155),
-  ('DEC_VARS -> empty','DEC_VARS',1,'p_dec_vars','lexer.py',160),
-  ('DEC_VARS -> VARS','DEC_VARS',1,'p_dec_vars','lexer.py',161),
-  ('VARS -> VAR LISTA_VAR','VARS',2,'p_vars','lexer.py',169),
-  ('LISTA_VAR -> LISTA_ID COLON TYPE SEMICOLON MAS_VAR','LISTA_VAR',5,'p_lista_var','lexer.py',174),
-  ('MAS_VAR -> empty','MAS_VAR',1,'p_mas_var','lexer.py',179),
-  ('MAS_VAR -> LISTA_VAR','MAS_VAR',1,'p_mas_var','lexer.py',180),
-  ('LISTA_ID -> ID MAS_ID','LISTA_ID',2,'p_lista_id','lexer.py',188),
-  ('MAS_ID -> COMMA LISTA_ID','MAS_ID',2,'p_mas_id','lexer.py',193),
-  ('MAS_ID -> empty','MAS_ID',1,'p_mas_id','lexer.py',194),
-  ('TYPE -> INT','TYPE',1,'p_type','lexer.py',202),
-  ('TYPE -> FLOAT','TYPE',1,'p_type','lexer.py',203),
-  ('empty -> <empty>','empty',0,'p_empty','lexer.py',207),
+  ('PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN END','PROGRAMA',7,'p_program','parser.py',17),
+  ('DEC_VARS -> empty','DEC_VARS',1,'p_dec_vars','parser.py',22),
+  ('DEC_VARS -> VARS','DEC_VARS',1,'p_dec_vars','parser.py',23),
+  ('SOLO_FUNCS -> FUNCS MAS_FUNCS','SOLO_FUNCS',2,'p_solo_funcs','parser.py',31),
+  ('MAS_FUNCS -> empty','MAS_FUNCS',1,'p_mas_funcs','parser.py',36),
+  ('MAS_FUNCS -> SOLO_FUNCS','MAS_FUNCS',1,'p_mas_funcs','parser.py',37),
+  ('DEC_FUNCS -> empty','DEC_FUNCS',1,'p_dec_funcs','parser.py',45),
+  ('DEC_FUNCS -> SOLO_FUNCS','DEC_FUNCS',1,'p_dec_funcs','parser.py',46),
+  ('VARS -> VAR LISTA_VAR','VARS',2,'p_vars','parser.py',56),
+  ('LISTA_VAR -> LISTA_ID COLON TYPE SEMICOLON MAS_VAR','LISTA_VAR',5,'p_lista_var','parser.py',61),
+  ('MAS_VAR -> empty','MAS_VAR',1,'p_mas_var','parser.py',66),
+  ('MAS_VAR -> LISTA_VAR','MAS_VAR',1,'p_mas_var','parser.py',67),
+  ('LISTA_ID -> ID MAS_ID','LISTA_ID',2,'p_lista_id','parser.py',75),
+  ('MAS_ID -> COMMA LISTA_ID','MAS_ID',2,'p_mas_id','parser.py',80),
+  ('MAS_ID -> empty','MAS_ID',1,'p_mas_id','parser.py',81),
+  ('TYPE -> INT','TYPE',1,'p_type','parser.py',91),
+  ('TYPE -> FLOAT','TYPE',1,'p_type','parser.py',92),
+  ('FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON','FUNCS',10,'p_funcs','parser.py',100),
+  ('PARAMETROS -> empty','PARAMETROS',1,'p_parametros','parser.py',107),
+  ('PARAMETROS -> DEC_PARAMETROS','PARAMETROS',1,'p_parametros','parser.py',108),
+  ('DEC_PARAMETROS -> ID COLON TYPE LISTA_PARAMETROS','DEC_PARAMETROS',4,'p_dec_parametros','parser.py',116),
+  ('LISTA_PARAMETROS -> empty','LISTA_PARAMETROS',1,'p_lista_parametros','parser.py',120),
+  ('LISTA_PARAMETROS -> COMMA DEC_PARAMETROS','LISTA_PARAMETROS',2,'p_lista_parametros','parser.py',121),
+  ('VARS_FUNC -> empty','VARS_FUNC',1,'p_vars_func','parser.py',128),
+  ('VARS_FUNC -> VARS','VARS_FUNC',1,'p_vars_func','parser.py',129),
+  ('BODY -> LEFT_BRACE ID RIGHT_BRACE','BODY',3,'p_body','parser.py',139),
+  ('empty -> <empty>','empty',0,'p_empty','parser.py',143),
 ]

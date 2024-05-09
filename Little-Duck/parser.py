@@ -14,8 +14,8 @@ precedence = (
 ## <Programa> ##
 #--------------#
 def p_program(p):
-    '''PROGRAMA : PROGRAM ID SEMICOLON DEC_VARS END'''
-    p[0] = p[2], p[4]
+    '''PROGRAMA : PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN END'''
+    p[0] = p[2], p[4], p[5] 
 
 # <DEC_VARS>
 def p_dec_vars(p):
@@ -26,27 +26,29 @@ def p_dec_vars(p):
     else:
         p[0] = None
 
-"""
 # <SOLO_FUNCS>
 def p_solo_funcs(p):
     '''SOLO_FUNCS : FUNCS MAS_FUNCS'''
     p[0] = ('SOLO_FUNCS', p[1], p[2])
 
-
 # <MAS_FUNCS>
 def p_mas_funcs(p):
     '''MAS_FUNCS : empty
                  | SOLO_FUNCS'''
-    if len(p) > 2:
+    if len(p) >= 2:
         p[0] = ('MAS_FUNCS', p[1])
     else:
         p[0] = None
 
 # <DEC_FUNCS>
 def p_dec_funcs(p):
-    '''DEC_FUNCS : SOLO_FUNCS'''
-    p[0] = ('DEC_FUNCS', p[1])
-"""
+    '''DEC_FUNCS : empty
+                 | SOLO_FUNCS'''
+    if len(p) == 2:
+        p[0] = ('DEC_FUNCS', p[1])
+    else:
+        p[0] = None 
+
 #----------#
 ## <VARS> ##
 #----------#
@@ -89,13 +91,14 @@ def p_type(p):
     '''TYPE : INT
             | FLOAT'''
     p[0] = ('TYPE', p[1])
-"""
+
 #-----------#
 ## <FUNCS> ##
 #-----------#
+# AGREGAR EL BODY
 def p_funcs(p):
-    '''FUNCS : VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNCS BODY RIGHT_BRACKET SEMI_COLON'''
-    p[0] = ('FUNCS', p[2], p[4], p[7],p[8])
+    '''FUNCS : VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON'''
+    p[0] = ('FUNCS', p[2], p[4], p[7], p[8])
 
 # <PARAMETROS>
 def p_parametros(p):
@@ -114,7 +117,7 @@ def p_dec_parametros(p):
 def p_lista_parametros(p):
     '''LISTA_PARAMETROS : empty
                         | COMMA DEC_PARAMETROS'''
-    if len(p) >= 2:
+    if len(p) > 2:
         p[0] = ('LISTA_PARAMETROS', p[2])
     else:
         p[0] = None
@@ -126,14 +129,14 @@ def p_vars_func(p):
         p[0] = ('VARS_FUNC', p[1])
     else:
         p[0] = None
-
+ 
 #-----------#
 ## <BODY> ##
 #-----------#
 def p_body(p):
-    '''BODY : LEFT_PARENTHESIS RIGHT_PARENTHESIS'''
-    p[0] = ('BODY')
-"""
+    '''BODY : LEFT_BRACE ID RIGHT_BRACE'''
+    p[0] = ('BODY', p[2])
+
 def p_empty(p):
     'empty :'
     pass
@@ -141,7 +144,11 @@ def p_empty(p):
 
 data = '''
 program carmina;
-var a : int; b, c : float;
+void caca (kk:int)[ 
+    var carmina:int; 
+    {ok}
+];
+main
 end
 '''
 
