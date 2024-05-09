@@ -2,14 +2,10 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    CTE_FLOAT
-    CTE_INT
     CTE_STRING
-    DIVISION
     DO
     ELSE
     IF
-    MULTIPLICATION
     PRINT
     WHILE
 
@@ -60,40 +56,53 @@ Rule 41    MAS_EXP -> OPERADORES_EXP EXP
 Rule 42    MAS_EXP -> epsilon
 Rule 43    OPERADORES_EXP -> PLUS
 Rule 44    OPERADORES_EXP -> MINUS
-Rule 45    TERMINO -> ID
-Rule 46    epsilon -> <empty>
+Rule 45    TERMINO -> FACTOR MAS_TERMINO
+Rule 46    MAS_TERMINO -> epsilon
+Rule 47    MAS_TERMINO -> OPERADORES_TER TERMINO
+Rule 48    OPERADORES_TER -> MULTIPLICATION
+Rule 49    OPERADORES_TER -> DIVISION
+Rule 50    FACTOR -> OPERADORES_FACTOR ID_CTE
+Rule 51    FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS
+Rule 52    ID_CTE -> ID
+Rule 53    ID_CTE -> CTE
+Rule 54    OPERADORES_FACTOR -> PLUS
+Rule 55    OPERADORES_FACTOR -> MINUS
+Rule 56    OPERADORES_FACTOR -> epsilon
+Rule 57    CTE -> CTE_INT
+Rule 58    CTE -> CTE_FLOAT
+Rule 59    epsilon -> <empty>
 
 Terminals, with rules where they appear
 
 COLON                : 10 21
 COMMA                : 14 23
-CTE_FLOAT            : 
-CTE_INT              : 
+CTE_FLOAT            : 58
+CTE_INT              : 57
 CTE_STRING           : 
-DIVISION             : 
+DIVISION             : 49
 DO                   : 
 ELSE                 : 
 END                  : 1
 EQUAL                : 33
 FLOAT                : 17
 GREATER_THAN         : 37
-ID                   : 1 13 18 21 33 45
+ID                   : 1 13 18 21 33 52
 IF                   : 
 INT                  : 16
 LEFT_BRACE           : 26
 LEFT_BRACKET         : 18
-LEFT_PARENTHESIS     : 18
+LEFT_PARENTHESIS     : 18 51
 LESS_THAN            : 38
 MAIN                 : 1
-MINUS                : 44
-MULTIPLICATION       : 
+MINUS                : 44 55
+MULTIPLICATION       : 48
 NOT_EQUAL            : 39
-PLUS                 : 43
+PLUS                 : 43 54
 PRINT                : 
 PROGRAM              : 1
 RIGHT_BRACE          : 26
 RIGHT_BRACKET        : 18
-RIGHT_PARENTHESIS    : 18
+RIGHT_PARENTHESIS    : 18 51
 SEMICOLON            : 1 10 18 33
 VAR                  : 9
 VOID                 : 18
@@ -104,13 +113,16 @@ Nonterminals, with rules where they appear
 
 ASSIGN               : 32
 BODY                 : 1 18
+CTE                  : 53
 DEC_FUNCS            : 1
 DEC_PARAMETROS       : 20 23
 DEC_STATEMENTS       : 26
 DEC_VARS             : 1
 EXP                  : 34 36 41
-EXPRESION            : 33
+EXPRESION            : 33 51
+FACTOR               : 45
 FUNCS                : 4
+ID_CTE               : 50
 LISTA_ID             : 10 14
 LISTA_PARAMETROS     : 21
 LISTA_STATEMENTS     : 28 31
@@ -120,18 +132,21 @@ MAS_EXPRESIONES      : 34
 MAS_FUNCS            : 4
 MAS_ID               : 13
 MAS_STATEMENTS       : 29
+MAS_TERMINO          : 45
 MAS_VAR              : 10
 OPERADORES           : 36
 OPERADORES_EXP       : 41
+OPERADORES_FACTOR    : 50
+OPERADORES_TER       : 47
 PARAMETROS           : 18
 PROGRAMA             : 0
 SOLO_FUNCS           : 6 8
 STATEMENT            : 29
-TERMINO              : 40
+TERMINO              : 40 47
 TYPE                 : 10 21
 VARS                 : 3 25
 VARS_FUNC            : 18
-epsilon              : 2 5 7 11 15 19 22 24 27 30 35 42
+epsilon              : 2 5 7 11 15 19 22 24 27 30 35 42 46 56
 
 Parsing method: LALR
 
@@ -169,11 +184,11 @@ state 4
     (1) PROGRAMA -> PROGRAM ID SEMICOLON . DEC_VARS DEC_FUNCS MAIN BODY END
     (2) DEC_VARS -> . epsilon
     (3) DEC_VARS -> . VARS
-    (46) epsilon -> .
+    (59) epsilon -> .
     (9) VARS -> . VAR LISTA_VAR
 
-    VOID            reduce using rule 46 (epsilon -> .)
-    MAIN            reduce using rule 46 (epsilon -> .)
+    VOID            reduce using rule 59 (epsilon -> .)
+    MAIN            reduce using rule 59 (epsilon -> .)
     VAR             shift and go to state 8
 
     DEC_VARS                       shift and go to state 5
@@ -185,11 +200,11 @@ state 5
     (1) PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS . DEC_FUNCS MAIN BODY END
     (7) DEC_FUNCS -> . epsilon
     (8) DEC_FUNCS -> . SOLO_FUNCS
-    (46) epsilon -> .
+    (59) epsilon -> .
     (4) SOLO_FUNCS -> . FUNCS MAS_FUNCS
     (18) FUNCS -> . VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
 
-    MAIN            reduce using rule 46 (epsilon -> .)
+    MAIN            reduce using rule 59 (epsilon -> .)
     VOID            shift and go to state 13
 
     DEC_FUNCS                      shift and go to state 9
@@ -250,11 +265,11 @@ state 12
     (4) SOLO_FUNCS -> FUNCS . MAS_FUNCS
     (5) MAS_FUNCS -> . epsilon
     (6) MAS_FUNCS -> . SOLO_FUNCS
-    (46) epsilon -> .
+    (59) epsilon -> .
     (4) SOLO_FUNCS -> . FUNCS MAS_FUNCS
     (18) FUNCS -> . VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
 
-    MAIN            reduce using rule 46 (epsilon -> .)
+    MAIN            reduce using rule 59 (epsilon -> .)
     VOID            shift and go to state 13
 
     FUNCS                          shift and go to state 12
@@ -290,10 +305,10 @@ state 16
     (13) LISTA_ID -> ID . MAS_ID
     (14) MAS_ID -> . COMMA LISTA_ID
     (15) MAS_ID -> . epsilon
-    (46) epsilon -> .
+    (59) epsilon -> .
 
     COMMA           shift and go to state 24
-    COLON           reduce using rule 46 (epsilon -> .)
+    COLON           reduce using rule 59 (epsilon -> .)
 
     MAS_ID                         shift and go to state 23
     epsilon                        shift and go to state 25
@@ -381,12 +396,12 @@ state 27
     (26) BODY -> LEFT_BRACE . DEC_STATEMENTS RIGHT_BRACE
     (27) DEC_STATEMENTS -> . epsilon
     (28) DEC_STATEMENTS -> . LISTA_STATEMENTS
-    (46) epsilon -> .
+    (59) epsilon -> .
     (29) LISTA_STATEMENTS -> . STATEMENT MAS_STATEMENTS
     (32) STATEMENT -> . ASSIGN
     (33) ASSIGN -> . ID EQUAL EXPRESION SEMICOLON
 
-    RIGHT_BRACE     reduce using rule 46 (epsilon -> .)
+    RIGHT_BRACE     reduce using rule 59 (epsilon -> .)
     ID              shift and go to state 39
 
     DEC_STATEMENTS                 shift and go to state 34
@@ -400,10 +415,10 @@ state 28
     (18) FUNCS -> VOID ID LEFT_PARENTHESIS . PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
     (19) PARAMETROS -> . epsilon
     (20) PARAMETROS -> . DEC_PARAMETROS
-    (46) epsilon -> .
+    (59) epsilon -> .
     (21) DEC_PARAMETROS -> . ID COLON TYPE LISTA_PARAMETROS
 
-    RIGHT_PARENTHESIS reduce using rule 46 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 59 (epsilon -> .)
     ID              shift and go to state 40
 
     PARAMETROS                     shift and go to state 41
@@ -475,12 +490,12 @@ state 37
     (29) LISTA_STATEMENTS -> STATEMENT . MAS_STATEMENTS
     (30) MAS_STATEMENTS -> . epsilon
     (31) MAS_STATEMENTS -> . LISTA_STATEMENTS
-    (46) epsilon -> .
+    (59) epsilon -> .
     (29) LISTA_STATEMENTS -> . STATEMENT MAS_STATEMENTS
     (32) STATEMENT -> . ASSIGN
     (33) ASSIGN -> . ID EQUAL EXPRESION SEMICOLON
 
-    RIGHT_BRACE     reduce using rule 46 (epsilon -> .)
+    RIGHT_BRACE     reduce using rule 59 (epsilon -> .)
     ID              shift and go to state 39
 
     STATEMENT                      shift and go to state 37
@@ -537,13 +552,13 @@ state 44
     (10) LISTA_VAR -> LISTA_ID COLON TYPE SEMICOLON . MAS_VAR
     (11) MAS_VAR -> . epsilon
     (12) MAS_VAR -> . LISTA_VAR
-    (46) epsilon -> .
+    (59) epsilon -> .
     (10) LISTA_VAR -> . LISTA_ID COLON TYPE SEMICOLON MAS_VAR
     (13) LISTA_ID -> . ID MAS_ID
 
-    VOID            reduce using rule 46 (epsilon -> .)
-    MAIN            reduce using rule 46 (epsilon -> .)
-    LEFT_BRACE      reduce using rule 46 (epsilon -> .)
+    VOID            reduce using rule 59 (epsilon -> .)
+    MAIN            reduce using rule 59 (epsilon -> .)
+    LEFT_BRACE      reduce using rule 59 (epsilon -> .)
     ID              shift and go to state 16
 
     LISTA_ID                       shift and go to state 15
@@ -585,13 +600,27 @@ state 49
     (33) ASSIGN -> ID EQUAL . EXPRESION SEMICOLON
     (34) EXPRESION -> . EXP MAS_EXPRESIONES
     (40) EXP -> . TERMINO MAS_EXP
-    (45) TERMINO -> . ID
+    (45) TERMINO -> . FACTOR MAS_TERMINO
+    (50) FACTOR -> . OPERADORES_FACTOR ID_CTE
+    (51) FACTOR -> . LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS
+    (54) OPERADORES_FACTOR -> . PLUS
+    (55) OPERADORES_FACTOR -> . MINUS
+    (56) OPERADORES_FACTOR -> . epsilon
+    (59) epsilon -> .
 
-    ID              shift and go to state 55
+    LEFT_PARENTHESIS shift and go to state 60
+    PLUS            shift and go to state 61
+    MINUS           shift and go to state 62
+    ID              reduce using rule 59 (epsilon -> .)
+    CTE_INT         reduce using rule 59 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 59 (epsilon -> .)
 
-    EXPRESION                      shift and go to state 56
-    EXP                            shift and go to state 57
-    TERMINO                        shift and go to state 58
+    EXPRESION                      shift and go to state 55
+    EXP                            shift and go to state 56
+    TERMINO                        shift and go to state 57
+    FACTOR                         shift and go to state 58
+    OPERADORES_FACTOR              shift and go to state 59
+    epsilon                        shift and go to state 63
 
 state 50
 
@@ -602,13 +631,13 @@ state 50
     INT             shift and go to state 30
     FLOAT           shift and go to state 31
 
-    TYPE                           shift and go to state 59
+    TYPE                           shift and go to state 64
 
 state 51
 
     (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS . LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
 
-    LEFT_BRACKET    shift and go to state 60
+    LEFT_BRACKET    shift and go to state 65
 
 
 state 52
@@ -640,91 +669,173 @@ state 54
 
 state 55
 
-    (45) TERMINO -> ID .
+    (33) ASSIGN -> ID EQUAL EXPRESION . SEMICOLON
 
-    PLUS            reduce using rule 45 (TERMINO -> ID .)
-    MINUS           reduce using rule 45 (TERMINO -> ID .)
-    GREATER_THAN    reduce using rule 45 (TERMINO -> ID .)
-    LESS_THAN       reduce using rule 45 (TERMINO -> ID .)
-    NOT_EQUAL       reduce using rule 45 (TERMINO -> ID .)
-    SEMICOLON       reduce using rule 45 (TERMINO -> ID .)
+    SEMICOLON       shift and go to state 66
 
 
 state 56
 
-    (33) ASSIGN -> ID EQUAL EXPRESION . SEMICOLON
-
-    SEMICOLON       shift and go to state 61
-
-
-state 57
-
     (34) EXPRESION -> EXP . MAS_EXPRESIONES
     (35) MAS_EXPRESIONES -> . epsilon
     (36) MAS_EXPRESIONES -> . OPERADORES EXP
-    (46) epsilon -> .
+    (59) epsilon -> .
     (37) OPERADORES -> . GREATER_THAN
     (38) OPERADORES -> . LESS_THAN
     (39) OPERADORES -> . NOT_EQUAL
 
-    SEMICOLON       reduce using rule 46 (epsilon -> .)
-    GREATER_THAN    shift and go to state 65
-    LESS_THAN       shift and go to state 66
-    NOT_EQUAL       shift and go to state 67
+    SEMICOLON       reduce using rule 59 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 59 (epsilon -> .)
+    GREATER_THAN    shift and go to state 70
+    LESS_THAN       shift and go to state 71
+    NOT_EQUAL       shift and go to state 72
 
-    MAS_EXPRESIONES                shift and go to state 62
-    epsilon                        shift and go to state 63
-    OPERADORES                     shift and go to state 64
+    MAS_EXPRESIONES                shift and go to state 67
+    epsilon                        shift and go to state 68
+    OPERADORES                     shift and go to state 69
 
-state 58
+state 57
 
     (40) EXP -> TERMINO . MAS_EXP
     (41) MAS_EXP -> . OPERADORES_EXP EXP
     (42) MAS_EXP -> . epsilon
     (43) OPERADORES_EXP -> . PLUS
     (44) OPERADORES_EXP -> . MINUS
-    (46) epsilon -> .
+    (59) epsilon -> .
 
-    PLUS            shift and go to state 71
-    MINUS           shift and go to state 72
-    GREATER_THAN    reduce using rule 46 (epsilon -> .)
-    LESS_THAN       reduce using rule 46 (epsilon -> .)
-    NOT_EQUAL       reduce using rule 46 (epsilon -> .)
-    SEMICOLON       reduce using rule 46 (epsilon -> .)
+    PLUS            shift and go to state 76
+    MINUS           shift and go to state 77
+    GREATER_THAN    reduce using rule 59 (epsilon -> .)
+    LESS_THAN       reduce using rule 59 (epsilon -> .)
+    NOT_EQUAL       reduce using rule 59 (epsilon -> .)
+    SEMICOLON       reduce using rule 59 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 59 (epsilon -> .)
 
-    MAS_EXP                        shift and go to state 68
-    OPERADORES_EXP                 shift and go to state 69
-    epsilon                        shift and go to state 70
+    MAS_EXP                        shift and go to state 73
+    OPERADORES_EXP                 shift and go to state 74
+    epsilon                        shift and go to state 75
+
+state 58
+
+    (45) TERMINO -> FACTOR . MAS_TERMINO
+    (46) MAS_TERMINO -> . epsilon
+    (47) MAS_TERMINO -> . OPERADORES_TER TERMINO
+    (59) epsilon -> .
+    (48) OPERADORES_TER -> . MULTIPLICATION
+    (49) OPERADORES_TER -> . DIVISION
+
+    PLUS            reduce using rule 59 (epsilon -> .)
+    MINUS           reduce using rule 59 (epsilon -> .)
+    GREATER_THAN    reduce using rule 59 (epsilon -> .)
+    LESS_THAN       reduce using rule 59 (epsilon -> .)
+    NOT_EQUAL       reduce using rule 59 (epsilon -> .)
+    SEMICOLON       reduce using rule 59 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 59 (epsilon -> .)
+    MULTIPLICATION  shift and go to state 81
+    DIVISION        shift and go to state 82
+
+    MAS_TERMINO                    shift and go to state 78
+    epsilon                        shift and go to state 79
+    OPERADORES_TER                 shift and go to state 80
 
 state 59
+
+    (50) FACTOR -> OPERADORES_FACTOR . ID_CTE
+    (52) ID_CTE -> . ID
+    (53) ID_CTE -> . CTE
+    (57) CTE -> . CTE_INT
+    (58) CTE -> . CTE_FLOAT
+
+    ID              shift and go to state 84
+    CTE_INT         shift and go to state 86
+    CTE_FLOAT       shift and go to state 87
+
+    ID_CTE                         shift and go to state 83
+    CTE                            shift and go to state 85
+
+state 60
+
+    (51) FACTOR -> LEFT_PARENTHESIS . EXPRESION RIGHT_PARENTHESIS
+    (34) EXPRESION -> . EXP MAS_EXPRESIONES
+    (40) EXP -> . TERMINO MAS_EXP
+    (45) TERMINO -> . FACTOR MAS_TERMINO
+    (50) FACTOR -> . OPERADORES_FACTOR ID_CTE
+    (51) FACTOR -> . LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS
+    (54) OPERADORES_FACTOR -> . PLUS
+    (55) OPERADORES_FACTOR -> . MINUS
+    (56) OPERADORES_FACTOR -> . epsilon
+    (59) epsilon -> .
+
+    LEFT_PARENTHESIS shift and go to state 60
+    PLUS            shift and go to state 61
+    MINUS           shift and go to state 62
+    ID              reduce using rule 59 (epsilon -> .)
+    CTE_INT         reduce using rule 59 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 59 (epsilon -> .)
+
+    EXPRESION                      shift and go to state 88
+    EXP                            shift and go to state 56
+    TERMINO                        shift and go to state 57
+    FACTOR                         shift and go to state 58
+    OPERADORES_FACTOR              shift and go to state 59
+    epsilon                        shift and go to state 63
+
+state 61
+
+    (54) OPERADORES_FACTOR -> PLUS .
+
+    ID              reduce using rule 54 (OPERADORES_FACTOR -> PLUS .)
+    CTE_INT         reduce using rule 54 (OPERADORES_FACTOR -> PLUS .)
+    CTE_FLOAT       reduce using rule 54 (OPERADORES_FACTOR -> PLUS .)
+
+
+state 62
+
+    (55) OPERADORES_FACTOR -> MINUS .
+
+    ID              reduce using rule 55 (OPERADORES_FACTOR -> MINUS .)
+    CTE_INT         reduce using rule 55 (OPERADORES_FACTOR -> MINUS .)
+    CTE_FLOAT       reduce using rule 55 (OPERADORES_FACTOR -> MINUS .)
+
+
+state 63
+
+    (56) OPERADORES_FACTOR -> epsilon .
+
+    ID              reduce using rule 56 (OPERADORES_FACTOR -> epsilon .)
+    CTE_INT         reduce using rule 56 (OPERADORES_FACTOR -> epsilon .)
+    CTE_FLOAT       reduce using rule 56 (OPERADORES_FACTOR -> epsilon .)
+
+
+state 64
 
     (21) DEC_PARAMETROS -> ID COLON TYPE . LISTA_PARAMETROS
     (22) LISTA_PARAMETROS -> . epsilon
     (23) LISTA_PARAMETROS -> . COMMA DEC_PARAMETROS
-    (46) epsilon -> .
+    (59) epsilon -> .
 
-    COMMA           shift and go to state 75
-    RIGHT_PARENTHESIS reduce using rule 46 (epsilon -> .)
+    COMMA           shift and go to state 91
+    RIGHT_PARENTHESIS reduce using rule 59 (epsilon -> .)
 
-    LISTA_PARAMETROS               shift and go to state 73
-    epsilon                        shift and go to state 74
+    LISTA_PARAMETROS               shift and go to state 89
+    epsilon                        shift and go to state 90
 
-state 60
+state 65
 
     (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET . VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
     (24) VARS_FUNC -> . epsilon
     (25) VARS_FUNC -> . VARS
-    (46) epsilon -> .
+    (59) epsilon -> .
     (9) VARS -> . VAR LISTA_VAR
 
-    LEFT_BRACE      reduce using rule 46 (epsilon -> .)
+    LEFT_BRACE      reduce using rule 59 (epsilon -> .)
     VAR             shift and go to state 8
 
-    VARS_FUNC                      shift and go to state 76
-    epsilon                        shift and go to state 77
-    VARS                           shift and go to state 78
+    VARS_FUNC                      shift and go to state 92
+    epsilon                        shift and go to state 93
+    VARS                           shift and go to state 94
 
-state 61
+state 66
 
     (33) ASSIGN -> ID EQUAL EXPRESION SEMICOLON .
 
@@ -732,53 +843,84 @@ state 61
     RIGHT_BRACE     reduce using rule 33 (ASSIGN -> ID EQUAL EXPRESION SEMICOLON .)
 
 
-state 62
+state 67
 
     (34) EXPRESION -> EXP MAS_EXPRESIONES .
 
     SEMICOLON       reduce using rule 34 (EXPRESION -> EXP MAS_EXPRESIONES .)
+    RIGHT_PARENTHESIS reduce using rule 34 (EXPRESION -> EXP MAS_EXPRESIONES .)
 
 
-state 63
+state 68
 
     (35) MAS_EXPRESIONES -> epsilon .
 
     SEMICOLON       reduce using rule 35 (MAS_EXPRESIONES -> epsilon .)
+    RIGHT_PARENTHESIS reduce using rule 35 (MAS_EXPRESIONES -> epsilon .)
 
 
-state 64
+state 69
 
     (36) MAS_EXPRESIONES -> OPERADORES . EXP
     (40) EXP -> . TERMINO MAS_EXP
-    (45) TERMINO -> . ID
+    (45) TERMINO -> . FACTOR MAS_TERMINO
+    (50) FACTOR -> . OPERADORES_FACTOR ID_CTE
+    (51) FACTOR -> . LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS
+    (54) OPERADORES_FACTOR -> . PLUS
+    (55) OPERADORES_FACTOR -> . MINUS
+    (56) OPERADORES_FACTOR -> . epsilon
+    (59) epsilon -> .
 
-    ID              shift and go to state 55
+    LEFT_PARENTHESIS shift and go to state 60
+    PLUS            shift and go to state 61
+    MINUS           shift and go to state 62
+    ID              reduce using rule 59 (epsilon -> .)
+    CTE_INT         reduce using rule 59 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 59 (epsilon -> .)
 
-    EXP                            shift and go to state 79
-    TERMINO                        shift and go to state 58
+    EXP                            shift and go to state 95
+    TERMINO                        shift and go to state 57
+    FACTOR                         shift and go to state 58
+    OPERADORES_FACTOR              shift and go to state 59
+    epsilon                        shift and go to state 63
 
-state 65
+state 70
 
     (37) OPERADORES -> GREATER_THAN .
 
+    LEFT_PARENTHESIS reduce using rule 37 (OPERADORES -> GREATER_THAN .)
+    PLUS            reduce using rule 37 (OPERADORES -> GREATER_THAN .)
+    MINUS           reduce using rule 37 (OPERADORES -> GREATER_THAN .)
     ID              reduce using rule 37 (OPERADORES -> GREATER_THAN .)
+    CTE_INT         reduce using rule 37 (OPERADORES -> GREATER_THAN .)
+    CTE_FLOAT       reduce using rule 37 (OPERADORES -> GREATER_THAN .)
 
 
-state 66
+state 71
 
     (38) OPERADORES -> LESS_THAN .
 
+    LEFT_PARENTHESIS reduce using rule 38 (OPERADORES -> LESS_THAN .)
+    PLUS            reduce using rule 38 (OPERADORES -> LESS_THAN .)
+    MINUS           reduce using rule 38 (OPERADORES -> LESS_THAN .)
     ID              reduce using rule 38 (OPERADORES -> LESS_THAN .)
+    CTE_INT         reduce using rule 38 (OPERADORES -> LESS_THAN .)
+    CTE_FLOAT       reduce using rule 38 (OPERADORES -> LESS_THAN .)
 
 
-state 67
+state 72
 
     (39) OPERADORES -> NOT_EQUAL .
 
+    LEFT_PARENTHESIS reduce using rule 39 (OPERADORES -> NOT_EQUAL .)
+    PLUS            reduce using rule 39 (OPERADORES -> NOT_EQUAL .)
+    MINUS           reduce using rule 39 (OPERADORES -> NOT_EQUAL .)
     ID              reduce using rule 39 (OPERADORES -> NOT_EQUAL .)
+    CTE_INT         reduce using rule 39 (OPERADORES -> NOT_EQUAL .)
+    CTE_FLOAT       reduce using rule 39 (OPERADORES -> NOT_EQUAL .)
 
 
-state 68
+state 73
 
     (40) EXP -> TERMINO MAS_EXP .
 
@@ -786,20 +928,35 @@ state 68
     LESS_THAN       reduce using rule 40 (EXP -> TERMINO MAS_EXP .)
     NOT_EQUAL       reduce using rule 40 (EXP -> TERMINO MAS_EXP .)
     SEMICOLON       reduce using rule 40 (EXP -> TERMINO MAS_EXP .)
+    RIGHT_PARENTHESIS reduce using rule 40 (EXP -> TERMINO MAS_EXP .)
 
 
-state 69
+state 74
 
     (41) MAS_EXP -> OPERADORES_EXP . EXP
     (40) EXP -> . TERMINO MAS_EXP
-    (45) TERMINO -> . ID
+    (45) TERMINO -> . FACTOR MAS_TERMINO
+    (50) FACTOR -> . OPERADORES_FACTOR ID_CTE
+    (51) FACTOR -> . LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS
+    (54) OPERADORES_FACTOR -> . PLUS
+    (55) OPERADORES_FACTOR -> . MINUS
+    (56) OPERADORES_FACTOR -> . epsilon
+    (59) epsilon -> .
 
-    ID              shift and go to state 55
+    LEFT_PARENTHESIS shift and go to state 60
+    PLUS            shift and go to state 61
+    MINUS           shift and go to state 62
+    ID              reduce using rule 59 (epsilon -> .)
+    CTE_INT         reduce using rule 59 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 59 (epsilon -> .)
 
-    EXP                            shift and go to state 80
-    TERMINO                        shift and go to state 58
+    EXP                            shift and go to state 96
+    TERMINO                        shift and go to state 57
+    FACTOR                         shift and go to state 58
+    OPERADORES_FACTOR              shift and go to state 59
+    epsilon                        shift and go to state 63
 
-state 70
+state 75
 
     (42) MAS_EXP -> epsilon .
 
@@ -807,76 +964,243 @@ state 70
     LESS_THAN       reduce using rule 42 (MAS_EXP -> epsilon .)
     NOT_EQUAL       reduce using rule 42 (MAS_EXP -> epsilon .)
     SEMICOLON       reduce using rule 42 (MAS_EXP -> epsilon .)
+    RIGHT_PARENTHESIS reduce using rule 42 (MAS_EXP -> epsilon .)
 
 
-state 71
+state 76
 
     (43) OPERADORES_EXP -> PLUS .
 
+    LEFT_PARENTHESIS reduce using rule 43 (OPERADORES_EXP -> PLUS .)
+    PLUS            reduce using rule 43 (OPERADORES_EXP -> PLUS .)
+    MINUS           reduce using rule 43 (OPERADORES_EXP -> PLUS .)
     ID              reduce using rule 43 (OPERADORES_EXP -> PLUS .)
+    CTE_INT         reduce using rule 43 (OPERADORES_EXP -> PLUS .)
+    CTE_FLOAT       reduce using rule 43 (OPERADORES_EXP -> PLUS .)
 
 
-state 72
+state 77
 
     (44) OPERADORES_EXP -> MINUS .
 
+    LEFT_PARENTHESIS reduce using rule 44 (OPERADORES_EXP -> MINUS .)
+    PLUS            reduce using rule 44 (OPERADORES_EXP -> MINUS .)
+    MINUS           reduce using rule 44 (OPERADORES_EXP -> MINUS .)
     ID              reduce using rule 44 (OPERADORES_EXP -> MINUS .)
+    CTE_INT         reduce using rule 44 (OPERADORES_EXP -> MINUS .)
+    CTE_FLOAT       reduce using rule 44 (OPERADORES_EXP -> MINUS .)
 
 
-state 73
+state 78
+
+    (45) TERMINO -> FACTOR MAS_TERMINO .
+
+    PLUS            reduce using rule 45 (TERMINO -> FACTOR MAS_TERMINO .)
+    MINUS           reduce using rule 45 (TERMINO -> FACTOR MAS_TERMINO .)
+    GREATER_THAN    reduce using rule 45 (TERMINO -> FACTOR MAS_TERMINO .)
+    LESS_THAN       reduce using rule 45 (TERMINO -> FACTOR MAS_TERMINO .)
+    NOT_EQUAL       reduce using rule 45 (TERMINO -> FACTOR MAS_TERMINO .)
+    SEMICOLON       reduce using rule 45 (TERMINO -> FACTOR MAS_TERMINO .)
+    RIGHT_PARENTHESIS reduce using rule 45 (TERMINO -> FACTOR MAS_TERMINO .)
+
+
+state 79
+
+    (46) MAS_TERMINO -> epsilon .
+
+    PLUS            reduce using rule 46 (MAS_TERMINO -> epsilon .)
+    MINUS           reduce using rule 46 (MAS_TERMINO -> epsilon .)
+    GREATER_THAN    reduce using rule 46 (MAS_TERMINO -> epsilon .)
+    LESS_THAN       reduce using rule 46 (MAS_TERMINO -> epsilon .)
+    NOT_EQUAL       reduce using rule 46 (MAS_TERMINO -> epsilon .)
+    SEMICOLON       reduce using rule 46 (MAS_TERMINO -> epsilon .)
+    RIGHT_PARENTHESIS reduce using rule 46 (MAS_TERMINO -> epsilon .)
+
+
+state 80
+
+    (47) MAS_TERMINO -> OPERADORES_TER . TERMINO
+    (45) TERMINO -> . FACTOR MAS_TERMINO
+    (50) FACTOR -> . OPERADORES_FACTOR ID_CTE
+    (51) FACTOR -> . LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS
+    (54) OPERADORES_FACTOR -> . PLUS
+    (55) OPERADORES_FACTOR -> . MINUS
+    (56) OPERADORES_FACTOR -> . epsilon
+    (59) epsilon -> .
+
+    LEFT_PARENTHESIS shift and go to state 60
+    PLUS            shift and go to state 61
+    MINUS           shift and go to state 62
+    ID              reduce using rule 59 (epsilon -> .)
+    CTE_INT         reduce using rule 59 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 59 (epsilon -> .)
+
+    TERMINO                        shift and go to state 97
+    FACTOR                         shift and go to state 58
+    OPERADORES_FACTOR              shift and go to state 59
+    epsilon                        shift and go to state 63
+
+state 81
+
+    (48) OPERADORES_TER -> MULTIPLICATION .
+
+    LEFT_PARENTHESIS reduce using rule 48 (OPERADORES_TER -> MULTIPLICATION .)
+    PLUS            reduce using rule 48 (OPERADORES_TER -> MULTIPLICATION .)
+    MINUS           reduce using rule 48 (OPERADORES_TER -> MULTIPLICATION .)
+    ID              reduce using rule 48 (OPERADORES_TER -> MULTIPLICATION .)
+    CTE_INT         reduce using rule 48 (OPERADORES_TER -> MULTIPLICATION .)
+    CTE_FLOAT       reduce using rule 48 (OPERADORES_TER -> MULTIPLICATION .)
+
+
+state 82
+
+    (49) OPERADORES_TER -> DIVISION .
+
+    LEFT_PARENTHESIS reduce using rule 49 (OPERADORES_TER -> DIVISION .)
+    PLUS            reduce using rule 49 (OPERADORES_TER -> DIVISION .)
+    MINUS           reduce using rule 49 (OPERADORES_TER -> DIVISION .)
+    ID              reduce using rule 49 (OPERADORES_TER -> DIVISION .)
+    CTE_INT         reduce using rule 49 (OPERADORES_TER -> DIVISION .)
+    CTE_FLOAT       reduce using rule 49 (OPERADORES_TER -> DIVISION .)
+
+
+state 83
+
+    (50) FACTOR -> OPERADORES_FACTOR ID_CTE .
+
+    MULTIPLICATION  reduce using rule 50 (FACTOR -> OPERADORES_FACTOR ID_CTE .)
+    DIVISION        reduce using rule 50 (FACTOR -> OPERADORES_FACTOR ID_CTE .)
+    PLUS            reduce using rule 50 (FACTOR -> OPERADORES_FACTOR ID_CTE .)
+    MINUS           reduce using rule 50 (FACTOR -> OPERADORES_FACTOR ID_CTE .)
+    GREATER_THAN    reduce using rule 50 (FACTOR -> OPERADORES_FACTOR ID_CTE .)
+    LESS_THAN       reduce using rule 50 (FACTOR -> OPERADORES_FACTOR ID_CTE .)
+    NOT_EQUAL       reduce using rule 50 (FACTOR -> OPERADORES_FACTOR ID_CTE .)
+    SEMICOLON       reduce using rule 50 (FACTOR -> OPERADORES_FACTOR ID_CTE .)
+    RIGHT_PARENTHESIS reduce using rule 50 (FACTOR -> OPERADORES_FACTOR ID_CTE .)
+
+
+state 84
+
+    (52) ID_CTE -> ID .
+
+    MULTIPLICATION  reduce using rule 52 (ID_CTE -> ID .)
+    DIVISION        reduce using rule 52 (ID_CTE -> ID .)
+    PLUS            reduce using rule 52 (ID_CTE -> ID .)
+    MINUS           reduce using rule 52 (ID_CTE -> ID .)
+    GREATER_THAN    reduce using rule 52 (ID_CTE -> ID .)
+    LESS_THAN       reduce using rule 52 (ID_CTE -> ID .)
+    NOT_EQUAL       reduce using rule 52 (ID_CTE -> ID .)
+    SEMICOLON       reduce using rule 52 (ID_CTE -> ID .)
+    RIGHT_PARENTHESIS reduce using rule 52 (ID_CTE -> ID .)
+
+
+state 85
+
+    (53) ID_CTE -> CTE .
+
+    MULTIPLICATION  reduce using rule 53 (ID_CTE -> CTE .)
+    DIVISION        reduce using rule 53 (ID_CTE -> CTE .)
+    PLUS            reduce using rule 53 (ID_CTE -> CTE .)
+    MINUS           reduce using rule 53 (ID_CTE -> CTE .)
+    GREATER_THAN    reduce using rule 53 (ID_CTE -> CTE .)
+    LESS_THAN       reduce using rule 53 (ID_CTE -> CTE .)
+    NOT_EQUAL       reduce using rule 53 (ID_CTE -> CTE .)
+    SEMICOLON       reduce using rule 53 (ID_CTE -> CTE .)
+    RIGHT_PARENTHESIS reduce using rule 53 (ID_CTE -> CTE .)
+
+
+state 86
+
+    (57) CTE -> CTE_INT .
+
+    MULTIPLICATION  reduce using rule 57 (CTE -> CTE_INT .)
+    DIVISION        reduce using rule 57 (CTE -> CTE_INT .)
+    PLUS            reduce using rule 57 (CTE -> CTE_INT .)
+    MINUS           reduce using rule 57 (CTE -> CTE_INT .)
+    GREATER_THAN    reduce using rule 57 (CTE -> CTE_INT .)
+    LESS_THAN       reduce using rule 57 (CTE -> CTE_INT .)
+    NOT_EQUAL       reduce using rule 57 (CTE -> CTE_INT .)
+    SEMICOLON       reduce using rule 57 (CTE -> CTE_INT .)
+    RIGHT_PARENTHESIS reduce using rule 57 (CTE -> CTE_INT .)
+
+
+state 87
+
+    (58) CTE -> CTE_FLOAT .
+
+    MULTIPLICATION  reduce using rule 58 (CTE -> CTE_FLOAT .)
+    DIVISION        reduce using rule 58 (CTE -> CTE_FLOAT .)
+    PLUS            reduce using rule 58 (CTE -> CTE_FLOAT .)
+    MINUS           reduce using rule 58 (CTE -> CTE_FLOAT .)
+    GREATER_THAN    reduce using rule 58 (CTE -> CTE_FLOAT .)
+    LESS_THAN       reduce using rule 58 (CTE -> CTE_FLOAT .)
+    NOT_EQUAL       reduce using rule 58 (CTE -> CTE_FLOAT .)
+    SEMICOLON       reduce using rule 58 (CTE -> CTE_FLOAT .)
+    RIGHT_PARENTHESIS reduce using rule 58 (CTE -> CTE_FLOAT .)
+
+
+state 88
+
+    (51) FACTOR -> LEFT_PARENTHESIS EXPRESION . RIGHT_PARENTHESIS
+
+    RIGHT_PARENTHESIS shift and go to state 98
+
+
+state 89
 
     (21) DEC_PARAMETROS -> ID COLON TYPE LISTA_PARAMETROS .
 
     RIGHT_PARENTHESIS reduce using rule 21 (DEC_PARAMETROS -> ID COLON TYPE LISTA_PARAMETROS .)
 
 
-state 74
+state 90
 
     (22) LISTA_PARAMETROS -> epsilon .
 
     RIGHT_PARENTHESIS reduce using rule 22 (LISTA_PARAMETROS -> epsilon .)
 
 
-state 75
+state 91
 
     (23) LISTA_PARAMETROS -> COMMA . DEC_PARAMETROS
     (21) DEC_PARAMETROS -> . ID COLON TYPE LISTA_PARAMETROS
 
     ID              shift and go to state 40
 
-    DEC_PARAMETROS                 shift and go to state 81
+    DEC_PARAMETROS                 shift and go to state 99
 
-state 76
+state 92
 
     (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC . BODY RIGHT_BRACKET SEMICOLON
     (26) BODY -> . LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE
 
     LEFT_BRACE      shift and go to state 27
 
-    BODY                           shift and go to state 82
+    BODY                           shift and go to state 100
 
-state 77
+state 93
 
     (24) VARS_FUNC -> epsilon .
 
     LEFT_BRACE      reduce using rule 24 (VARS_FUNC -> epsilon .)
 
 
-state 78
+state 94
 
     (25) VARS_FUNC -> VARS .
 
     LEFT_BRACE      reduce using rule 25 (VARS_FUNC -> VARS .)
 
 
-state 79
+state 95
 
     (36) MAS_EXPRESIONES -> OPERADORES EXP .
 
     SEMICOLON       reduce using rule 36 (MAS_EXPRESIONES -> OPERADORES EXP .)
+    RIGHT_PARENTHESIS reduce using rule 36 (MAS_EXPRESIONES -> OPERADORES EXP .)
 
 
-state 80
+state 96
 
     (41) MAS_EXP -> OPERADORES_EXP EXP .
 
@@ -884,30 +1208,59 @@ state 80
     LESS_THAN       reduce using rule 41 (MAS_EXP -> OPERADORES_EXP EXP .)
     NOT_EQUAL       reduce using rule 41 (MAS_EXP -> OPERADORES_EXP EXP .)
     SEMICOLON       reduce using rule 41 (MAS_EXP -> OPERADORES_EXP EXP .)
+    RIGHT_PARENTHESIS reduce using rule 41 (MAS_EXP -> OPERADORES_EXP EXP .)
 
 
-state 81
+state 97
+
+    (47) MAS_TERMINO -> OPERADORES_TER TERMINO .
+
+    PLUS            reduce using rule 47 (MAS_TERMINO -> OPERADORES_TER TERMINO .)
+    MINUS           reduce using rule 47 (MAS_TERMINO -> OPERADORES_TER TERMINO .)
+    GREATER_THAN    reduce using rule 47 (MAS_TERMINO -> OPERADORES_TER TERMINO .)
+    LESS_THAN       reduce using rule 47 (MAS_TERMINO -> OPERADORES_TER TERMINO .)
+    NOT_EQUAL       reduce using rule 47 (MAS_TERMINO -> OPERADORES_TER TERMINO .)
+    SEMICOLON       reduce using rule 47 (MAS_TERMINO -> OPERADORES_TER TERMINO .)
+    RIGHT_PARENTHESIS reduce using rule 47 (MAS_TERMINO -> OPERADORES_TER TERMINO .)
+
+
+state 98
+
+    (51) FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS .
+
+    MULTIPLICATION  reduce using rule 51 (FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS .)
+    DIVISION        reduce using rule 51 (FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS .)
+    PLUS            reduce using rule 51 (FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS .)
+    MINUS           reduce using rule 51 (FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS .)
+    GREATER_THAN    reduce using rule 51 (FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS .)
+    LESS_THAN       reduce using rule 51 (FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS .)
+    NOT_EQUAL       reduce using rule 51 (FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS .)
+    SEMICOLON       reduce using rule 51 (FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS .)
+    RIGHT_PARENTHESIS reduce using rule 51 (FACTOR -> LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS .)
+
+
+state 99
 
     (23) LISTA_PARAMETROS -> COMMA DEC_PARAMETROS .
 
     RIGHT_PARENTHESIS reduce using rule 23 (LISTA_PARAMETROS -> COMMA DEC_PARAMETROS .)
 
 
-state 82
+state 100
 
     (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY . RIGHT_BRACKET SEMICOLON
 
-    RIGHT_BRACKET   shift and go to state 83
+    RIGHT_BRACKET   shift and go to state 101
 
 
-state 83
+state 101
 
     (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET . SEMICOLON
 
-    SEMICOLON       shift and go to state 84
+    SEMICOLON       shift and go to state 102
 
 
-state 84
+state 102
 
     (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON .
 

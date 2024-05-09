@@ -205,6 +205,7 @@ def p_exp(p):
     '''EXP : TERMINO MAS_EXP'''
     p[0] = ('EXP', p[1], p[2])
 
+# <MAS_EXP>
 def p_mas_exp(p):
     '''MAS_EXP : OPERADORES_EXP EXP
                | epsilon'''
@@ -213,14 +214,68 @@ def p_mas_exp(p):
     else:
         p[0] = None
 
+# <OPERADORES_EXP>
 def p_operadores_exp(p):
     '''OPERADORES_EXP : PLUS
                       | MINUS'''
     p[0] = ('OPERADORES_EXP', p[1])
 
+#--------------#
+## <TERMINO> ##
+#-------------#
 def p_termino(p):
-    'TERMINO : ID'
-    p[0] = ('TERMINO', p[1])
+    '''TERMINO : FACTOR MAS_TERMINO'''
+    p[0] = ('TERMINO', p[1], p[2])
+
+# <MAS_TERMINO>
+def p_mas_termino(p):
+    '''MAS_TERMINO : epsilon
+                   | OPERADORES_TER TERMINO'''
+    if len(p) > 2:
+        p[0] = ('MAS_TERMINO', p[1], p[2])
+    else:
+        p[0] = None
+
+# <OPERADORES_TER>
+def p_operadores_ter(p):
+    '''OPERADORES_TER : MULTIPLICATION
+                      | DIVISION'''
+    p[0] = ('OPERADORES_TER', p[1])
+
+#------------#
+## <FACTOR> ##
+#------------#
+def p_factor(p):
+    '''FACTOR : OPERADORES_FACTOR ID_CTE
+              | LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS'''
+    if len(p) == 4:
+        p[0] = ('FACTOR', p[2])
+    else:
+        p[0] = ('FACTOR', p[1], p[2])
+    
+# <ID_CTE>
+def p_id_cte(p):
+    '''ID_CTE : ID
+              | CTE'''
+    p[0] = ('ID_CTE', p[1])
+
+# <OPERADORES_FACTOR>
+def p_operadores_factor(p):
+    '''OPERADORES_FACTOR : PLUS
+                         | MINUS
+                         | epsilon'''
+    if len(p) == 2:
+        p[0] = ('OPERADORES_FACTOR', p[1])
+    else:
+        p[0] = None
+
+#---------#
+## <CTE> ##
+#---------#
+def p_cte(p):
+    '''CTE : CTE_INT
+           | CTE_FLOAT'''
+    p[0] = ('CTE', p[1])
 
 # Epsilon
 def p_epsilon(p):
@@ -232,12 +287,15 @@ data = '''
 program carmina;
 void caca (kk:int)[ 
     var carmina:int; 
-    {ll = kk > i;}
+    {ll = kk + i;}
 ];
 main
 { 
     intento = yo+tu > ola;
-    tu = kk; 
+    tu = kk;
+    assignacion = factor * otro_factor + termino > uno; 
+    factor = (1 * 30 + 5.0);
+    factor = (1 * 30 + 5.0 > 6);
 }
 end
 '''
