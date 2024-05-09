@@ -8,13 +8,8 @@ Unused terminals:
     DIVISION
     DO
     ELSE
-    GREATER_THAN
     IF
-    LESS_THAN
-    MINUS
     MULTIPLICATION
-    NOT_EQUAL
-    PLUS
     PRINT
     WHILE
 
@@ -54,7 +49,19 @@ Rule 30    MAS_STATEMENTS -> epsilon
 Rule 31    MAS_STATEMENTS -> LISTA_STATEMENTS
 Rule 32    STATEMENT -> ASSIGN
 Rule 33    ASSIGN -> ID EQUAL EXPRESION SEMICOLON
-Rule 34    epsilon -> <empty>
+Rule 34    EXPRESION -> EXP MAS_EXPRESIONES
+Rule 35    MAS_EXPRESIONES -> epsilon
+Rule 36    MAS_EXPRESIONES -> OPERADORES EXP
+Rule 37    OPERADORES -> GREATER_THAN
+Rule 38    OPERADORES -> LESS_THAN
+Rule 39    OPERADORES -> NOT_EQUAL
+Rule 40    EXP -> TERMINO MAS_EXP
+Rule 41    MAS_EXP -> OPERADORES_EXP EXP
+Rule 42    MAS_EXP -> epsilon
+Rule 43    OPERADORES_EXP -> PLUS
+Rule 44    OPERADORES_EXP -> MINUS
+Rule 45    TERMINO -> ID
+Rule 46    epsilon -> <empty>
 
 Terminals, with rules where they appear
 
@@ -69,19 +76,19 @@ ELSE                 :
 END                  : 1
 EQUAL                : 33
 FLOAT                : 17
-GREATER_THAN         : 
-ID                   : 1 13 18 21 33
+GREATER_THAN         : 37
+ID                   : 1 13 18 21 33 45
 IF                   : 
 INT                  : 16
 LEFT_BRACE           : 26
 LEFT_BRACKET         : 18
 LEFT_PARENTHESIS     : 18
-LESS_THAN            : 
+LESS_THAN            : 38
 MAIN                 : 1
-MINUS                : 
+MINUS                : 44
 MULTIPLICATION       : 
-NOT_EQUAL            : 
-PLUS                 : 
+NOT_EQUAL            : 39
+PLUS                 : 43
 PRINT                : 
 PROGRAM              : 1
 RIGHT_BRACE          : 26
@@ -101,22 +108,809 @@ DEC_FUNCS            : 1
 DEC_PARAMETROS       : 20 23
 DEC_STATEMENTS       : 26
 DEC_VARS             : 1
+EXP                  : 34 36 41
 EXPRESION            : 33
 FUNCS                : 4
 LISTA_ID             : 10 14
 LISTA_PARAMETROS     : 21
 LISTA_STATEMENTS     : 28 31
 LISTA_VAR            : 9 12
+MAS_EXP              : 40
+MAS_EXPRESIONES      : 34
 MAS_FUNCS            : 4
 MAS_ID               : 13
 MAS_STATEMENTS       : 29
 MAS_VAR              : 10
+OPERADORES           : 36
+OPERADORES_EXP       : 41
 PARAMETROS           : 18
 PROGRAMA             : 0
 SOLO_FUNCS           : 6 8
 STATEMENT            : 29
+TERMINO              : 40
 TYPE                 : 10 21
 VARS                 : 3 25
 VARS_FUNC            : 18
-epsilon              : 2 5 7 11 15 19 22 24 27 30
+epsilon              : 2 5 7 11 15 19 22 24 27 30 35 42
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . PROGRAMA
+    (1) PROGRAMA -> . PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END
+
+    PROGRAM         shift and go to state 2
+
+    PROGRAMA                       shift and go to state 1
+
+state 1
+
+    (0) S' -> PROGRAMA .
+
+
+
+state 2
+
+    (1) PROGRAMA -> PROGRAM . ID SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END
+
+    ID              shift and go to state 3
+
+
+state 3
+
+    (1) PROGRAMA -> PROGRAM ID . SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END
+
+    SEMICOLON       shift and go to state 4
+
+
+state 4
+
+    (1) PROGRAMA -> PROGRAM ID SEMICOLON . DEC_VARS DEC_FUNCS MAIN BODY END
+    (2) DEC_VARS -> . epsilon
+    (3) DEC_VARS -> . VARS
+    (46) epsilon -> .
+    (9) VARS -> . VAR LISTA_VAR
+
+    VOID            reduce using rule 46 (epsilon -> .)
+    MAIN            reduce using rule 46 (epsilon -> .)
+    VAR             shift and go to state 8
+
+    DEC_VARS                       shift and go to state 5
+    epsilon                        shift and go to state 6
+    VARS                           shift and go to state 7
+
+state 5
+
+    (1) PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS . DEC_FUNCS MAIN BODY END
+    (7) DEC_FUNCS -> . epsilon
+    (8) DEC_FUNCS -> . SOLO_FUNCS
+    (46) epsilon -> .
+    (4) SOLO_FUNCS -> . FUNCS MAS_FUNCS
+    (18) FUNCS -> . VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
+
+    MAIN            reduce using rule 46 (epsilon -> .)
+    VOID            shift and go to state 13
+
+    DEC_FUNCS                      shift and go to state 9
+    epsilon                        shift and go to state 10
+    SOLO_FUNCS                     shift and go to state 11
+    FUNCS                          shift and go to state 12
+
+state 6
+
+    (2) DEC_VARS -> epsilon .
+
+    VOID            reduce using rule 2 (DEC_VARS -> epsilon .)
+    MAIN            reduce using rule 2 (DEC_VARS -> epsilon .)
+
+
+state 7
+
+    (3) DEC_VARS -> VARS .
+
+    VOID            reduce using rule 3 (DEC_VARS -> VARS .)
+    MAIN            reduce using rule 3 (DEC_VARS -> VARS .)
+
+
+state 8
+
+    (9) VARS -> VAR . LISTA_VAR
+    (10) LISTA_VAR -> . LISTA_ID COLON TYPE SEMICOLON MAS_VAR
+    (13) LISTA_ID -> . ID MAS_ID
+
+    ID              shift and go to state 16
+
+    LISTA_VAR                      shift and go to state 14
+    LISTA_ID                       shift and go to state 15
+
+state 9
+
+    (1) PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS . MAIN BODY END
+
+    MAIN            shift and go to state 17
+
+
+state 10
+
+    (7) DEC_FUNCS -> epsilon .
+
+    MAIN            reduce using rule 7 (DEC_FUNCS -> epsilon .)
+
+
+state 11
+
+    (8) DEC_FUNCS -> SOLO_FUNCS .
+
+    MAIN            reduce using rule 8 (DEC_FUNCS -> SOLO_FUNCS .)
+
+
+state 12
+
+    (4) SOLO_FUNCS -> FUNCS . MAS_FUNCS
+    (5) MAS_FUNCS -> . epsilon
+    (6) MAS_FUNCS -> . SOLO_FUNCS
+    (46) epsilon -> .
+    (4) SOLO_FUNCS -> . FUNCS MAS_FUNCS
+    (18) FUNCS -> . VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
+
+    MAIN            reduce using rule 46 (epsilon -> .)
+    VOID            shift and go to state 13
+
+    FUNCS                          shift and go to state 12
+    MAS_FUNCS                      shift and go to state 18
+    epsilon                        shift and go to state 19
+    SOLO_FUNCS                     shift and go to state 20
+
+state 13
+
+    (18) FUNCS -> VOID . ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
+
+    ID              shift and go to state 21
+
+
+state 14
+
+    (9) VARS -> VAR LISTA_VAR .
+
+    VOID            reduce using rule 9 (VARS -> VAR LISTA_VAR .)
+    MAIN            reduce using rule 9 (VARS -> VAR LISTA_VAR .)
+    LEFT_BRACE      reduce using rule 9 (VARS -> VAR LISTA_VAR .)
+
+
+state 15
+
+    (10) LISTA_VAR -> LISTA_ID . COLON TYPE SEMICOLON MAS_VAR
+
+    COLON           shift and go to state 22
+
+
+state 16
+
+    (13) LISTA_ID -> ID . MAS_ID
+    (14) MAS_ID -> . COMMA LISTA_ID
+    (15) MAS_ID -> . epsilon
+    (46) epsilon -> .
+
+    COMMA           shift and go to state 24
+    COLON           reduce using rule 46 (epsilon -> .)
+
+    MAS_ID                         shift and go to state 23
+    epsilon                        shift and go to state 25
+
+state 17
+
+    (1) PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN . BODY END
+    (26) BODY -> . LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE
+
+    LEFT_BRACE      shift and go to state 27
+
+    BODY                           shift and go to state 26
+
+state 18
+
+    (4) SOLO_FUNCS -> FUNCS MAS_FUNCS .
+
+    MAIN            reduce using rule 4 (SOLO_FUNCS -> FUNCS MAS_FUNCS .)
+
+
+state 19
+
+    (5) MAS_FUNCS -> epsilon .
+
+    MAIN            reduce using rule 5 (MAS_FUNCS -> epsilon .)
+
+
+state 20
+
+    (6) MAS_FUNCS -> SOLO_FUNCS .
+
+    MAIN            reduce using rule 6 (MAS_FUNCS -> SOLO_FUNCS .)
+
+
+state 21
+
+    (18) FUNCS -> VOID ID . LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
+
+    LEFT_PARENTHESIS shift and go to state 28
+
+
+state 22
+
+    (10) LISTA_VAR -> LISTA_ID COLON . TYPE SEMICOLON MAS_VAR
+    (16) TYPE -> . INT
+    (17) TYPE -> . FLOAT
+
+    INT             shift and go to state 30
+    FLOAT           shift and go to state 31
+
+    TYPE                           shift and go to state 29
+
+state 23
+
+    (13) LISTA_ID -> ID MAS_ID .
+
+    COLON           reduce using rule 13 (LISTA_ID -> ID MAS_ID .)
+
+
+state 24
+
+    (14) MAS_ID -> COMMA . LISTA_ID
+    (13) LISTA_ID -> . ID MAS_ID
+
+    ID              shift and go to state 16
+
+    LISTA_ID                       shift and go to state 32
+
+state 25
+
+    (15) MAS_ID -> epsilon .
+
+    COLON           reduce using rule 15 (MAS_ID -> epsilon .)
+
+
+state 26
+
+    (1) PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY . END
+
+    END             shift and go to state 33
+
+
+state 27
+
+    (26) BODY -> LEFT_BRACE . DEC_STATEMENTS RIGHT_BRACE
+    (27) DEC_STATEMENTS -> . epsilon
+    (28) DEC_STATEMENTS -> . LISTA_STATEMENTS
+    (46) epsilon -> .
+    (29) LISTA_STATEMENTS -> . STATEMENT MAS_STATEMENTS
+    (32) STATEMENT -> . ASSIGN
+    (33) ASSIGN -> . ID EQUAL EXPRESION SEMICOLON
+
+    RIGHT_BRACE     reduce using rule 46 (epsilon -> .)
+    ID              shift and go to state 39
+
+    DEC_STATEMENTS                 shift and go to state 34
+    epsilon                        shift and go to state 35
+    LISTA_STATEMENTS               shift and go to state 36
+    STATEMENT                      shift and go to state 37
+    ASSIGN                         shift and go to state 38
+
+state 28
+
+    (18) FUNCS -> VOID ID LEFT_PARENTHESIS . PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
+    (19) PARAMETROS -> . epsilon
+    (20) PARAMETROS -> . DEC_PARAMETROS
+    (46) epsilon -> .
+    (21) DEC_PARAMETROS -> . ID COLON TYPE LISTA_PARAMETROS
+
+    RIGHT_PARENTHESIS reduce using rule 46 (epsilon -> .)
+    ID              shift and go to state 40
+
+    PARAMETROS                     shift and go to state 41
+    epsilon                        shift and go to state 42
+    DEC_PARAMETROS                 shift and go to state 43
+
+state 29
+
+    (10) LISTA_VAR -> LISTA_ID COLON TYPE . SEMICOLON MAS_VAR
+
+    SEMICOLON       shift and go to state 44
+
+
+state 30
+
+    (16) TYPE -> INT .
+
+    SEMICOLON       reduce using rule 16 (TYPE -> INT .)
+    COMMA           reduce using rule 16 (TYPE -> INT .)
+    RIGHT_PARENTHESIS reduce using rule 16 (TYPE -> INT .)
+
+
+state 31
+
+    (17) TYPE -> FLOAT .
+
+    SEMICOLON       reduce using rule 17 (TYPE -> FLOAT .)
+    COMMA           reduce using rule 17 (TYPE -> FLOAT .)
+    RIGHT_PARENTHESIS reduce using rule 17 (TYPE -> FLOAT .)
+
+
+state 32
+
+    (14) MAS_ID -> COMMA LISTA_ID .
+
+    COLON           reduce using rule 14 (MAS_ID -> COMMA LISTA_ID .)
+
+
+state 33
+
+    (1) PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END .
+
+    $end            reduce using rule 1 (PROGRAMA -> PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END .)
+
+
+state 34
+
+    (26) BODY -> LEFT_BRACE DEC_STATEMENTS . RIGHT_BRACE
+
+    RIGHT_BRACE     shift and go to state 45
+
+
+state 35
+
+    (27) DEC_STATEMENTS -> epsilon .
+
+    RIGHT_BRACE     reduce using rule 27 (DEC_STATEMENTS -> epsilon .)
+
+
+state 36
+
+    (28) DEC_STATEMENTS -> LISTA_STATEMENTS .
+
+    RIGHT_BRACE     reduce using rule 28 (DEC_STATEMENTS -> LISTA_STATEMENTS .)
+
+
+state 37
+
+    (29) LISTA_STATEMENTS -> STATEMENT . MAS_STATEMENTS
+    (30) MAS_STATEMENTS -> . epsilon
+    (31) MAS_STATEMENTS -> . LISTA_STATEMENTS
+    (46) epsilon -> .
+    (29) LISTA_STATEMENTS -> . STATEMENT MAS_STATEMENTS
+    (32) STATEMENT -> . ASSIGN
+    (33) ASSIGN -> . ID EQUAL EXPRESION SEMICOLON
+
+    RIGHT_BRACE     reduce using rule 46 (epsilon -> .)
+    ID              shift and go to state 39
+
+    STATEMENT                      shift and go to state 37
+    MAS_STATEMENTS                 shift and go to state 46
+    epsilon                        shift and go to state 47
+    LISTA_STATEMENTS               shift and go to state 48
+    ASSIGN                         shift and go to state 38
+
+state 38
+
+    (32) STATEMENT -> ASSIGN .
+
+    ID              reduce using rule 32 (STATEMENT -> ASSIGN .)
+    RIGHT_BRACE     reduce using rule 32 (STATEMENT -> ASSIGN .)
+
+
+state 39
+
+    (33) ASSIGN -> ID . EQUAL EXPRESION SEMICOLON
+
+    EQUAL           shift and go to state 49
+
+
+state 40
+
+    (21) DEC_PARAMETROS -> ID . COLON TYPE LISTA_PARAMETROS
+
+    COLON           shift and go to state 50
+
+
+state 41
+
+    (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS . RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
+
+    RIGHT_PARENTHESIS shift and go to state 51
+
+
+state 42
+
+    (19) PARAMETROS -> epsilon .
+
+    RIGHT_PARENTHESIS reduce using rule 19 (PARAMETROS -> epsilon .)
+
+
+state 43
+
+    (20) PARAMETROS -> DEC_PARAMETROS .
+
+    RIGHT_PARENTHESIS reduce using rule 20 (PARAMETROS -> DEC_PARAMETROS .)
+
+
+state 44
+
+    (10) LISTA_VAR -> LISTA_ID COLON TYPE SEMICOLON . MAS_VAR
+    (11) MAS_VAR -> . epsilon
+    (12) MAS_VAR -> . LISTA_VAR
+    (46) epsilon -> .
+    (10) LISTA_VAR -> . LISTA_ID COLON TYPE SEMICOLON MAS_VAR
+    (13) LISTA_ID -> . ID MAS_ID
+
+    VOID            reduce using rule 46 (epsilon -> .)
+    MAIN            reduce using rule 46 (epsilon -> .)
+    LEFT_BRACE      reduce using rule 46 (epsilon -> .)
+    ID              shift and go to state 16
+
+    LISTA_ID                       shift and go to state 15
+    MAS_VAR                        shift and go to state 52
+    epsilon                        shift and go to state 53
+    LISTA_VAR                      shift and go to state 54
+
+state 45
+
+    (26) BODY -> LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE .
+
+    END             reduce using rule 26 (BODY -> LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE .)
+    RIGHT_BRACKET   reduce using rule 26 (BODY -> LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE .)
+
+
+state 46
+
+    (29) LISTA_STATEMENTS -> STATEMENT MAS_STATEMENTS .
+
+    RIGHT_BRACE     reduce using rule 29 (LISTA_STATEMENTS -> STATEMENT MAS_STATEMENTS .)
+
+
+state 47
+
+    (30) MAS_STATEMENTS -> epsilon .
+
+    RIGHT_BRACE     reduce using rule 30 (MAS_STATEMENTS -> epsilon .)
+
+
+state 48
+
+    (31) MAS_STATEMENTS -> LISTA_STATEMENTS .
+
+    RIGHT_BRACE     reduce using rule 31 (MAS_STATEMENTS -> LISTA_STATEMENTS .)
+
+
+state 49
+
+    (33) ASSIGN -> ID EQUAL . EXPRESION SEMICOLON
+    (34) EXPRESION -> . EXP MAS_EXPRESIONES
+    (40) EXP -> . TERMINO MAS_EXP
+    (45) TERMINO -> . ID
+
+    ID              shift and go to state 55
+
+    EXPRESION                      shift and go to state 56
+    EXP                            shift and go to state 57
+    TERMINO                        shift and go to state 58
+
+state 50
+
+    (21) DEC_PARAMETROS -> ID COLON . TYPE LISTA_PARAMETROS
+    (16) TYPE -> . INT
+    (17) TYPE -> . FLOAT
+
+    INT             shift and go to state 30
+    FLOAT           shift and go to state 31
+
+    TYPE                           shift and go to state 59
+
+state 51
+
+    (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS . LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
+
+    LEFT_BRACKET    shift and go to state 60
+
+
+state 52
+
+    (10) LISTA_VAR -> LISTA_ID COLON TYPE SEMICOLON MAS_VAR .
+
+    VOID            reduce using rule 10 (LISTA_VAR -> LISTA_ID COLON TYPE SEMICOLON MAS_VAR .)
+    MAIN            reduce using rule 10 (LISTA_VAR -> LISTA_ID COLON TYPE SEMICOLON MAS_VAR .)
+    LEFT_BRACE      reduce using rule 10 (LISTA_VAR -> LISTA_ID COLON TYPE SEMICOLON MAS_VAR .)
+
+
+state 53
+
+    (11) MAS_VAR -> epsilon .
+
+    VOID            reduce using rule 11 (MAS_VAR -> epsilon .)
+    MAIN            reduce using rule 11 (MAS_VAR -> epsilon .)
+    LEFT_BRACE      reduce using rule 11 (MAS_VAR -> epsilon .)
+
+
+state 54
+
+    (12) MAS_VAR -> LISTA_VAR .
+
+    VOID            reduce using rule 12 (MAS_VAR -> LISTA_VAR .)
+    MAIN            reduce using rule 12 (MAS_VAR -> LISTA_VAR .)
+    LEFT_BRACE      reduce using rule 12 (MAS_VAR -> LISTA_VAR .)
+
+
+state 55
+
+    (45) TERMINO -> ID .
+
+    PLUS            reduce using rule 45 (TERMINO -> ID .)
+    MINUS           reduce using rule 45 (TERMINO -> ID .)
+    GREATER_THAN    reduce using rule 45 (TERMINO -> ID .)
+    LESS_THAN       reduce using rule 45 (TERMINO -> ID .)
+    NOT_EQUAL       reduce using rule 45 (TERMINO -> ID .)
+    SEMICOLON       reduce using rule 45 (TERMINO -> ID .)
+
+
+state 56
+
+    (33) ASSIGN -> ID EQUAL EXPRESION . SEMICOLON
+
+    SEMICOLON       shift and go to state 61
+
+
+state 57
+
+    (34) EXPRESION -> EXP . MAS_EXPRESIONES
+    (35) MAS_EXPRESIONES -> . epsilon
+    (36) MAS_EXPRESIONES -> . OPERADORES EXP
+    (46) epsilon -> .
+    (37) OPERADORES -> . GREATER_THAN
+    (38) OPERADORES -> . LESS_THAN
+    (39) OPERADORES -> . NOT_EQUAL
+
+    SEMICOLON       reduce using rule 46 (epsilon -> .)
+    GREATER_THAN    shift and go to state 65
+    LESS_THAN       shift and go to state 66
+    NOT_EQUAL       shift and go to state 67
+
+    MAS_EXPRESIONES                shift and go to state 62
+    epsilon                        shift and go to state 63
+    OPERADORES                     shift and go to state 64
+
+state 58
+
+    (40) EXP -> TERMINO . MAS_EXP
+    (41) MAS_EXP -> . OPERADORES_EXP EXP
+    (42) MAS_EXP -> . epsilon
+    (43) OPERADORES_EXP -> . PLUS
+    (44) OPERADORES_EXP -> . MINUS
+    (46) epsilon -> .
+
+    PLUS            shift and go to state 71
+    MINUS           shift and go to state 72
+    GREATER_THAN    reduce using rule 46 (epsilon -> .)
+    LESS_THAN       reduce using rule 46 (epsilon -> .)
+    NOT_EQUAL       reduce using rule 46 (epsilon -> .)
+    SEMICOLON       reduce using rule 46 (epsilon -> .)
+
+    MAS_EXP                        shift and go to state 68
+    OPERADORES_EXP                 shift and go to state 69
+    epsilon                        shift and go to state 70
+
+state 59
+
+    (21) DEC_PARAMETROS -> ID COLON TYPE . LISTA_PARAMETROS
+    (22) LISTA_PARAMETROS -> . epsilon
+    (23) LISTA_PARAMETROS -> . COMMA DEC_PARAMETROS
+    (46) epsilon -> .
+
+    COMMA           shift and go to state 75
+    RIGHT_PARENTHESIS reduce using rule 46 (epsilon -> .)
+
+    LISTA_PARAMETROS               shift and go to state 73
+    epsilon                        shift and go to state 74
+
+state 60
+
+    (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET . VARS_FUNC BODY RIGHT_BRACKET SEMICOLON
+    (24) VARS_FUNC -> . epsilon
+    (25) VARS_FUNC -> . VARS
+    (46) epsilon -> .
+    (9) VARS -> . VAR LISTA_VAR
+
+    LEFT_BRACE      reduce using rule 46 (epsilon -> .)
+    VAR             shift and go to state 8
+
+    VARS_FUNC                      shift and go to state 76
+    epsilon                        shift and go to state 77
+    VARS                           shift and go to state 78
+
+state 61
+
+    (33) ASSIGN -> ID EQUAL EXPRESION SEMICOLON .
+
+    ID              reduce using rule 33 (ASSIGN -> ID EQUAL EXPRESION SEMICOLON .)
+    RIGHT_BRACE     reduce using rule 33 (ASSIGN -> ID EQUAL EXPRESION SEMICOLON .)
+
+
+state 62
+
+    (34) EXPRESION -> EXP MAS_EXPRESIONES .
+
+    SEMICOLON       reduce using rule 34 (EXPRESION -> EXP MAS_EXPRESIONES .)
+
+
+state 63
+
+    (35) MAS_EXPRESIONES -> epsilon .
+
+    SEMICOLON       reduce using rule 35 (MAS_EXPRESIONES -> epsilon .)
+
+
+state 64
+
+    (36) MAS_EXPRESIONES -> OPERADORES . EXP
+    (40) EXP -> . TERMINO MAS_EXP
+    (45) TERMINO -> . ID
+
+    ID              shift and go to state 55
+
+    EXP                            shift and go to state 79
+    TERMINO                        shift and go to state 58
+
+state 65
+
+    (37) OPERADORES -> GREATER_THAN .
+
+    ID              reduce using rule 37 (OPERADORES -> GREATER_THAN .)
+
+
+state 66
+
+    (38) OPERADORES -> LESS_THAN .
+
+    ID              reduce using rule 38 (OPERADORES -> LESS_THAN .)
+
+
+state 67
+
+    (39) OPERADORES -> NOT_EQUAL .
+
+    ID              reduce using rule 39 (OPERADORES -> NOT_EQUAL .)
+
+
+state 68
+
+    (40) EXP -> TERMINO MAS_EXP .
+
+    GREATER_THAN    reduce using rule 40 (EXP -> TERMINO MAS_EXP .)
+    LESS_THAN       reduce using rule 40 (EXP -> TERMINO MAS_EXP .)
+    NOT_EQUAL       reduce using rule 40 (EXP -> TERMINO MAS_EXP .)
+    SEMICOLON       reduce using rule 40 (EXP -> TERMINO MAS_EXP .)
+
+
+state 69
+
+    (41) MAS_EXP -> OPERADORES_EXP . EXP
+    (40) EXP -> . TERMINO MAS_EXP
+    (45) TERMINO -> . ID
+
+    ID              shift and go to state 55
+
+    EXP                            shift and go to state 80
+    TERMINO                        shift and go to state 58
+
+state 70
+
+    (42) MAS_EXP -> epsilon .
+
+    GREATER_THAN    reduce using rule 42 (MAS_EXP -> epsilon .)
+    LESS_THAN       reduce using rule 42 (MAS_EXP -> epsilon .)
+    NOT_EQUAL       reduce using rule 42 (MAS_EXP -> epsilon .)
+    SEMICOLON       reduce using rule 42 (MAS_EXP -> epsilon .)
+
+
+state 71
+
+    (43) OPERADORES_EXP -> PLUS .
+
+    ID              reduce using rule 43 (OPERADORES_EXP -> PLUS .)
+
+
+state 72
+
+    (44) OPERADORES_EXP -> MINUS .
+
+    ID              reduce using rule 44 (OPERADORES_EXP -> MINUS .)
+
+
+state 73
+
+    (21) DEC_PARAMETROS -> ID COLON TYPE LISTA_PARAMETROS .
+
+    RIGHT_PARENTHESIS reduce using rule 21 (DEC_PARAMETROS -> ID COLON TYPE LISTA_PARAMETROS .)
+
+
+state 74
+
+    (22) LISTA_PARAMETROS -> epsilon .
+
+    RIGHT_PARENTHESIS reduce using rule 22 (LISTA_PARAMETROS -> epsilon .)
+
+
+state 75
+
+    (23) LISTA_PARAMETROS -> COMMA . DEC_PARAMETROS
+    (21) DEC_PARAMETROS -> . ID COLON TYPE LISTA_PARAMETROS
+
+    ID              shift and go to state 40
+
+    DEC_PARAMETROS                 shift and go to state 81
+
+state 76
+
+    (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC . BODY RIGHT_BRACKET SEMICOLON
+    (26) BODY -> . LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE
+
+    LEFT_BRACE      shift and go to state 27
+
+    BODY                           shift and go to state 82
+
+state 77
+
+    (24) VARS_FUNC -> epsilon .
+
+    LEFT_BRACE      reduce using rule 24 (VARS_FUNC -> epsilon .)
+
+
+state 78
+
+    (25) VARS_FUNC -> VARS .
+
+    LEFT_BRACE      reduce using rule 25 (VARS_FUNC -> VARS .)
+
+
+state 79
+
+    (36) MAS_EXPRESIONES -> OPERADORES EXP .
+
+    SEMICOLON       reduce using rule 36 (MAS_EXPRESIONES -> OPERADORES EXP .)
+
+
+state 80
+
+    (41) MAS_EXP -> OPERADORES_EXP EXP .
+
+    GREATER_THAN    reduce using rule 41 (MAS_EXP -> OPERADORES_EXP EXP .)
+    LESS_THAN       reduce using rule 41 (MAS_EXP -> OPERADORES_EXP EXP .)
+    NOT_EQUAL       reduce using rule 41 (MAS_EXP -> OPERADORES_EXP EXP .)
+    SEMICOLON       reduce using rule 41 (MAS_EXP -> OPERADORES_EXP EXP .)
+
+
+state 81
+
+    (23) LISTA_PARAMETROS -> COMMA DEC_PARAMETROS .
+
+    RIGHT_PARENTHESIS reduce using rule 23 (LISTA_PARAMETROS -> COMMA DEC_PARAMETROS .)
+
+
+state 82
+
+    (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY . RIGHT_BRACKET SEMICOLON
+
+    RIGHT_BRACKET   shift and go to state 83
+
+
+state 83
+
+    (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET . SEMICOLON
+
+    SEMICOLON       shift and go to state 84
+
+
+state 84
+
+    (18) FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON .
+
+    VOID            reduce using rule 18 (FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON .)
+    MAIN            reduce using rule 18 (FUNCS -> VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON .)
 

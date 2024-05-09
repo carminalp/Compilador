@@ -178,11 +178,12 @@ def p_assign(p):
 
 ## <EXPRESIÓN> ##
 #---------------#
-def p_expression(p):
+def p_expresion(p):
     '''EXPRESION : EXP MAS_EXPRESIONES'''
     p[0] = ('EXPRESION', p[1], p[2])
 
-def p_more_expressions(p):
+# <MAS_EXPRESIONES>
+def p_mas_expresiones(p):
     '''MAS_EXPRESIONES : epsilon
                        | OPERADORES EXP'''
     if len(p) > 2:
@@ -190,7 +191,8 @@ def p_more_expressions(p):
     else:
         p[0] = None
 
-def p_operators(p):
+# <OPERADORES>
+def p_operadores(p):
     '''OPERADORES : GREATER_THAN
                   | LESS_THAN
                   | NOT_EQUAL'''
@@ -200,8 +202,25 @@ def p_operators(p):
 ## <EXP> ##
 #---------#
 def p_exp(p):
-    '''EXP : ID'''
-    p[0] = ('EXP', p[1])
+    '''EXP : TERMINO MAS_EXP'''
+    p[0] = ('EXP', p[1], p[2])
+
+def p_mas_exp(p):
+    '''MAS_EXP : OPERADORES_EXP EXP
+               | epsilon'''
+    if len(p) > 2:
+        p[0] = ('MAS_EXP', p[1], p[2])
+    else:
+        p[0] = None
+
+def p_operadores_exp(p):
+    '''OPERADORES_EXP : PLUS
+                      | MINUS'''
+    p[0] = ('OPERADORES_EXP', p[1])
+
+def p_termino(p):
+    'TERMINO : ID'
+    p[0] = ('TERMINO', p[1])
 
 # Epsilon
 def p_epsilon(p):
@@ -217,7 +236,8 @@ void caca (kk:int)[
 ];
 main
 { 
-    ll = kk < i; 
+    intento = yo+tu > ola;
+    tu = kk; 
 }
 end
 '''

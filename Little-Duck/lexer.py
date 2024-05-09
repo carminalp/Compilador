@@ -119,6 +119,7 @@ def t_error(t):
 # Build the lexer
 lexer = lex.lex()
 
+"""
 # Test
 data = '''
 program carmina;
@@ -142,3 +143,4 @@ while True:
     if not tok:
         break
     print(tok)
+"""
