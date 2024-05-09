@@ -167,6 +167,8 @@ def p_mas_staments(p):
 def p_statement(p):
     '''STATEMENT : ASSIGN
                  | CONDITION
+                 | CYCLE
+                 | F_CALL
     '''
     p[0] = ('STATEMENT', p[1])
 
@@ -295,6 +297,43 @@ def p_else(p):
     else:
         p[0] = None
 
+#-----------#
+## <CYCLE> ##
+#-----------#
+def p_cycle(p):
+    '''CYCLE : WHILE BODY DO LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON'''
+    p[0] = ('CYCLE', p[2], p[5])
+
+#-----------#
+## <F_CALL> ##
+#-----------#
+def p_f_call(p):
+    '''F_CALL : ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON'''
+    p[0] = ('F_CALL', p[1], p[3])
+
+# <EXPRESIONES>
+def p_expresiones(p):
+    '''EXPRESIONES : epsilon
+                   | EXPRESIONES_F'''
+    if len(p) == 2:
+        p[0] = ('EXPRESIONES', p[1])
+    else:
+        p[0] = None
+
+# <EXPRESIONES_F>
+def p_expresiones_f(p):
+    '''EXPRESIONES_F : EXPRESION LISTA_EXP'''
+    p[0] = ('EXPRESIONES_F', p[1], p[2])
+
+# <LISTA_EXP>
+def p_lista_exp(p):
+    '''LISTA_EXP : epsilon
+                 | COMMA EXPRESIONES_F'''
+    if len(p) > 2:
+        p[0] = ('LISTA_EXP', p[2])
+    else:
+        p[0] = None
+
 # Epsilon
 def p_epsilon(p):
     'epsilon :'
@@ -318,6 +357,9 @@ main
     if (5 > 2) {
 
     }
+
+    while {lol = yolo;} do (ll);
+    jojo(b,50);
 }
 end
 '''
