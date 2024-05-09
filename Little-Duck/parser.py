@@ -1,3 +1,15 @@
+"""
+Como primera etapa se implementó, 
+el proceso de análisis de sintaxis 
+usando la herramienta PLY yacc.
+
+Este archivo contiene el Parser 
+basadas en las reglas gramaticales 
+previamente definidas.
+
+@author: Carmina López Palacios
+"""
+
 import ply.yacc as yacc
 from lexer import tokens
 

@@ -1,10 +1,10 @@
 """
 Como primera etapa se implementó, 
-el proceso de análisis léxico y sintaxis 
+el proceso de análisis léxico
 usando la herramienta PLY.
 
-Este archivo contiene el Scanner y el Parser 
-basadas en las reglas gramaticales y expresiones 
+Este archivo contiene el Scanner, 
+basado en las expresiones 
 regulares previamente definidas.
 
 @author: Carmina López Palacios
