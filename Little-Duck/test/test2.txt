@@ -1,0 +1,17 @@
+program alex;
+
+var 
+    yogurt, con, carmina: int;
+    sandwich: float;
+
+main 
+{ 
+   yogurt = 307;
+   con = 1;
+   carmina = 0;
+   sandwich = con + 3;
+
+   carmina = sandwich + yogurt;
+}
+
+end 

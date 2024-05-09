@@ -1,0 +1,24 @@
+program funcion_Ciclo;
+
+void funcionCiclo(num_1: float, num_2: int) [
+    var 
+        total: float;
+    {
+        num_1 = 50;
+        num_2 = 10.0;
+
+        while {
+            total = num_1 + 1;
+        } do (num_1 > total);
+    }
+];
+
+main 
+{
+
+    funcionCiclo(5.0, 6);
+
+    print("Funcion ciclo");
+}
+
+end

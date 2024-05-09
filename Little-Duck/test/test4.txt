@@ -1,0 +1,24 @@
+program funcion_condicional;
+
+void funcionVacia() [
+    var
+        number1, number2: int;
+    {
+        number1 = 1 + number2 * 1 / (0.5 + 50.0);
+
+        if (number1 > number2) {
+            print("Number 1 es mas grande ", number1);
+        } else {
+            print("Number 2 es mas grande ", number2);
+        };
+    }
+];
+
+main 
+{ 
+    funcionVacia();
+
+    print("Funcion vacia");
+}
+
+end

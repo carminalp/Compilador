@@ -1,0 +1,23 @@
+program fibonacci;
+
+var 
+    a, b, temp: int;
+    i : int;
+
+main 
+{ 
+    a = 0;
+    b = 1;
+    i = 2;
+
+    while { 
+        temp = a + b; 
+        print(temp);
+        a = b;
+        b = temp;
+        i = i + 1;
+    } do (i < 20);
+
+}
+
+end 

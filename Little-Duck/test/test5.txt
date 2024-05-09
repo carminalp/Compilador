@@ -1,0 +1,6 @@
+program nadota;
+
+main {
+
+} end
+

@@ -286,7 +286,7 @@ def p_cte(p):
 ## <CONDITION> ##
 #---------------#
 def p_condition(p):
-    '''CONDITION : IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS BODY ELSE_CONDITION'''
+    '''CONDITION : IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS BODY ELSE_CONDITION SEMICOLON'''
     p[0] = ('CONDITION', p[3], p[5], p[6])
 
 # <ELSE_CONDITION>
@@ -361,41 +361,23 @@ def p_mas_print(p):
 def p_epsilon(p):
     'epsilon :'
     pass
-    
 
-data = '''
-program carmina;
-void caca (kk:int)[ 
-    var carmina:int; 
-    {ll = kk + i;}
-];
-main
-{ 
-    intento = yo+tu > ola;
-    tu = kk;
-    assignacion = factor * otro_factor + termino > uno; 
-    factor = (1 * 30 + 5.0);
-    factor = (1 * 30 + 5.0 > 6);
+# Error rule for syntax errors
+def p_error(p):
+    print("Syntax error")
 
-    if (5 > 2) {
-
-    }
-
-    while {lol = yolo;} do (ll);
-    jojo(b,50);
-    print("hola");
-    print(4);
-}
-end
-'''
-
-# Definir el parser
+# Define the parser
 parser = yacc.yacc()
 
-# Función para analizar la entrada
+# Function to parse the input
 def parse_input(input_data):
     return parser.parse(input_data)
 
-# Llamar a la función para analizar la entrada
+# Open the input file and read its content
+input_file = 'test/test6.txt'  # Input file name
+with open(input_file, 'r') as file:
+    data = file.read()
+
+# Call the function to parse the input
 parsed_result = parse_input(data)
 print(parsed_result)
