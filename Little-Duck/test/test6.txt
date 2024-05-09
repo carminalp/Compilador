@@ -1,28 +1,31 @@
- program programa1;
-                var global1, global2 : int;
-                
-                void funcion1 (x : float, y : float)[
-                    var a, b, c : float;
-                    {
-                        a = x * 10;
-                        b = y * 20;
-                        if (a / 5 < a * 5) {
-                            c = 100;
-                        } else {
-                            c = 0;
-                        };
-                        print(c);
-                    }
-                ];
-                
-                main {
-                    global1 = 1.0;
-                    global2 = 1.0;
-                    
-                    while { funcion1(global1, global2); }
-                    do ( a - 1 );
-                    
-                    funcion2(global1, global2);
-                    
-                    print(global1, global2);
-                } end
+program programa1;
+
+var acum, total : int;
+
+void func_1(x : float, y : float)[
+    var z : float;
+    {
+        valor_x = x + 10;
+        valor_y = y * 20;
+        
+        if (valor_x / 2 < valor_y * 2) {
+            total = total + 1;
+        } else {
+            total = 0;
+        };
+        
+        print(total);
+    }
+];
+
+main {
+    acum = 0;
+    
+    do { 
+        func_1(x, y); 
+    } while ( a > 3 );
+    
+    func_1(x, y);
+    
+    print("Fin");
+} end

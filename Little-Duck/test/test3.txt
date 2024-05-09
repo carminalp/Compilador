@@ -7,9 +7,9 @@ void funcionCiclo(num_1: float, num_2: int) [
         num_1 = 50;
         num_2 = 10.0;
 
-        while {
+        do {
             total = num_1 + 1;
-        } do (num_1 > total);
+        } while (num_1 > total);
     }
 ];
 

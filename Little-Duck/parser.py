@@ -302,7 +302,7 @@ def p_else(p):
 ## <CYCLE> ##
 #-----------#
 def p_cycle(p):
-    '''CYCLE : WHILE BODY DO LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON'''
+    '''CYCLE : DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON'''
     p[0] = ('CYCLE', p[2], p[5])
 
 #-----------#
