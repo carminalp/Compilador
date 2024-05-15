@@ -39,7 +39,7 @@ def p_punto_1(p):
     "PUNTO_1 :"
     # 1) Add new function 'ID'
     print("Añadiendo función")
-    dir_func.add_function(p[-1])
+    dir_func.add_function(p[-1],'NP')
     print("Nombre:", p[-1]) 
     dir_func.set_current_function(p[-1])
     # *BORRAR* Set global_name
@@ -154,7 +154,7 @@ def p_punto_4(p):
     
     # 4) Add new function 'ID'
     print("Añadiendo función")
-    dir_func.add_function(p[-1])
+    dir_func.add_function(p[-1],p[-2])
     print("Nombre:", p[-1]) 
     dir_func.set_current_function(p[-1])   
 
@@ -449,7 +449,7 @@ def p_epsilon(p):
 
 # Error rule for syntax errors
 def p_error(p):
-    print("Syntax error")
+    print("Error sintáxis")
 
 # Define el parser
 parser = yacc.yacc()
