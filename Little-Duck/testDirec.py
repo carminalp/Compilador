@@ -19,18 +19,18 @@ def run_tests():
 
         # Añadir nueva función 'func1'
         print("Añadiendo función 'func1'")
-        dir_func.add_function('func1')
+        dir_func.add_function('carmina')
         dir_func.create_variable_table()
 
         # Añadir variables a 'func1'
         try:
             print("Añadiendo variable 'a' a 'func1' (debería fallar)")
-            dir_func.add_variable_to_current_func('a', 'int')
+            dir_func.add_variable_to_current_func('suma', 'int')
         except ValueError as e:
             print(e)  # Debería mostrar un error diciendo que 'a' ya está definida en el ámbito global
 
         print("Añadiendo variable 'c' a 'func1'")
-        dir_func.add_variable_to_current_func('c', 'bool')
+        dir_func.add_variable_to_current_func('resta', 'float')
 
         # Verificar variables en 'func1'
         print("Variables en 'func1':", dir_func.get_current_function_vars())
@@ -46,6 +46,7 @@ def run_tests():
 
         # Verificar variables en 'func2'
         print("Variables en 'func2':", dir_func.get_current_function_vars())
+        dir_func.print_directory()
 
     except ValueError as e:
         print("Error:", e)

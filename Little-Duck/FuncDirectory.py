@@ -21,7 +21,7 @@ class FuncDirectory:
         if name in self.functions:
             raise ValueError("Multiple declaración de función")
         # Initialize the function without a variable table
-        self.functions[name] = {'vars': None}
+        self.functions[name] = None
         # Set the newly created function as the current function (to work whit it)
         self.currentFunc = name
     
@@ -52,13 +52,13 @@ class FuncDirectory:
     def create_variable_table(self): 
         # Validate if the func_name exist      
         if self.currentFunc not in self.functions:
-            raise ValueError("Function does not exist")
+            raise ValueError("Función no existe")
         
         # Validate if the function doesn't have a variable table 
-        if self.functions[self.currentFunc]['vars'] is None:
+        if self.functions[self.currentFunc] is None:
             # Create and link the variable table with the specified function
             # Instancia de VariableTable (class)
-            self.functions[self.currentFunc]['vars'] = VariableTable()
+            self.functions[self.currentFunc] = VariableTable()
         
         
 
@@ -75,13 +75,10 @@ class FuncDirectory:
         if self.currentFunc is None:
             raise ValueError("No current function set")
 
-        
-        current_vars = self.functions[self.currentFunc]['vars']
-
         # Access to the variable table of the current function (KEY) 
         # Remember: self.functions is the dictonary (for functions)
         # current_vars is an instance of the VariableTable class
-        current_vars = self.functions[self.currentFunc]['vars']
+        current_vars = self.functions[self.currentFunc]
         
         """# Si la función no es global, comprobar si la variable ya existe en el ámbito global
         if self.currentFunc != self.globalName:
@@ -103,8 +100,35 @@ class FuncDirectory:
             raise ValueError("No current function set")
         
         # Check if the current function doesn't have a VarTable
-        if self.functions[self.currentFunc]['vars'] is None:
+        if self.functions[self.currentFunc] is None:
             raise ValueError("No variable table for current function")
         
         # Rertuns the variable table
-        return self.functions[self.currentFunc]['vars'].variableTable
+        return self.functions[self.currentFunc].variableTable
+    
+    """
+    BORRAR
+    """
+    def print_directory(self):
+        for func_name, var_table in self.functions.items():
+            print(f"Función '{func_name}':")
+            if var_table:
+                for var_name, var_info in var_table.variableTable.items():
+                    print(f"  Variable '{var_name}': Tipo = {var_info['type']}, Valor = {var_info['value']}")
+            else:
+                print("Sin variables")
+    
+    """
+    Delete the var table that it's no longer required.
+
+    Parameters:
+    # func_name is a string with  the name of the function
+    """
+    def delete_variable_table(self, func_name):       
+        if self.functions[func_name] is None:
+            raise ValueError("No hay tabla de variables para eliminar")
+        
+        self.functions[func_name] = None
+        
+        # BORRAR
+        print(f"Tabla de variables para la función '{func_name}' eliminada.")

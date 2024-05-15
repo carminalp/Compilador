@@ -1,6 +1,6 @@
 class SemanticCube:
     def __init__(self):
-        # Initialize the semantic cube (dictionary) with definitions for type operations
+        # Initialize the semantic cube (Hashmap) with definitions for type operations
         self.semanticDictionary = {
             ('INT', 'INT', 'PLUS'): 'INT',
             ('INT', 'FLOAT', 'PLUS'): 'FLOAT',

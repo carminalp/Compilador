@@ -1,4 +1,6 @@
 program funcion_Ciclo;
+var 
+    total: float;
 
 void funcionCiclo(num_1: float, num_2: int) [
     var 

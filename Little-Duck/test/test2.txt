@@ -1,7 +1,6 @@
 program alex;
 
 var 
-    kk: int;
     yogurt, con, carmina: int;
     sandwich: float;
 

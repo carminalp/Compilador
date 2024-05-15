@@ -16,7 +16,7 @@ class VariableTable:
     def add_variable(self, name, var_type, value=None):
         # Search if the name it already exist
         if name in self.variableTable:
-            raise ValueError("Multiple declaración de variable")
+            raise ValueError("Múltiple declaración de variable")
         self.variableTable[name] = {'type': var_type, 'value': value}
 
     """

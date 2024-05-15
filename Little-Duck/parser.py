@@ -34,7 +34,7 @@ def p_program(p):
     p[0] = p[2], p[4], p[5], p[7] 
 
 # --- Embedded Actions ----
-# To initialize the symbol table / Puntos neurológicos
+# To initialize the symbol table / Puntos neurálgicos
 def p_punto_1(p):
     "PUNTO_1 :"
     # 1) Add new function 'ID'
@@ -105,7 +105,7 @@ def p_lista_var(p):
     '''LISTA_VAR : LISTA_ID COLON TYPE PUNTO_3 SEMICOLON MAS_VAR'''
 
     # borrar
-    #print("Variables en 'program':", dir_func.get_current_function_vars())
+    print("Variables en 'func':", dir_func.get_current_function_vars())
     p[0] = ('LISTA_VAR', p[1], p[3], p[5])
 
 # <MAS_VAR>
@@ -144,8 +144,36 @@ def p_type(p):
 ## <FUNCS> ##
 #-----------#
 def p_funcs(p):
-    '''FUNCS : VOID ID LEFT_PARENTHESIS PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON'''
+    '''FUNCS : VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7'''
     p[0] = ('FUNCS', p[2], p[4], p[7], p[8])
+
+# --- Embedded Actions ----
+# To add new function to DirFunc
+def p_punto_4(p):
+    "PUNTO_4 :"
+    
+    # 4) Add new function 'ID'
+    print("Añadiendo función")
+    dir_func.add_function(p[-1])
+    print("Nombre:", p[-1]) 
+    dir_func.set_current_function(p[-1])   
+
+# --- Embedded Actions ----
+# To create a varTable and link it to current Func
+def p_punto_5(p):
+    "PUNTO_5 :"
+    
+    #5) Create variable table
+    dir_func.create_variable_table()
+    
+
+# --- Embedded Actions ----
+# Delete var table
+def p_punto_7(p):
+    "PUNTO_7 :"
+    
+    #7) Delete variables
+    dir_func.delete_variable_table(p[-11])
 
 # <PARAMETROS>
 def p_parametros(p):
@@ -156,9 +184,18 @@ def p_parametros(p):
     else:
         p[0] = None
 
+# --- Embedded Actions ----
+# To add variables to varTable
+def p_punto_6(p):
+    "PUNTO_6 :"
+    
+    # 6) Add variables to var table
+    dir_func.add_variable_to_current_func(p[-3], p[-1])
 # <DEC_PARAMETROS>
 def p_dec_parametros(p):
-    '''DEC_PARAMETROS : ID COLON TYPE LISTA_PARAMETROS'''
+    '''DEC_PARAMETROS : ID COLON TYPE PUNTO_6 LISTA_PARAMETROS'''
+    print("Directorio función")
+    dir_func.print_directory()
     p[0] = ('DEC_PARAMETROS', p[1], p[3], p[4])
 
 # <LISTA_PARAMETROS>
@@ -422,7 +459,7 @@ def parse_input(input_data):
     return parser.parse(input_data)
 
 # Archivo de entrada
-input_file = 'test/test2.txt'
+input_file = 'test/test3.txt'
 
 # Abre el archivo de entrada y lee su contenido
 with open(input_file, 'r') as file:
@@ -431,4 +468,6 @@ with open(input_file, 'r') as file:
 # Analiza la entrada
 parsed_result = parse_input(data)
 
-print(parsed_result)
+#print(parsed_result)
+print("Directorio sin función")
+dir_func.print_directory()
