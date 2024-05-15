@@ -91,10 +91,21 @@ def p_vars(p):
     '''VARS : VAR PUNTO_2 LISTA_VAR'''
     p[0] = ('VARS', p[2])
 
+# --- Embedded Actions ----
+# To initialize the variable table
+def p_punto_3(p):
+    "PUNTO_3 :"
+    # 3) Add the variables to variable table
+    var_names = p[-3]
+    for var_name in var_names:
+        dir_func.add_variable_to_current_func(var_name, p[-1])
+
 # <LISTA_VAR>
 def p_lista_var(p):
-    '''LISTA_VAR : LISTA_ID COLON TYPE SEMICOLON MAS_VAR'''
-    print(p[1])
+    '''LISTA_VAR : LISTA_ID COLON TYPE PUNTO_3 SEMICOLON MAS_VAR'''
+
+    # borrar
+    #print("Variables en 'program':", dir_func.get_current_function_vars())
     p[0] = ('LISTA_VAR', p[1], p[3], p[5])
 
 # <MAS_VAR>
@@ -109,7 +120,8 @@ def p_mas_var(p):
 # <LISTA_ID>
 def p_lista_id(p):
     '''LISTA_ID : ID MAS_ID'''
-    p[0] = p[1], p[2]
+    # Created the lista ID in this form: ['yogurt', 'con', 'carmina']
+    p[0] = [p[1]] + (p[2] if p[2] is not None else [])
 
 # <MAS_ID>
 def p_mas_id(p):
@@ -126,7 +138,7 @@ def p_mas_id(p):
 def p_type(p):
     '''TYPE : INT
             | FLOAT'''
-    p[0] = ('TYPE', p[1])
+    p[0] = p[1]
 
 #-----------#
 ## <FUNCS> ##
