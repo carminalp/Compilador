@@ -12,12 +12,13 @@ previamente definidas.
 
 import ply.yacc as yacc
 from lexer import tokens
+from FuncDirectory import FuncDirectory
 
 # Define precedence and associativity
-precedence = (
+"""precedence = (
     ('left', 'PLUS', 'MINUS'),
     ('left', 'MULTIPLICATION', 'DIVISION'),
-)
+)"""
 
 # Formal grammar
 # Using syntax Backus-Naur Form (BNF)
@@ -25,9 +26,24 @@ precedence = (
 #--------------#
 ## <Programa> ##
 #--------------#
+# 1) Create an instance of Functon Directory
+dir_func = FuncDirectory()
+
 def p_program(p):
-    '''PROGRAMA : PROGRAM ID SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END'''
+    '''PROGRAMA : PROGRAM ID PUNTO_1 SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END'''
     p[0] = p[2], p[4], p[5], p[7] 
+
+# --- Embedded Actions ----
+# To initialize the symbol table / Puntos neurológicos
+def p_punto_1(p):
+    "PUNTO_1 :"
+    # 1) Add new function 'ID'
+    print("Añadiendo función")
+    dir_func.add_function(p[-1])
+    print("Nombre:", p[-1]) 
+    dir_func.set_current_function(p[-1])
+    # *BORRAR* Set global_name
+    dir_func.set_current_global(p[-1])
 
 # <DEC_VARS>
 def p_dec_vars(p):
@@ -61,16 +77,24 @@ def p_dec_funcs(p):
     else:
         p[0] = None 
 
+# --- Embedded Actions ----
+# To initialize the variable table
+def p_punto_2(p):
+    "PUNTO_2 :"
+    #2) Create variable table
+    dir_func.create_variable_table()
+
 #----------#
 ## <VARS> ##
 #----------#
 def p_vars(p):
-    '''VARS : VAR LISTA_VAR'''
+    '''VARS : VAR PUNTO_2 LISTA_VAR'''
     p[0] = ('VARS', p[2])
 
 # <LISTA_VAR>
 def p_lista_var(p):
     '''LISTA_VAR : LISTA_ID COLON TYPE SEMICOLON MAS_VAR'''
+    print(p[1])
     p[0] = ('LISTA_VAR', p[1], p[3], p[5])
 
 # <MAS_VAR>
@@ -85,14 +109,14 @@ def p_mas_var(p):
 # <LISTA_ID>
 def p_lista_id(p):
     '''LISTA_ID : ID MAS_ID'''
-    p[0] = ('LISTA_ID', p[1], p[2])
+    p[0] = p[1], p[2]
 
 # <MAS_ID>
 def p_mas_id(p):
     '''MAS_ID : COMMA LISTA_ID
               | epsilon'''
     if len(p) > 2:
-        p[0] = ('MAS_ID', p[2])
+        p[0] = p[2]
     else:
         p[0] = None
 
@@ -192,7 +216,7 @@ def p_assign(p):
     'ASSIGN : ID EQUAL EXPRESION SEMICOLON'
     p[0] = ('ASSIGN', p[1], p[3])
 
-
+#----------------#
 ## <EXPRESIÓN> ##
 #---------------#
 def p_expresion(p):
@@ -378,18 +402,21 @@ def p_epsilon(p):
 def p_error(p):
     print("Syntax error")
 
-# Define the parser
+# Define el parser
 parser = yacc.yacc()
 
-# Function to parse the input
+# Función para analizar la entrada
 def parse_input(input_data):
     return parser.parse(input_data)
 
-# Open the input file and read its content
-input_file = 'test/test6.txt'  # Input file name
+# Archivo de entrada
+input_file = 'test/test2.txt'
+
+# Abre el archivo de entrada y lee su contenido
 with open(input_file, 'r') as file:
     data = file.read()
 
-# Call the function to parse the input
+# Analiza la entrada
 parsed_result = parse_input(data)
+
 print(parsed_result)
