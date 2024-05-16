@@ -57,7 +57,7 @@ reserved_words = {
 }
 
 # Added reserved words token
-tokens = tokens + list(reserved_words.values())
+tokens += list(reserved_words.values())
 
 # Regular expression rules for simple tokens
 # Defines a token (USSING the prefix t_)

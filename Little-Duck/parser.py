@@ -31,13 +31,14 @@ dir_func = FuncDirectory()
 
 def p_program(p):
     '''PROGRAMA : PROGRAM ID PUNTO_1 SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END'''
-    p[0] = p[2], p[4], p[5], p[7] 
+    p[0] = p[2], p[5], p[6], p[8] 
 
 # --- Embedded Actions ----
 # To initialize the symbol table / Puntos neurálgicos
 def p_punto_1(p):
     "PUNTO_1 :"
     # 1) Add new function 'ID'
+    # Inside of this method validates if the id func already exists
     print("Añadiendo función")
     dir_func.add_function(p[-1],'NP')
     print("Nombre:", p[-1]) 
@@ -89,13 +90,14 @@ def p_punto_2(p):
 #----------#
 def p_vars(p):
     '''VARS : VAR PUNTO_2 LISTA_VAR'''
-    p[0] = ('VARS', p[2])
+    p[0] = ('VARS', p[3])
 
 # --- Embedded Actions ----
 # To initialize the variable table
 def p_punto_3(p):
     "PUNTO_3 :"
     # 3) Add the variables to variable table
+    # Inside of this method validates if the variable already exists
     var_names = p[-3]
     for var_name in var_names:
         dir_func.add_variable_to_current_func(var_name, p[-1])
@@ -106,7 +108,7 @@ def p_lista_var(p):
 
     # borrar
     print("Variables en 'func':", dir_func.get_current_function_vars())
-    p[0] = ('LISTA_VAR', p[1], p[3], p[5])
+    p[0] = ('LISTA_VAR', p[1], p[3], p[6])
 
 # <MAS_VAR>
 def p_mas_var(p):
@@ -145,7 +147,9 @@ def p_type(p):
 #-----------#
 def p_funcs(p):
     '''FUNCS : VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7'''
-    p[0] = ('FUNCS', p[2], p[4], p[7], p[8])
+    p[0] = ('FUNCS', p[2], p[6], p[9], p[10])
+    print("Directorio función")
+    dir_func.print_directory()
 
 # --- Embedded Actions ----
 # To add new function to DirFunc
@@ -153,6 +157,7 @@ def p_punto_4(p):
     "PUNTO_4 :"
     
     # 4) Add new function 'ID'
+    # Inside of this method validates if the id func already exists
     print("Añadiendo función")
     dir_func.add_function(p[-1],p[-2])
     print("Nombre:", p[-1]) 
@@ -190,13 +195,12 @@ def p_punto_6(p):
     "PUNTO_6 :"
     
     # 6) Add variables to var table
+    # Inside of this method validates if the variable already exists
     dir_func.add_variable_to_current_func(p[-3], p[-1])
 # <DEC_PARAMETROS>
 def p_dec_parametros(p):
     '''DEC_PARAMETROS : ID COLON TYPE PUNTO_6 LISTA_PARAMETROS'''
-    print("Directorio función")
-    dir_func.print_directory()
-    p[0] = ('DEC_PARAMETROS', p[1], p[3], p[4])
+    p[0] = ('DEC_PARAMETROS', p[1], p[3], p[5])
 
 # <LISTA_PARAMETROS>
 def p_lista_parametros(p):
@@ -468,6 +472,6 @@ with open(input_file, 'r') as file:
 # Analiza la entrada
 parsed_result = parse_input(data)
 
-#print(parsed_result)
+print(parsed_result)
 print("Directorio sin función")
 dir_func.print_directory()
