@@ -13,11 +13,11 @@ class VariableTable:
     # value is an (int|float) and it's the assigned value (defaults to None)
 
     """
-    def add_variable(self, name, var_type, value=None):
+    def add_variable(self, name, var_type, memDirection, value=None ):
         # Search if the name it already exist
         if name in self.variableTable:
             raise ValueError("Múltiple declaración de variable")
-        self.variableTable[name] = {'type': var_type, 'value': value}
+        self.variableTable[name] = {'type': var_type, 'value': value, 'direction': memDirection}
 
     """
     Get the variable with the key = name

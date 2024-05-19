@@ -17,13 +17,11 @@ class FuncDirectory:
 
     """
     def add_function(self, name, tipo):
-        # Search if the name it already exist
+        # Search if the name already exist
         if name in self.functions:
             raise ValueError("Error Semántica: multiple declaración de función")
         # Initialize the function without a variable table
         self.functions[name] = {'tipo': tipo, 'varTab': None}
-        # Set the newly created function as the current function (to work whit it)
-        self.currentFunc = name
     
     """
     Sets the current function to the specified function name.
@@ -37,6 +35,9 @@ class FuncDirectory:
 
     def set_current_global(self, name):   
         self.globalName = name
+
+    def get_current_global(self):
+        return self.globalName
 
     """
     Creates and link a variable table with the specified function.
@@ -59,20 +60,20 @@ class FuncDirectory:
     # var_type is a string with the type of the variable.
     # value is a any (int|float) with the initial value of the variable. Defaults to None.
     """
-    def add_variable_to_current_func(self, var_name, var_type, value=None):
+    def add_variable_to_current_func(self, var_name, var_type, memDirection, value=None):
         # Access to the variable table of the current function (KEY) 
         # Remember: self.functions is the dictonary (for functions)
         # current_vars is an instance of the VariableTable class
         current_vars = self.functions[self.currentFunc]['varTab']
         
-        """# Si la función no es global, comprobar si la variable ya existe en el ámbito global
+        # If the function isn't global, validate if the variable already exists
         if self.currentFunc != self.globalName:
-            global_vars = self.functions[self.globalName]['vars'].variableTable
+            global_vars = self.functions[self.globalName]['varTab'].variableTable
             if var_name in global_vars:
-                raise ValueError(f"Variable '{var_name}' ya definida en el ámbito global")"""
+                raise ValueError(f"Variable '{var_name}' ya definida en el ámbito global")
 
         # Add the values of the variable to the variable table
-        current_vars.add_variable(var_name, var_type, value)
+        current_vars.add_variable(var_name, var_type, value, memDirection)
 
     """
     Returns the variables of the current function.
@@ -87,6 +88,7 @@ class FuncDirectory:
         # Rertuns the variable table
         return self.functions[self.currentFunc]['varTab'].variableTable
     
+
     """
     BORRAR
     """
@@ -112,6 +114,3 @@ class FuncDirectory:
             raise ValueError("No hay tabla de variables para eliminar")
         
         self.functions[func_name]['varTab'] = None
-        
-        # BORRRAR
-        print(f"Tabla de variables para la función '{func_name}' eliminada.")

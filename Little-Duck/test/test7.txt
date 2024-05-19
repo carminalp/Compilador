@@ -1,0 +1,13 @@
+program fibonacci;
+
+var 
+    a, b, c, d, e, f: int;
+    i : float;
+
+main 
+{ 
+    a = b + c * d * (e + f);
+    print("El resultado es", a, b+c*d);
+}
+
+end 

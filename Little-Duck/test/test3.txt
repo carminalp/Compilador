@@ -9,13 +9,75 @@ void funcionCiclo(num_1: float, num_2: int) [
         num_1 = 50;
         num_2 = 10.0;
 
+    }
+];
+
+void funcionCiclo2() [
+    var 
+        total: float;
+    {
+        num_1 = 50;
+        num_2 = 10.0;
+
         do {
             total = num_1 + 1;
         } while (num_1 > total);
     }
 ];
 
-void funcionCiclo() [
+void funcionCiclo3() [
+    var 
+        total: float;
+    {
+        num_1 = 50;
+        num_2 = 10.0;
+
+        do {
+            total = num_1 + 1;
+        } while (num_1 > total);
+    }
+];
+
+void funcionCiclo4() [
+    var 
+        total: float;
+    {
+        num_1 = 50;
+        num_2 = 10.0;
+
+        do {
+            total = num_1 + 1;
+        } while (num_1 > total);
+    }
+];
+
+void funcionCiclo5() [
+    var 
+        total: float;
+    {
+        num_1 = 50;
+        num_2 = 10.0;
+
+        do {
+            total = num_1 + 1;
+        } while (num_1 > total);
+    }
+];
+
+void funcionCiclo6() [
+    var 
+        total: float;
+    {
+        num_1 = 50;
+        num_2 = 10.0;
+
+        do {
+            total = num_1 + 1;
+        } while (num_1 > total);
+    }
+];
+
+void funcionCiclo7() [
     var 
         total: float;
     {

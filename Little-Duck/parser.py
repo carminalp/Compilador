@@ -9,16 +9,27 @@ previamente definidas.
 
 @author: Carmina López Palacios
 """
+# RECUERDAMEEEEEEE
+# BORRAR!!!!!!
+def print_stack(stack, message="Contenido de la pila:"):
+    print(message)
+    for elemento in stack:
+        print(elemento)
 
 import ply.yacc as yacc
 from lexer import tokens
 from FuncDirectory import FuncDirectory
+from semanticActions import semanticOperations, semanticAssign, semanticPrint
+from cteDirectory import ConstantDirectory
 
-# Define precedence and associativity
-"""precedence = (
-    ('left', 'PLUS', 'MINUS'),
-    ('left', 'MULTIPLICATION', 'DIVISION'),
-)"""
+# Initialization of stack 
+PilaO = [] # Pila Operandos
+POper = [] # Pila Operadores
+Quad = [] # Fila cuadroplos
+AVAIL = iter(range(2302,3200)) # set of Temporal spaces 
+
+# Create an instance of cte Directory
+const_directory = ConstantDirectory()
 
 # Formal grammar
 # Using syntax Backus-Naur Form (BNF)
@@ -30,21 +41,28 @@ from FuncDirectory import FuncDirectory
 dir_func = FuncDirectory()
 
 def p_program(p):
-    '''PROGRAMA : PROGRAM ID PUNTO_1 SEMICOLON DEC_VARS DEC_FUNCS MAIN BODY END'''
+    '''PROGRAMA : PROGRAM ID PUNTO_1 SEMICOLON DEC_VARS DEC_FUNCS MAIN PUNTO_CURRENT BODY END'''
     p[0] = p[2], p[5], p[6], p[8] 
 
-# --- Embedded Actions ----
+#-------------------------
+# ---- NEURALGIC POINT ----
 # To initialize the symbol table / Puntos neurálgicos
 def p_punto_1(p):
     "PUNTO_1 :"
     # 1) Add new function 'ID'
     # Inside of this method validates if the id func already exists
-    print("Añadiendo función")
     dir_func.add_function(p[-1],'NP')
-    print("Nombre:", p[-1]) 
     dir_func.set_current_function(p[-1])
     # *BORRAR* Set global_name
     dir_func.set_current_global(p[-1])
+
+#-------------------------
+# ---- NEURALGIC POINT ----
+# Set current function to global
+def p_punto_current(p):
+    "PUNTO_CURRENT :"
+    global_name = dir_func.get_current_global()
+    dir_func.set_current_function(global_name)
 
 # <DEC_VARS>
 def p_dec_vars(p):
@@ -78,7 +96,8 @@ def p_dec_funcs(p):
     else:
         p[0] = None 
 
-# --- Embedded Actions ----
+#-------------------------
+# ---- NEURALGIC POINT ----
 # To initialize the variable table
 def p_punto_2(p):
     "PUNTO_2 :"
@@ -92,7 +111,8 @@ def p_vars(p):
     '''VARS : VAR PUNTO_2 LISTA_VAR'''
     p[0] = ('VARS', p[3])
 
-# --- Embedded Actions ----
+#-------------------------
+# ---- NEURALGIC POINT ----
 # To initialize the variable table
 def p_punto_3(p):
     "PUNTO_3 :"
@@ -100,14 +120,14 @@ def p_punto_3(p):
     # Inside of this method validates if the variable already exists
     var_names = p[-3]
     for var_name in var_names:
-        dir_func.add_variable_to_current_func(var_name, p[-1])
+        dir_func.add_variable_to_current_func(var_name, p[-1], 1)
 
 # <LISTA_VAR>
 def p_lista_var(p):
     '''LISTA_VAR : LISTA_ID COLON TYPE PUNTO_3 SEMICOLON MAS_VAR'''
 
     # borrar
-    print("Variables en 'func':", dir_func.get_current_function_vars())
+    # print("Variables en 'func':", dir_func.get_current_function_vars())
     p[0] = ('LISTA_VAR', p[1], p[3], p[6])
 
 # <MAS_VAR>
@@ -149,22 +169,21 @@ def p_funcs(p):
     '''FUNCS : VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7'''
     p[0] = ('FUNCS', p[2], p[6], p[9], p[10])
     print("Directorio función")
-    dir_func.print_directory()
 
-# --- Embedded Actions ----
-# To add new function to DirFunc
+#-------------------------
+# ---- NEURALGIC POINT ----
+# 4) To add new function to DirFunc
 def p_punto_4(p):
     "PUNTO_4 :"
     
     # 4) Add new function 'ID'
     # Inside of this method validates if the id func already exists
-    print("Añadiendo función")
-    dir_func.add_function(p[-1],p[-2])
-    print("Nombre:", p[-1]) 
+    dir_func.add_function(p[-1],p[-2]) 
     dir_func.set_current_function(p[-1])   
 
-# --- Embedded Actions ----
-# To create a varTable and link it to current Func
+#-------------------------
+# ---- NEURALGIC POINT ----
+# 5) To create a varTable and link it to current Func
 def p_punto_5(p):
     "PUNTO_5 :"
     
@@ -172,13 +191,19 @@ def p_punto_5(p):
     dir_func.create_variable_table()
     
 
-# --- Embedded Actions ----
-# Delete var table
+#-------------------------
+# ---- NEURALGIC POINT ----
+# 7) Delete var table and clear PilaO, POper and Quad
 def p_punto_7(p):
     "PUNTO_7 :"
     
     #7) Delete variables
     dir_func.delete_variable_table(p[-11])
+    # Delete stack
+    PilaO.clear()
+    POper.clear()
+    Quad.clear()
+
 
 # <PARAMETROS>
 def p_parametros(p):
@@ -189,14 +214,15 @@ def p_parametros(p):
     else:
         p[0] = None
 
-# --- Embedded Actions ----
+#-------------------------
+# ---- NEURALGIC POINT ----
 # To add variables to varTable
 def p_punto_6(p):
     "PUNTO_6 :"
-    
     # 6) Add variables to var table
     # Inside of this method validates if the variable already exists
-    dir_func.add_variable_to_current_func(p[-3], p[-1])
+    dir_func.add_variable_to_current_func(p[-3], p[-1], 1)
+
 # <DEC_PARAMETROS>
 def p_dec_parametros(p):
     '''DEC_PARAMETROS : ID COLON TYPE PUNTO_6 LISTA_PARAMETROS'''
@@ -266,8 +292,36 @@ def p_statement(p):
 ## <ASSIGN> ##
 #------------#
 def p_assign(p):
-    'ASSIGN : ID EQUAL EXPRESION SEMICOLON'
-    p[0] = ('ASSIGN', p[1], p[3])
+    'ASSIGN : ID PUNTO_8 EQUAL PUNTO_9 EXPRESION PUNTO_18 SEMICOLON'
+    p[0] = ('ASSIGN', p[1], p[5])
+
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# save id to be assign  
+def p_punto_8(p):
+    "PUNTO_8 :"
+    var_name = p[-1] 
+    var_type = dir_func.get_current_function_vars()[var_name]['type']
+    PilaO.append((var_name, var_type))
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# save operator  
+def p_punto_9(p):
+    "PUNTO_9 :"
+    POper.append(p[-1])
+    #var_name, var_type = PilaO.pop()
+    #print(f"Assignment: {var_name} {POper.pop()}")
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# assign = expresion 
+def p_punto_18(p):
+    "PUNTO_18 :"
+    if POper[-1] == '=':
+        semanticAssign(PilaO, POper, Quad, AVAIL)
+    print(Quad)
 
 #----------------#
 ## <EXPRESIÓN> ##
@@ -279,79 +333,159 @@ def p_expresion(p):
 # <MAS_EXPRESIONES>
 def p_mas_expresiones(p):
     '''MAS_EXPRESIONES : epsilon
-                       | OPERADORES EXP'''
+                       | OPERADORES PUNTO_13 EXP'''
     if len(p) > 2:
-        p[0] = ('MAS_EXPRESIONES', p[1], p[2])
+        p[0] = ('MAS_EXPRESIONES', p[1], p[3])
     else:
         p[0] = None
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# save operator  
+def p_punto_13(p):
+    "PUNTO_13 :"
+    POper.append(p[-1])
 
 # <OPERADORES>
 def p_operadores(p):
     '''OPERADORES : GREATER_THAN
                   | LESS_THAN
                   | NOT_EQUAL'''
-    p[0] = ('OPERADORES', p[1])
+    p[0] = p[1]
 
 #---------#
 ## <EXP> ##
 #---------#
 def p_exp(p):
-    '''EXP : TERMINO MAS_EXP'''
-    p[0] = ('EXP', p[1], p[2])
+    '''EXP : TERMINO PUNTO_14 MAS_EXP'''
+    p[0] = ('EXP', p[1], p[3])
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# See if there's a + or -  at Poper
+def p_punto_14(p):
+    "PUNTO_14 :"
+    if POper[-1] == '+' or POper[-1]  == '-':
+        semanticOperations(PilaO, POper, Quad, AVAIL)
+    print(Quad) # BORRAR
 
 # <MAS_EXP>
 def p_mas_exp(p):
-    '''MAS_EXP : OPERADORES_EXP EXP
+    '''MAS_EXP : OPERADORES_EXP PUNTO_12 EXP
                | epsilon'''
     if len(p) > 2:
-        p[0] = ('MAS_EXP', p[1], p[2])
+        p[0] = ('MAS_EXP', p[1], p[3])
     else:
         p[0] = None
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# save + / -  
+def p_punto_12(p):
+    "PUNTO_12 :"
+    POper.append(p[-1])
 
 # <OPERADORES_EXP>
 def p_operadores_exp(p):
     '''OPERADORES_EXP : PLUS
                       | MINUS'''
-    p[0] = ('OPERADORES_EXP', p[1])
+    p[0] = p[1]
 
 #--------------#
 ## <TERMINO> ##
 #-------------#
 def p_termino(p):
-    '''TERMINO : FACTOR MAS_TERMINO'''
-    p[0] = ('TERMINO', p[1], p[2])
+    '''TERMINO : FACTOR PUNTO_15 MAS_TERMINO'''
+    p[0] = ('TERMINO', p[1], p[3])
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# See if there's a * or / at Poper
+def p_punto_15(p):
+    "PUNTO_15 :"
+    if POper[-1] == '*' or POper[-1]  == '/':
+        semanticOperations(PilaO, POper, Quad, AVAIL)
+    print(Quad)
 
 # <MAS_TERMINO>
 def p_mas_termino(p):
     '''MAS_TERMINO : epsilon
-                   | OPERADORES_TER TERMINO'''
+                   | OPERADORES_TER PUNTO_11 TERMINO'''
     if len(p) > 2:
-        p[0] = ('MAS_TERMINO', p[1], p[2])
+        p[0] = ('MAS_TERMINO', p[1], p[3])
     else:
         p[0] = None
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# save operator * or / 
+def p_punto_11(p):
+    "PUNTO_11 :"
+    POper.append(p[-1])
 
 # <OPERADORES_TER>
 def p_operadores_ter(p):
     '''OPERADORES_TER : MULTIPLICATION
                       | DIVISION'''
-    p[0] = ('OPERADORES_TER', p[1])
+    p[0] = p[1]
 
 #------------#
 ## <FACTOR> ##
 #------------#
 def p_factor(p):
     '''FACTOR : OPERADORES_FACTOR ID_CTE
-              | LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS'''
-    if len(p) == 4:
-        p[0] = ('FACTOR', p[2])
+              | LEFT_PARENTHESIS PUNTO_16 EXPRESION RIGHT_PARENTHESIS PUNTO_17'''
+    if len(p) >= 4:
+        p[0] = ('FACTOR', p[3])
     else:
         p[0] = ('FACTOR', p[1], p[2])
-    
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# save (
+def p_punto_16(p):
+    "PUNTO_16 :"
+    POper.append(p[-1])
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 17) pop (
+def p_punto_17(p):
+    "PUNTO_17 :"
+    POper.pop()
+
 # <ID_CTE>
 def p_id_cte(p):
-    '''ID_CTE : ID
-              | CTE'''
-    p[0] = ('ID_CTE', p[1])
+    '''ID_CTE : ID PUNTO_10
+              | CTE PUNTO_CTE PUNTO_19'''
+    p[0] = p[1]
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# add CTE to directory
+def p_punto_cte(p):
+    "PUNTO_CTE :"
+    print(p[-1])
+    const_type = const_directory.determine_const_type(p[-1])
+    const_directory.add_constant(p[-1], const_type)
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 10) save id
+def p_punto_10(p):
+    "PUNTO_10 :"
+    var_name = p[-1] 
+    var_type = dir_func.get_current_function_vars()[var_name]['type']
+    PilaO.append((var_name, var_type))
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 19) save cte
+def p_punto_19(p):
+    "PUNTO_19 :"
+    cte_address = const_directory.get_constant(p[-2])['address']
+    cte_type = const_directory.get_constant(p[-2])['type']
+    PilaO.append((cte_address, cte_type))
 
 # <OPERADORES_FACTOR>
 def p_operadores_factor(p):
@@ -369,7 +503,8 @@ def p_operadores_factor(p):
 def p_cte(p):
     '''CTE : CTE_INT
            | CTE_FLOAT'''
-    p[0] = ('CTE', p[1])
+    p[0] = p[1]
+    
 
 #---------------#
 ## <CONDITION> ##
@@ -428,23 +563,58 @@ def p_lista_exp(p):
 ## <PRINT_STMT>  ##
 #----------------#
 def p_print_stmt(p):
-    '''PRINT_STMT : PRINT LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON'''
-    p[0] = ('PRINT_STMT', p[3])
+    '''PRINT_STMT : PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON'''
+    print(p[3])
+    p[0] = ('PRINT_STMT', p[4])
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 20) save 'print'  
+def p_punto_20(p):
+    "PUNTO_20 :"
+    POper.append(p[-1])
 
 # <PARAMETROS_PRINT>
 def p_parametros_print(p):
-    '''PARAMETROS_PRINT : CTE_STRING MAS_PRINT
-                        | EXPRESION MAS_PRINT'''
-    p[0] = ('PARAMETROS_PRINT', p[1], p[2])                    
+    '''PARAMETROS_PRINT : CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT
+                        | EXPRESION PUNTO_22 MAS_PRINT'''
+    p[0] = (p[1], p[2])                    
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 21) push cte string
+def p_punto_21(p):
+    "PUNTO_21 :"
+    cte_string = p[-1] 
+    PilaO.append((cte_string, 'string'))
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 22) save 'print'
+def p_punto_22(p):
+    "PUNTO_22 :"
+    if POper[-1] == 'print':
+        semanticPrint(PilaO, POper, Quad, AVAIL)
+        print(Quad)
+
 
 # <MAS_PRINT>
 def p_mas_print(p):
     '''MAS_PRINT : epsilon
-                 | COMMA PARAMETROS_PRINT'''
+                 | COMMA PUNTO_23 PARAMETROS_PRINT'''
     if len(p) > 2:
         p[0] = ('MAS_PRINT', p[2])
     else:
         p[0] = None
+
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 23) save 'print'  
+def p_punto_23(p):
+    "PUNTO_23 :"
+    POper.append('print')
+
 
 # Epsilon
 def p_epsilon(p):
@@ -463,7 +633,7 @@ def parse_input(input_data):
     return parser.parse(input_data)
 
 # Archivo de entrada
-input_file = 'test/test3.txt'
+input_file = 'test/test7.txt'
 
 # Abre el archivo de entrada y lee su contenido
 with open(input_file, 'r') as file:
@@ -472,6 +642,5 @@ with open(input_file, 'r') as file:
 # Analiza la entrada
 parsed_result = parse_input(data)
 
-print(parsed_result)
-print("Directorio sin función")
-dir_func.print_directory()
+# print(parsed_result)
+# dir_func.print_directory()
