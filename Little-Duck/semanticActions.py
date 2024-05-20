@@ -111,7 +111,6 @@ def semanticExpressions(PilaO, POper, Quad, AVAIL):
 def semanticConditionIf(PilaO, POper, Quad, AVAIL, PJumps):
     global cont
 
-    # Pop of the operator, right and left operands
     exp, exp_type = PilaO.pop()
 
     if (exp_type != 'bool'):
@@ -125,7 +124,6 @@ def semanticConditionIf(PilaO, POper, Quad, AVAIL, PJumps):
 
 def fillGotoF(Quad, PJumps):
     global cont
-    #result = PJumps.pop()
     if PJumps:
         end = PJumps.pop()
         Quad[end].result = cont + 1
@@ -135,13 +133,29 @@ def semanticConditionElse(PilaO, POper, Quad, AVAIL, PJumps):
     quad = Quadruple('Goto', None, None, None)
     Quad.append(quad)
     cont += 1
-    #print(cont)
     fillGotoF(Quad, PJumps)
     PJumps.append(cont-1)
 
 def fillGoto(Quad, PJumps):
     global cont
     if PJumps:
-        print(cont)
+        # PREGUNTAR
         false = PJumps.pop()
         Quad[false].result = cont + 1
+
+def semanticCycleDo(PJumps):
+    PJumps.append(cont)
+
+def semanticCycle(PilaO, Quad, PJumps):
+    global cont
+
+    condition, condition_type = PilaO.pop()
+
+    if (condition_type != 'bool'):
+        raise ValueError("Type mismatch error")
+    else: 
+        result = condition
+        returnTo = PJumps.pop()
+        quad = Quadruple('GotoV', result, None, returnTo + 1)
+        Quad.append(quad)
+        cont += 1

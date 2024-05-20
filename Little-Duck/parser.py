@@ -13,7 +13,7 @@ previamente definidas.
 import ply.yacc as yacc
 from lexer import tokens
 from FuncDirectory import FuncDirectory
-from semanticActions import semanticOperations, semanticAssign, semanticPrint, semanticExpressions, semanticConditionIf, fillGotoF, semanticConditionElse, fillGoto
+from semanticActions import semanticOperations, semanticAssign, semanticPrint, semanticExpressions, semanticConditionIf, fillGotoF, semanticConditionElse, fillGoto, semanticCycleDo, semanticCycle
 from cteDirectory import ConstantDirectory
 
 # Initialization of stack 
@@ -512,7 +512,6 @@ def p_cte(p):
 def p_condition(p):
     '''CONDITION : IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS PUNTO_24 BODY ELSE_CONDITION SEMICOLON PUNTO_25'''
     p[0] = ('CONDITION', p[3], p[6], p[7])
-    print("Else", p[7])
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -556,8 +555,22 @@ def p_punto_27(p):
 ## <CYCLE> ##
 #-----------#
 def p_cycle(p):
-    '''CYCLE : DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON'''
+    '''CYCLE : DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29'''
     p[0] = ('CYCLE', p[2], p[5])
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 28) Add 'migajita de pan'
+def p_punto_28(p):
+    "PUNTO_28 :"
+    semanticCycleDo(PJumps)
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 29) go to V
+def p_punto_29(p):
+    "PUNTO_29 :"
+    semanticCycle(PilaO, Quad, PJumps)
 
 #-----------#
 ## <F_CALL> ##

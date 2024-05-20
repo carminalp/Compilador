@@ -94,31 +94,33 @@ Rule 88    PUNTO_26 -> <empty>
 Rule 89    ELSE_CONDITION -> epsilon
 Rule 90    ELSE_CONDITION -> ELSE PUNTO_26 BODY PUNTO_27
 Rule 91    PUNTO_27 -> <empty>
-Rule 92    CYCLE -> DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON
-Rule 93    F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON
-Rule 94    EXPRESIONES -> epsilon
-Rule 95    EXPRESIONES -> EXPRESIONES_F
-Rule 96    EXPRESIONES_F -> EXPRESION LISTA_EXP
-Rule 97    LISTA_EXP -> epsilon
-Rule 98    LISTA_EXP -> COMMA EXPRESIONES_F
-Rule 99    PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
-Rule 100   PUNTO_20 -> <empty>
-Rule 101   PARAMETROS_PRINT -> CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT
-Rule 102   PARAMETROS_PRINT -> EXPRESION PUNTO_22 MAS_PRINT
-Rule 103   PUNTO_21 -> <empty>
-Rule 104   PUNTO_22 -> <empty>
-Rule 105   MAS_PRINT -> epsilon
-Rule 106   MAS_PRINT -> COMMA PUNTO_23 PARAMETROS_PRINT
-Rule 107   PUNTO_23 -> <empty>
-Rule 108   epsilon -> <empty>
+Rule 92    CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29
+Rule 93    PUNTO_28 -> <empty>
+Rule 94    PUNTO_29 -> <empty>
+Rule 95    F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON
+Rule 96    EXPRESIONES -> epsilon
+Rule 97    EXPRESIONES -> EXPRESIONES_F
+Rule 98    EXPRESIONES_F -> EXPRESION LISTA_EXP
+Rule 99    LISTA_EXP -> epsilon
+Rule 100   LISTA_EXP -> COMMA EXPRESIONES_F
+Rule 101   PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
+Rule 102   PUNTO_20 -> <empty>
+Rule 103   PARAMETROS_PRINT -> CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT
+Rule 104   PARAMETROS_PRINT -> EXPRESION PUNTO_22 MAS_PRINT
+Rule 105   PUNTO_21 -> <empty>
+Rule 106   PUNTO_22 -> <empty>
+Rule 107   MAS_PRINT -> epsilon
+Rule 108   MAS_PRINT -> COMMA PUNTO_23 PARAMETROS_PRINT
+Rule 109   PUNTO_23 -> <empty>
+Rule 110   epsilon -> <empty>
 
 Terminals, with rules where they appear
 
 COLON                : 14 29
-COMMA                : 18 31 98 106
+COMMA                : 18 31 100 108
 CTE_FLOAT            : 84
 CTE_INT              : 83
-CTE_STRING           : 101
+CTE_STRING           : 103
 DIVISION             : 70
 DO                   : 92
 ELSE                 : 90
@@ -126,24 +128,24 @@ END                  : 1
 EQUAL                : 45
 FLOAT                : 21
 GREATER_THAN         : 54
-ID                   : 1 17 22 29 45 75 93
+ID                   : 1 17 22 29 45 75 95
 IF                   : 85
 INT                  : 20
 LEFT_BRACE           : 34
 LEFT_BRACKET         : 22
-LEFT_PARENTHESIS     : 22 72 85 92 93 99
+LEFT_PARENTHESIS     : 22 72 85 92 95 101
 LESS_THAN            : 55
 MAIN                 : 1
 MINUS                : 63 81
 MULTIPLICATION       : 69
 NOT_EQUAL            : 56
 PLUS                 : 62 80
-PRINT                : 99
+PRINT                : 101
 PROGRAM              : 1
 RIGHT_BRACE          : 34
 RIGHT_BRACKET        : 22
-RIGHT_PARENTHESIS    : 22 72 85 92 93 99
-SEMICOLON            : 1 14 22 45 85 92 93 99
+RIGHT_PARENTHESIS    : 22 72 85 92 95 101
+SEMICOLON            : 1 14 22 45 85 92 95 101
 VAR                  : 12
 VOID                 : 22
 WHILE                : 92
@@ -162,14 +164,14 @@ DEC_STATEMENTS       : 34
 DEC_VARS             : 1
 ELSE_CONDITION       : 85
 EXP                  : 49 50 59
-EXPRESION            : 45 72 85 92 96 102
-EXPRESIONES          : 93
-EXPRESIONES_F        : 95 98
+EXPRESION            : 45 72 85 92 98 104
+EXPRESIONES          : 95
+EXPRESIONES_F        : 97 100
 FACTOR               : 64
 FUNCS                : 6
 F_CALL               : 43
 ID_CTE               : 71
-LISTA_EXP            : 96
+LISTA_EXP            : 98
 LISTA_ID             : 14 18
 LISTA_PARAMETROS     : 29
 LISTA_STATEMENTS     : 36 39
@@ -178,7 +180,7 @@ MAS_EXP              : 57
 MAS_EXPRESIONES      : 49
 MAS_FUNCS            : 6
 MAS_ID               : 17
-MAS_PRINT            : 101 102
+MAS_PRINT            : 103 104
 MAS_STATEMENTS       : 37
 MAS_TERMINO          : 64
 MAS_VAR              : 14
@@ -187,7 +189,7 @@ OPERADORES_EXP       : 59
 OPERADORES_FACTOR    : 71
 OPERADORES_TER       : 67
 PARAMETROS           : 22
-PARAMETROS_PRINT     : 99 106
+PARAMETROS_PRINT     : 101 108
 PRINT_STMT           : 44
 PROGRAMA             : 0
 PUNTO_1              : 1
@@ -203,14 +205,16 @@ PUNTO_17             : 72
 PUNTO_18             : 45
 PUNTO_19             : 76
 PUNTO_2              : 12
-PUNTO_20             : 99
-PUNTO_21             : 101
-PUNTO_22             : 101 102
-PUNTO_23             : 106
+PUNTO_20             : 101
+PUNTO_21             : 103
+PUNTO_22             : 103 104
+PUNTO_23             : 108
 PUNTO_24             : 85
 PUNTO_25             : 85
 PUNTO_26             : 90
 PUNTO_27             : 90
+PUNTO_28             : 92
+PUNTO_29             : 92
 PUNTO_3              : 14
 PUNTO_4              : 22
 PUNTO_5              : 22
@@ -226,7 +230,7 @@ TERMINO              : 57 67
 TYPE                 : 14 29
 VARS                 : 5 33
 VARS_FUNC            : 22
-epsilon              : 4 7 9 15 19 26 30 32 35 38 51 60 66 82 89 94 97 105
+epsilon              : 4 7 9 15 19 26 30 32 35 38 51 60 66 82 89 96 99 107
 
 Parsing method: LALR
 
@@ -273,11 +277,11 @@ state 5
     (1) PROGRAMA -> PROGRAM ID PUNTO_1 SEMICOLON . DEC_VARS DEC_FUNCS MAIN PUNTO_CURRENT BODY END
     (4) DEC_VARS -> . epsilon
     (5) DEC_VARS -> . VARS
-    (108) epsilon -> .
+    (110) epsilon -> .
     (12) VARS -> . VAR PUNTO_2 LISTA_VAR
 
-    VOID            reduce using rule 108 (epsilon -> .)
-    MAIN            reduce using rule 108 (epsilon -> .)
+    VOID            reduce using rule 110 (epsilon -> .)
+    MAIN            reduce using rule 110 (epsilon -> .)
     VAR             shift and go to state 9
 
     DEC_VARS                       shift and go to state 6
@@ -289,11 +293,11 @@ state 6
     (1) PROGRAMA -> PROGRAM ID PUNTO_1 SEMICOLON DEC_VARS . DEC_FUNCS MAIN PUNTO_CURRENT BODY END
     (9) DEC_FUNCS -> . epsilon
     (10) DEC_FUNCS -> . SOLO_FUNCS
-    (108) epsilon -> .
+    (110) epsilon -> .
     (6) SOLO_FUNCS -> . FUNCS MAS_FUNCS
     (22) FUNCS -> . VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7
 
-    MAIN            reduce using rule 108 (epsilon -> .)
+    MAIN            reduce using rule 110 (epsilon -> .)
     VOID            shift and go to state 14
 
     DEC_FUNCS                      shift and go to state 10
@@ -352,11 +356,11 @@ state 13
     (6) SOLO_FUNCS -> FUNCS . MAS_FUNCS
     (7) MAS_FUNCS -> . epsilon
     (8) MAS_FUNCS -> . SOLO_FUNCS
-    (108) epsilon -> .
+    (110) epsilon -> .
     (6) SOLO_FUNCS -> . FUNCS MAS_FUNCS
     (22) FUNCS -> . VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7
 
-    MAIN            reduce using rule 108 (epsilon -> .)
+    MAIN            reduce using rule 110 (epsilon -> .)
     VOID            shift and go to state 14
 
     FUNCS                          shift and go to state 13
@@ -442,10 +446,10 @@ state 23
     (17) LISTA_ID -> ID . MAS_ID
     (18) MAS_ID -> . COMMA LISTA_ID
     (19) MAS_ID -> . epsilon
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     COMMA           shift and go to state 28
-    COLON           reduce using rule 108 (epsilon -> .)
+    COLON           reduce using rule 110 (epsilon -> .)
 
     MAS_ID                         shift and go to state 27
     epsilon                        shift and go to state 29
@@ -512,7 +516,7 @@ state 31
     (34) BODY -> LEFT_BRACE . DEC_STATEMENTS RIGHT_BRACE
     (35) DEC_STATEMENTS -> . epsilon
     (36) DEC_STATEMENTS -> . LISTA_STATEMENTS
-    (108) epsilon -> .
+    (110) epsilon -> .
     (37) LISTA_STATEMENTS -> . STATEMENT MAS_STATEMENTS
     (40) STATEMENT -> . ASSIGN
     (41) STATEMENT -> . CONDITION
@@ -521,11 +525,11 @@ state 31
     (44) STATEMENT -> . PRINT_STMT
     (45) ASSIGN -> . ID PUNTO_8 EQUAL PUNTO_9 EXPRESION PUNTO_18 SEMICOLON
     (85) CONDITION -> . IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS PUNTO_24 BODY ELSE_CONDITION SEMICOLON PUNTO_25
-    (92) CYCLE -> . DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON
-    (93) F_CALL -> . ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON
-    (99) PRINT_STMT -> . PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
+    (92) CYCLE -> . DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29
+    (95) F_CALL -> . ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON
+    (101) PRINT_STMT -> . PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
 
-    RIGHT_BRACE     reduce using rule 108 (epsilon -> .)
+    RIGHT_BRACE     reduce using rule 110 (epsilon -> .)
     ID              shift and go to state 47
     IF              shift and go to state 48
     DO              shift and go to state 49
@@ -618,7 +622,7 @@ state 41
     (37) LISTA_STATEMENTS -> STATEMENT . MAS_STATEMENTS
     (38) MAS_STATEMENTS -> . epsilon
     (39) MAS_STATEMENTS -> . LISTA_STATEMENTS
-    (108) epsilon -> .
+    (110) epsilon -> .
     (37) LISTA_STATEMENTS -> . STATEMENT MAS_STATEMENTS
     (40) STATEMENT -> . ASSIGN
     (41) STATEMENT -> . CONDITION
@@ -627,11 +631,11 @@ state 41
     (44) STATEMENT -> . PRINT_STMT
     (45) ASSIGN -> . ID PUNTO_8 EQUAL PUNTO_9 EXPRESION PUNTO_18 SEMICOLON
     (85) CONDITION -> . IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS PUNTO_24 BODY ELSE_CONDITION SEMICOLON PUNTO_25
-    (92) CYCLE -> . DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON
-    (93) F_CALL -> . ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON
-    (99) PRINT_STMT -> . PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
+    (92) CYCLE -> . DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29
+    (95) F_CALL -> . ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON
+    (101) PRINT_STMT -> . PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
 
-    RIGHT_BRACE     reduce using rule 108 (epsilon -> .)
+    RIGHT_BRACE     reduce using rule 110 (epsilon -> .)
     ID              shift and go to state 47
     IF              shift and go to state 48
     DO              shift and go to state 49
@@ -705,7 +709,7 @@ state 46
 state 47
 
     (45) ASSIGN -> ID . PUNTO_8 EQUAL PUNTO_9 EXPRESION PUNTO_18 SEMICOLON
-    (93) F_CALL -> ID . LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON
+    (95) F_CALL -> ID . LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON
     (46) PUNTO_8 -> .
 
     LEFT_PARENTHESIS shift and go to state 58
@@ -722,19 +726,19 @@ state 48
 
 state 49
 
-    (92) CYCLE -> DO . BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON
-    (34) BODY -> . LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE
+    (92) CYCLE -> DO . PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29
+    (93) PUNTO_28 -> .
 
-    LEFT_BRACE      shift and go to state 31
+    LEFT_BRACE      reduce using rule 93 (PUNTO_28 -> .)
 
-    BODY                           shift and go to state 60
+    PUNTO_28                       shift and go to state 60
 
 state 50
 
-    (99) PRINT_STMT -> PRINT . PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
-    (100) PUNTO_20 -> .
+    (101) PRINT_STMT -> PRINT . PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
+    (102) PUNTO_20 -> .
 
-    LEFT_PARENTHESIS reduce using rule 100 (PUNTO_20 -> .)
+    LEFT_PARENTHESIS reduce using rule 102 (PUNTO_20 -> .)
 
     PUNTO_20                       shift and go to state 61
 
@@ -743,10 +747,10 @@ state 51
     (22) FUNCS -> VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 . PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7
     (26) PARAMETROS -> . epsilon
     (27) PARAMETROS -> . DEC_PARAMETROS
-    (108) epsilon -> .
+    (110) epsilon -> .
     (29) DEC_PARAMETROS -> . ID COLON TYPE PUNTO_6 LISTA_PARAMETROS
 
-    RIGHT_PARENTHESIS reduce using rule 108 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 110 (epsilon -> .)
     ID              shift and go to state 62
 
     PARAMETROS                     shift and go to state 63
@@ -801,11 +805,11 @@ state 57
 
 state 58
 
-    (93) F_CALL -> ID LEFT_PARENTHESIS . EXPRESIONES RIGHT_PARENTHESIS SEMICOLON
-    (94) EXPRESIONES -> . epsilon
-    (95) EXPRESIONES -> . EXPRESIONES_F
-    (108) epsilon -> .
-    (96) EXPRESIONES_F -> . EXPRESION LISTA_EXP
+    (95) F_CALL -> ID LEFT_PARENTHESIS . EXPRESIONES RIGHT_PARENTHESIS SEMICOLON
+    (96) EXPRESIONES -> . epsilon
+    (97) EXPRESIONES -> . EXPRESIONES_F
+    (110) epsilon -> .
+    (98) EXPRESIONES_F -> . EXPRESION LISTA_EXP
     (49) EXPRESION -> . EXP MAS_EXPRESIONES
     (57) EXP -> . TERMINO PUNTO_14 MAS_EXP
     (64) TERMINO -> . FACTOR PUNTO_15 MAS_TERMINO
@@ -815,10 +819,10 @@ state 58
     (81) OPERADORES_FACTOR -> . MINUS
     (82) OPERADORES_FACTOR -> . epsilon
 
-    RIGHT_PARENTHESIS reduce using rule 108 (epsilon -> .)
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 110 (epsilon -> .)
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
     LEFT_PARENTHESIS shift and go to state 68
     PLUS            shift and go to state 77
     MINUS           shift and go to state 78
@@ -843,14 +847,14 @@ state 59
     (80) OPERADORES_FACTOR -> . PLUS
     (81) OPERADORES_FACTOR -> . MINUS
     (82) OPERADORES_FACTOR -> . epsilon
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     LEFT_PARENTHESIS shift and go to state 68
     PLUS            shift and go to state 77
     MINUS           shift and go to state 78
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
 
     EXPRESION                      shift and go to state 79
     EXP                            shift and go to state 73
@@ -861,14 +865,16 @@ state 59
 
 state 60
 
-    (92) CYCLE -> DO BODY . WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON
+    (92) CYCLE -> DO PUNTO_28 . BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29
+    (34) BODY -> . LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE
 
-    WHILE           shift and go to state 81
+    LEFT_BRACE      shift and go to state 31
 
+    BODY                           shift and go to state 81
 
 state 61
 
-    (99) PRINT_STMT -> PRINT PUNTO_20 . LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
+    (101) PRINT_STMT -> PRINT PUNTO_20 . LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
 
     LEFT_PARENTHESIS shift and go to state 82
 
@@ -906,13 +912,13 @@ state 66
     (14) LISTA_VAR -> LISTA_ID COLON TYPE PUNTO_3 SEMICOLON . MAS_VAR
     (15) MAS_VAR -> . epsilon
     (16) MAS_VAR -> . LISTA_VAR
-    (108) epsilon -> .
+    (110) epsilon -> .
     (14) LISTA_VAR -> . LISTA_ID COLON TYPE PUNTO_3 SEMICOLON MAS_VAR
     (17) LISTA_ID -> . ID MAS_ID
 
-    VOID            reduce using rule 108 (epsilon -> .)
-    MAIN            reduce using rule 108 (epsilon -> .)
-    LEFT_BRACE      reduce using rule 108 (epsilon -> .)
+    VOID            reduce using rule 110 (epsilon -> .)
+    MAIN            reduce using rule 110 (epsilon -> .)
+    LEFT_BRACE      reduce using rule 110 (epsilon -> .)
     ID              shift and go to state 23
 
     LISTA_ID                       shift and go to state 22
@@ -950,17 +956,17 @@ state 68
 
 state 69
 
-    (93) F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES . RIGHT_PARENTHESIS SEMICOLON
+    (95) F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES . RIGHT_PARENTHESIS SEMICOLON
 
     RIGHT_PARENTHESIS shift and go to state 90
 
 
 state 70
 
-    (94) EXPRESIONES -> epsilon .
+    (96) EXPRESIONES -> epsilon .
     (82) OPERADORES_FACTOR -> epsilon .
 
-    RIGHT_PARENTHESIS reduce using rule 94 (EXPRESIONES -> epsilon .)
+    RIGHT_PARENTHESIS reduce using rule 96 (EXPRESIONES -> epsilon .)
     ID              reduce using rule 82 (OPERADORES_FACTOR -> epsilon .)
     CTE_INT         reduce using rule 82 (OPERADORES_FACTOR -> epsilon .)
     CTE_FLOAT       reduce using rule 82 (OPERADORES_FACTOR -> epsilon .)
@@ -968,20 +974,20 @@ state 70
 
 state 71
 
-    (95) EXPRESIONES -> EXPRESIONES_F .
+    (97) EXPRESIONES -> EXPRESIONES_F .
 
-    RIGHT_PARENTHESIS reduce using rule 95 (EXPRESIONES -> EXPRESIONES_F .)
+    RIGHT_PARENTHESIS reduce using rule 97 (EXPRESIONES -> EXPRESIONES_F .)
 
 
 state 72
 
-    (96) EXPRESIONES_F -> EXPRESION . LISTA_EXP
-    (97) LISTA_EXP -> . epsilon
-    (98) LISTA_EXP -> . COMMA EXPRESIONES_F
-    (108) epsilon -> .
+    (98) EXPRESIONES_F -> EXPRESION . LISTA_EXP
+    (99) LISTA_EXP -> . epsilon
+    (100) LISTA_EXP -> . COMMA EXPRESIONES_F
+    (110) epsilon -> .
 
     COMMA           shift and go to state 93
-    RIGHT_PARENTHESIS reduce using rule 108 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 110 (epsilon -> .)
 
     LISTA_EXP                      shift and go to state 91
     epsilon                        shift and go to state 92
@@ -994,14 +1000,14 @@ state 73
     (54) OPERADORES -> . GREATER_THAN
     (55) OPERADORES -> . LESS_THAN
     (56) OPERADORES -> . NOT_EQUAL
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     GREATER_THAN    shift and go to state 97
     LESS_THAN       shift and go to state 98
     NOT_EQUAL       shift and go to state 99
-    COMMA           reduce using rule 108 (epsilon -> .)
-    RIGHT_PARENTHESIS reduce using rule 108 (epsilon -> .)
-    SEMICOLON       reduce using rule 108 (epsilon -> .)
+    COMMA           reduce using rule 110 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 110 (epsilon -> .)
+    SEMICOLON       reduce using rule 110 (epsilon -> .)
 
     MAS_EXPRESIONES                shift and go to state 94
     OPERADORES                     shift and go to state 95
@@ -1092,16 +1098,16 @@ state 80
 
 state 81
 
-    (92) CYCLE -> DO BODY WHILE . LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON
+    (92) CYCLE -> DO PUNTO_28 BODY . WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29
 
-    LEFT_PARENTHESIS shift and go to state 108
+    WHILE           shift and go to state 108
 
 
 state 82
 
-    (99) PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS . PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
-    (101) PARAMETROS_PRINT -> . CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT
-    (102) PARAMETROS_PRINT -> . EXPRESION PUNTO_22 MAS_PRINT
+    (101) PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS . PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON
+    (103) PARAMETROS_PRINT -> . CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT
+    (104) PARAMETROS_PRINT -> . EXPRESION PUNTO_22 MAS_PRINT
     (49) EXPRESION -> . EXP MAS_EXPRESIONES
     (57) EXP -> . TERMINO PUNTO_14 MAS_EXP
     (64) TERMINO -> . FACTOR PUNTO_15 MAS_TERMINO
@@ -1110,15 +1116,15 @@ state 82
     (80) OPERADORES_FACTOR -> . PLUS
     (81) OPERADORES_FACTOR -> . MINUS
     (82) OPERADORES_FACTOR -> . epsilon
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     CTE_STRING      shift and go to state 110
     LEFT_PARENTHESIS shift and go to state 68
     PLUS            shift and go to state 77
     MINUS           shift and go to state 78
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
 
     PARAMETROS_PRINT               shift and go to state 109
     EXPRESION                      shift and go to state 111
@@ -1184,14 +1190,14 @@ state 88
     (80) OPERADORES_FACTOR -> . PLUS
     (81) OPERADORES_FACTOR -> . MINUS
     (82) OPERADORES_FACTOR -> . epsilon
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     LEFT_PARENTHESIS shift and go to state 68
     PLUS            shift and go to state 77
     MINUS           shift and go to state 78
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
 
     EXPRESION                      shift and go to state 114
     EXP                            shift and go to state 73
@@ -1211,14 +1217,14 @@ state 89
     (80) OPERADORES_FACTOR -> . PLUS
     (81) OPERADORES_FACTOR -> . MINUS
     (82) OPERADORES_FACTOR -> . epsilon
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     LEFT_PARENTHESIS shift and go to state 68
     PLUS            shift and go to state 77
     MINUS           shift and go to state 78
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
 
     EXPRESION                      shift and go to state 115
     EXP                            shift and go to state 73
@@ -1229,29 +1235,29 @@ state 89
 
 state 90
 
-    (93) F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS . SEMICOLON
+    (95) F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS . SEMICOLON
 
     SEMICOLON       shift and go to state 116
 
 
 state 91
 
-    (96) EXPRESIONES_F -> EXPRESION LISTA_EXP .
+    (98) EXPRESIONES_F -> EXPRESION LISTA_EXP .
 
-    RIGHT_PARENTHESIS reduce using rule 96 (EXPRESIONES_F -> EXPRESION LISTA_EXP .)
+    RIGHT_PARENTHESIS reduce using rule 98 (EXPRESIONES_F -> EXPRESION LISTA_EXP .)
 
 
 state 92
 
-    (97) LISTA_EXP -> epsilon .
+    (99) LISTA_EXP -> epsilon .
 
-    RIGHT_PARENTHESIS reduce using rule 97 (LISTA_EXP -> epsilon .)
+    RIGHT_PARENTHESIS reduce using rule 99 (LISTA_EXP -> epsilon .)
 
 
 state 93
 
-    (98) LISTA_EXP -> COMMA . EXPRESIONES_F
-    (96) EXPRESIONES_F -> . EXPRESION LISTA_EXP
+    (100) LISTA_EXP -> COMMA . EXPRESIONES_F
+    (98) EXPRESIONES_F -> . EXPRESION LISTA_EXP
     (49) EXPRESION -> . EXP MAS_EXPRESIONES
     (57) EXP -> . TERMINO PUNTO_14 MAS_EXP
     (64) TERMINO -> . FACTOR PUNTO_15 MAS_TERMINO
@@ -1260,14 +1266,14 @@ state 93
     (80) OPERADORES_FACTOR -> . PLUS
     (81) OPERADORES_FACTOR -> . MINUS
     (82) OPERADORES_FACTOR -> . epsilon
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     LEFT_PARENTHESIS shift and go to state 68
     PLUS            shift and go to state 77
     MINUS           shift and go to state 78
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
 
     EXPRESIONES_F                  shift and go to state 117
     EXPRESION                      shift and go to state 72
@@ -1352,16 +1358,16 @@ state 100
     (60) MAS_EXP -> . epsilon
     (62) OPERADORES_EXP -> . PLUS
     (63) OPERADORES_EXP -> . MINUS
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     PLUS            shift and go to state 122
     MINUS           shift and go to state 123
-    GREATER_THAN    reduce using rule 108 (epsilon -> .)
-    LESS_THAN       reduce using rule 108 (epsilon -> .)
-    NOT_EQUAL       reduce using rule 108 (epsilon -> .)
-    COMMA           reduce using rule 108 (epsilon -> .)
-    RIGHT_PARENTHESIS reduce using rule 108 (epsilon -> .)
-    SEMICOLON       reduce using rule 108 (epsilon -> .)
+    GREATER_THAN    reduce using rule 110 (epsilon -> .)
+    LESS_THAN       reduce using rule 110 (epsilon -> .)
+    NOT_EQUAL       reduce using rule 110 (epsilon -> .)
+    COMMA           reduce using rule 110 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 110 (epsilon -> .)
+    SEMICOLON       reduce using rule 110 (epsilon -> .)
 
     MAS_EXP                        shift and go to state 119
     OPERADORES_EXP                 shift and go to state 120
@@ -1372,18 +1378,18 @@ state 101
     (64) TERMINO -> FACTOR PUNTO_15 . MAS_TERMINO
     (66) MAS_TERMINO -> . epsilon
     (67) MAS_TERMINO -> . OPERADORES_TER PUNTO_11 TERMINO
-    (108) epsilon -> .
+    (110) epsilon -> .
     (69) OPERADORES_TER -> . MULTIPLICATION
     (70) OPERADORES_TER -> . DIVISION
 
-    PLUS            reduce using rule 108 (epsilon -> .)
-    MINUS           reduce using rule 108 (epsilon -> .)
-    GREATER_THAN    reduce using rule 108 (epsilon -> .)
-    LESS_THAN       reduce using rule 108 (epsilon -> .)
-    NOT_EQUAL       reduce using rule 108 (epsilon -> .)
-    COMMA           reduce using rule 108 (epsilon -> .)
-    RIGHT_PARENTHESIS reduce using rule 108 (epsilon -> .)
-    SEMICOLON       reduce using rule 108 (epsilon -> .)
+    PLUS            reduce using rule 110 (epsilon -> .)
+    MINUS           reduce using rule 110 (epsilon -> .)
+    GREATER_THAN    reduce using rule 110 (epsilon -> .)
+    LESS_THAN       reduce using rule 110 (epsilon -> .)
+    NOT_EQUAL       reduce using rule 110 (epsilon -> .)
+    COMMA           reduce using rule 110 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 110 (epsilon -> .)
+    SEMICOLON       reduce using rule 110 (epsilon -> .)
     MULTIPLICATION  shift and go to state 127
     DIVISION        shift and go to state 128
 
@@ -1486,55 +1492,35 @@ state 107
 
 state 108
 
-    (92) CYCLE -> DO BODY WHILE LEFT_PARENTHESIS . EXPRESION RIGHT_PARENTHESIS SEMICOLON
-    (49) EXPRESION -> . EXP MAS_EXPRESIONES
-    (57) EXP -> . TERMINO PUNTO_14 MAS_EXP
-    (64) TERMINO -> . FACTOR PUNTO_15 MAS_TERMINO
-    (71) FACTOR -> . OPERADORES_FACTOR ID_CTE
-    (72) FACTOR -> . LEFT_PARENTHESIS PUNTO_16 EXPRESION RIGHT_PARENTHESIS PUNTO_17
-    (80) OPERADORES_FACTOR -> . PLUS
-    (81) OPERADORES_FACTOR -> . MINUS
-    (82) OPERADORES_FACTOR -> . epsilon
-    (108) epsilon -> .
+    (92) CYCLE -> DO PUNTO_28 BODY WHILE . LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29
 
-    LEFT_PARENTHESIS shift and go to state 68
-    PLUS            shift and go to state 77
-    MINUS           shift and go to state 78
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    LEFT_PARENTHESIS shift and go to state 132
 
-    EXPRESION                      shift and go to state 132
-    EXP                            shift and go to state 73
-    TERMINO                        shift and go to state 74
-    FACTOR                         shift and go to state 75
-    OPERADORES_FACTOR              shift and go to state 76
-    epsilon                        shift and go to state 80
 
 state 109
 
-    (99) PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT . RIGHT_PARENTHESIS SEMICOLON
+    (101) PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT . RIGHT_PARENTHESIS SEMICOLON
 
     RIGHT_PARENTHESIS shift and go to state 133
 
 
 state 110
 
-    (101) PARAMETROS_PRINT -> CTE_STRING . PUNTO_21 PUNTO_22 MAS_PRINT
-    (103) PUNTO_21 -> .
+    (103) PARAMETROS_PRINT -> CTE_STRING . PUNTO_21 PUNTO_22 MAS_PRINT
+    (105) PUNTO_21 -> .
 
-    COMMA           reduce using rule 103 (PUNTO_21 -> .)
-    RIGHT_PARENTHESIS reduce using rule 103 (PUNTO_21 -> .)
+    COMMA           reduce using rule 105 (PUNTO_21 -> .)
+    RIGHT_PARENTHESIS reduce using rule 105 (PUNTO_21 -> .)
 
     PUNTO_21                       shift and go to state 134
 
 state 111
 
-    (102) PARAMETROS_PRINT -> EXPRESION . PUNTO_22 MAS_PRINT
-    (104) PUNTO_22 -> .
+    (104) PARAMETROS_PRINT -> EXPRESION . PUNTO_22 MAS_PRINT
+    (106) PUNTO_22 -> .
 
-    COMMA           reduce using rule 104 (PUNTO_22 -> .)
-    RIGHT_PARENTHESIS reduce using rule 104 (PUNTO_22 -> .)
+    COMMA           reduce using rule 106 (PUNTO_22 -> .)
+    RIGHT_PARENTHESIS reduce using rule 106 (PUNTO_22 -> .)
 
     PUNTO_22                       shift and go to state 135
 
@@ -1553,10 +1539,10 @@ state 113
     (22) FUNCS -> VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET . VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7
     (32) VARS_FUNC -> . epsilon
     (33) VARS_FUNC -> . VARS
-    (108) epsilon -> .
+    (110) epsilon -> .
     (12) VARS -> . VAR PUNTO_2 LISTA_VAR
 
-    LEFT_BRACE      reduce using rule 108 (epsilon -> .)
+    LEFT_BRACE      reduce using rule 110 (epsilon -> .)
     VAR             shift and go to state 9
 
     VARS_FUNC                      shift and go to state 137
@@ -1581,20 +1567,20 @@ state 115
 
 state 116
 
-    (93) F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .
+    (95) F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .
 
-    ID              reduce using rule 93 (F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .)
-    IF              reduce using rule 93 (F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .)
-    DO              reduce using rule 93 (F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .)
-    PRINT           reduce using rule 93 (F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .)
-    RIGHT_BRACE     reduce using rule 93 (F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .)
+    ID              reduce using rule 95 (F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .)
+    IF              reduce using rule 95 (F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .)
+    DO              reduce using rule 95 (F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .)
+    PRINT           reduce using rule 95 (F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .)
+    RIGHT_BRACE     reduce using rule 95 (F_CALL -> ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON .)
 
 
 state 117
 
-    (98) LISTA_EXP -> COMMA EXPRESIONES_F .
+    (100) LISTA_EXP -> COMMA EXPRESIONES_F .
 
-    RIGHT_PARENTHESIS reduce using rule 98 (LISTA_EXP -> COMMA EXPRESIONES_F .)
+    RIGHT_PARENTHESIS reduce using rule 100 (LISTA_EXP -> COMMA EXPRESIONES_F .)
 
 
 state 118
@@ -1607,14 +1593,14 @@ state 118
     (80) OPERADORES_FACTOR -> . PLUS
     (81) OPERADORES_FACTOR -> . MINUS
     (82) OPERADORES_FACTOR -> . epsilon
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     LEFT_PARENTHESIS shift and go to state 68
     PLUS            shift and go to state 77
     MINUS           shift and go to state 78
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
 
     EXP                            shift and go to state 142
     TERMINO                        shift and go to state 74
@@ -1795,37 +1781,57 @@ state 131
 
 state 132
 
-    (92) CYCLE -> DO BODY WHILE LEFT_PARENTHESIS EXPRESION . RIGHT_PARENTHESIS SEMICOLON
+    (92) CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS . EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29
+    (49) EXPRESION -> . EXP MAS_EXPRESIONES
+    (57) EXP -> . TERMINO PUNTO_14 MAS_EXP
+    (64) TERMINO -> . FACTOR PUNTO_15 MAS_TERMINO
+    (71) FACTOR -> . OPERADORES_FACTOR ID_CTE
+    (72) FACTOR -> . LEFT_PARENTHESIS PUNTO_16 EXPRESION RIGHT_PARENTHESIS PUNTO_17
+    (80) OPERADORES_FACTOR -> . PLUS
+    (81) OPERADORES_FACTOR -> . MINUS
+    (82) OPERADORES_FACTOR -> . epsilon
+    (110) epsilon -> .
 
-    RIGHT_PARENTHESIS shift and go to state 147
+    LEFT_PARENTHESIS shift and go to state 68
+    PLUS            shift and go to state 77
+    MINUS           shift and go to state 78
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
 
+    EXPRESION                      shift and go to state 147
+    EXP                            shift and go to state 73
+    TERMINO                        shift and go to state 74
+    FACTOR                         shift and go to state 75
+    OPERADORES_FACTOR              shift and go to state 76
+    epsilon                        shift and go to state 80
 
 state 133
 
-    (99) PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS . SEMICOLON
+    (101) PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS . SEMICOLON
 
     SEMICOLON       shift and go to state 148
 
 
 state 134
 
-    (101) PARAMETROS_PRINT -> CTE_STRING PUNTO_21 . PUNTO_22 MAS_PRINT
-    (104) PUNTO_22 -> .
+    (103) PARAMETROS_PRINT -> CTE_STRING PUNTO_21 . PUNTO_22 MAS_PRINT
+    (106) PUNTO_22 -> .
 
-    COMMA           reduce using rule 104 (PUNTO_22 -> .)
-    RIGHT_PARENTHESIS reduce using rule 104 (PUNTO_22 -> .)
+    COMMA           reduce using rule 106 (PUNTO_22 -> .)
+    RIGHT_PARENTHESIS reduce using rule 106 (PUNTO_22 -> .)
 
     PUNTO_22                       shift and go to state 149
 
 state 135
 
-    (102) PARAMETROS_PRINT -> EXPRESION PUNTO_22 . MAS_PRINT
-    (105) MAS_PRINT -> . epsilon
-    (106) MAS_PRINT -> . COMMA PUNTO_23 PARAMETROS_PRINT
-    (108) epsilon -> .
+    (104) PARAMETROS_PRINT -> EXPRESION PUNTO_22 . MAS_PRINT
+    (107) MAS_PRINT -> . epsilon
+    (108) MAS_PRINT -> . COMMA PUNTO_23 PARAMETROS_PRINT
+    (110) epsilon -> .
 
     COMMA           shift and go to state 152
-    RIGHT_PARENTHESIS reduce using rule 108 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 110 (epsilon -> .)
 
     MAS_PRINT                      shift and go to state 150
     epsilon                        shift and go to state 151
@@ -1835,10 +1841,10 @@ state 136
     (29) DEC_PARAMETROS -> ID COLON TYPE PUNTO_6 . LISTA_PARAMETROS
     (30) LISTA_PARAMETROS -> . epsilon
     (31) LISTA_PARAMETROS -> . COMMA DEC_PARAMETROS
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     COMMA           shift and go to state 155
-    RIGHT_PARENTHESIS reduce using rule 108 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 110 (epsilon -> .)
 
     LISTA_PARAMETROS               shift and go to state 153
     epsilon                        shift and go to state 154
@@ -1912,14 +1918,14 @@ state 143
     (80) OPERADORES_FACTOR -> . PLUS
     (81) OPERADORES_FACTOR -> . MINUS
     (82) OPERADORES_FACTOR -> . epsilon
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     LEFT_PARENTHESIS shift and go to state 68
     PLUS            shift and go to state 77
     MINUS           shift and go to state 78
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
 
     EXP                            shift and go to state 160
     TERMINO                        shift and go to state 74
@@ -1936,14 +1942,14 @@ state 144
     (80) OPERADORES_FACTOR -> . PLUS
     (81) OPERADORES_FACTOR -> . MINUS
     (82) OPERADORES_FACTOR -> . epsilon
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     LEFT_PARENTHESIS shift and go to state 68
     PLUS            shift and go to state 77
     MINUS           shift and go to state 78
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
 
     TERMINO                        shift and go to state 161
     FACTOR                         shift and go to state 75
@@ -1971,71 +1977,71 @@ state 146
     (85) CONDITION -> IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS PUNTO_24 BODY . ELSE_CONDITION SEMICOLON PUNTO_25
     (89) ELSE_CONDITION -> . epsilon
     (90) ELSE_CONDITION -> . ELSE PUNTO_26 BODY PUNTO_27
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     ELSE            shift and go to state 164
-    SEMICOLON       reduce using rule 108 (epsilon -> .)
+    SEMICOLON       reduce using rule 110 (epsilon -> .)
 
     ELSE_CONDITION                 shift and go to state 162
     epsilon                        shift and go to state 163
 
 state 147
 
-    (92) CYCLE -> DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS . SEMICOLON
+    (92) CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION . RIGHT_PARENTHESIS SEMICOLON PUNTO_29
 
-    SEMICOLON       shift and go to state 165
+    RIGHT_PARENTHESIS shift and go to state 165
 
 
 state 148
 
-    (99) PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .
+    (101) PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .
 
-    ID              reduce using rule 99 (PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .)
-    IF              reduce using rule 99 (PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .)
-    DO              reduce using rule 99 (PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .)
-    PRINT           reduce using rule 99 (PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .)
-    RIGHT_BRACE     reduce using rule 99 (PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .)
+    ID              reduce using rule 101 (PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .)
+    IF              reduce using rule 101 (PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .)
+    DO              reduce using rule 101 (PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .)
+    PRINT           reduce using rule 101 (PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .)
+    RIGHT_BRACE     reduce using rule 101 (PRINT_STMT -> PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON .)
 
 
 state 149
 
-    (101) PARAMETROS_PRINT -> CTE_STRING PUNTO_21 PUNTO_22 . MAS_PRINT
-    (105) MAS_PRINT -> . epsilon
-    (106) MAS_PRINT -> . COMMA PUNTO_23 PARAMETROS_PRINT
-    (108) epsilon -> .
+    (103) PARAMETROS_PRINT -> CTE_STRING PUNTO_21 PUNTO_22 . MAS_PRINT
+    (107) MAS_PRINT -> . epsilon
+    (108) MAS_PRINT -> . COMMA PUNTO_23 PARAMETROS_PRINT
+    (110) epsilon -> .
 
     COMMA           shift and go to state 152
-    RIGHT_PARENTHESIS reduce using rule 108 (epsilon -> .)
+    RIGHT_PARENTHESIS reduce using rule 110 (epsilon -> .)
 
     MAS_PRINT                      shift and go to state 166
     epsilon                        shift and go to state 151
 
 state 150
 
-    (102) PARAMETROS_PRINT -> EXPRESION PUNTO_22 MAS_PRINT .
+    (104) PARAMETROS_PRINT -> EXPRESION PUNTO_22 MAS_PRINT .
 
-    RIGHT_PARENTHESIS reduce using rule 102 (PARAMETROS_PRINT -> EXPRESION PUNTO_22 MAS_PRINT .)
+    RIGHT_PARENTHESIS reduce using rule 104 (PARAMETROS_PRINT -> EXPRESION PUNTO_22 MAS_PRINT .)
 
 
 state 151
 
-    (105) MAS_PRINT -> epsilon .
+    (107) MAS_PRINT -> epsilon .
 
-    RIGHT_PARENTHESIS reduce using rule 105 (MAS_PRINT -> epsilon .)
+    RIGHT_PARENTHESIS reduce using rule 107 (MAS_PRINT -> epsilon .)
 
 
 state 152
 
-    (106) MAS_PRINT -> COMMA . PUNTO_23 PARAMETROS_PRINT
-    (107) PUNTO_23 -> .
+    (108) MAS_PRINT -> COMMA . PUNTO_23 PARAMETROS_PRINT
+    (109) PUNTO_23 -> .
 
-    CTE_STRING      reduce using rule 107 (PUNTO_23 -> .)
-    LEFT_PARENTHESIS reduce using rule 107 (PUNTO_23 -> .)
-    PLUS            reduce using rule 107 (PUNTO_23 -> .)
-    MINUS           reduce using rule 107 (PUNTO_23 -> .)
-    ID              reduce using rule 107 (PUNTO_23 -> .)
-    CTE_INT         reduce using rule 107 (PUNTO_23 -> .)
-    CTE_FLOAT       reduce using rule 107 (PUNTO_23 -> .)
+    CTE_STRING      reduce using rule 109 (PUNTO_23 -> .)
+    LEFT_PARENTHESIS reduce using rule 109 (PUNTO_23 -> .)
+    PLUS            reduce using rule 109 (PUNTO_23 -> .)
+    MINUS           reduce using rule 109 (PUNTO_23 -> .)
+    ID              reduce using rule 109 (PUNTO_23 -> .)
+    CTE_INT         reduce using rule 109 (PUNTO_23 -> .)
+    CTE_FLOAT       reduce using rule 109 (PUNTO_23 -> .)
 
     PUNTO_23                       shift and go to state 167
 
@@ -2156,27 +2162,23 @@ state 164
 
 state 165
 
-    (92) CYCLE -> DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON .
+    (92) CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS . SEMICOLON PUNTO_29
 
-    ID              reduce using rule 92 (CYCLE -> DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON .)
-    IF              reduce using rule 92 (CYCLE -> DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON .)
-    DO              reduce using rule 92 (CYCLE -> DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON .)
-    PRINT           reduce using rule 92 (CYCLE -> DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON .)
-    RIGHT_BRACE     reduce using rule 92 (CYCLE -> DO BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON .)
+    SEMICOLON       shift and go to state 172
 
 
 state 166
 
-    (101) PARAMETROS_PRINT -> CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT .
+    (103) PARAMETROS_PRINT -> CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT .
 
-    RIGHT_PARENTHESIS reduce using rule 101 (PARAMETROS_PRINT -> CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT .)
+    RIGHT_PARENTHESIS reduce using rule 103 (PARAMETROS_PRINT -> CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT .)
 
 
 state 167
 
-    (106) MAS_PRINT -> COMMA PUNTO_23 . PARAMETROS_PRINT
-    (101) PARAMETROS_PRINT -> . CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT
-    (102) PARAMETROS_PRINT -> . EXPRESION PUNTO_22 MAS_PRINT
+    (108) MAS_PRINT -> COMMA PUNTO_23 . PARAMETROS_PRINT
+    (103) PARAMETROS_PRINT -> . CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT
+    (104) PARAMETROS_PRINT -> . EXPRESION PUNTO_22 MAS_PRINT
     (49) EXPRESION -> . EXP MAS_EXPRESIONES
     (57) EXP -> . TERMINO PUNTO_14 MAS_EXP
     (64) TERMINO -> . FACTOR PUNTO_15 MAS_TERMINO
@@ -2185,17 +2187,17 @@ state 167
     (80) OPERADORES_FACTOR -> . PLUS
     (81) OPERADORES_FACTOR -> . MINUS
     (82) OPERADORES_FACTOR -> . epsilon
-    (108) epsilon -> .
+    (110) epsilon -> .
 
     CTE_STRING      shift and go to state 110
     LEFT_PARENTHESIS shift and go to state 68
     PLUS            shift and go to state 77
     MINUS           shift and go to state 78
-    ID              reduce using rule 108 (epsilon -> .)
-    CTE_INT         reduce using rule 108 (epsilon -> .)
-    CTE_FLOAT       reduce using rule 108 (epsilon -> .)
+    ID              reduce using rule 110 (epsilon -> .)
+    CTE_INT         reduce using rule 110 (epsilon -> .)
+    CTE_FLOAT       reduce using rule 110 (epsilon -> .)
 
-    PARAMETROS_PRINT               shift and go to state 172
+    PARAMETROS_PRINT               shift and go to state 173
     EXPRESION                      shift and go to state 111
     EXP                            shift and go to state 73
     TERMINO                        shift and go to state 74
@@ -2214,7 +2216,7 @@ state 169
 
     (22) FUNCS -> VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET . SEMICOLON PUNTO_7
 
-    SEMICOLON       shift and go to state 173
+    SEMICOLON       shift and go to state 174
 
 
 state 170
@@ -2228,7 +2230,7 @@ state 170
     PRINT           reduce using rule 87 (PUNTO_25 -> .)
     RIGHT_BRACE     reduce using rule 87 (PUNTO_25 -> .)
 
-    PUNTO_25                       shift and go to state 174
+    PUNTO_25                       shift and go to state 175
 
 state 171
 
@@ -2237,16 +2239,29 @@ state 171
 
     LEFT_BRACE      shift and go to state 31
 
-    BODY                           shift and go to state 175
+    BODY                           shift and go to state 176
 
 state 172
 
-    (106) MAS_PRINT -> COMMA PUNTO_23 PARAMETROS_PRINT .
+    (92) CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON . PUNTO_29
+    (94) PUNTO_29 -> .
 
-    RIGHT_PARENTHESIS reduce using rule 106 (MAS_PRINT -> COMMA PUNTO_23 PARAMETROS_PRINT .)
+    ID              reduce using rule 94 (PUNTO_29 -> .)
+    IF              reduce using rule 94 (PUNTO_29 -> .)
+    DO              reduce using rule 94 (PUNTO_29 -> .)
+    PRINT           reduce using rule 94 (PUNTO_29 -> .)
+    RIGHT_BRACE     reduce using rule 94 (PUNTO_29 -> .)
 
+    PUNTO_29                       shift and go to state 177
 
 state 173
+
+    (108) MAS_PRINT -> COMMA PUNTO_23 PARAMETROS_PRINT .
+
+    RIGHT_PARENTHESIS reduce using rule 108 (MAS_PRINT -> COMMA PUNTO_23 PARAMETROS_PRINT .)
+
+
+state 174
 
     (22) FUNCS -> VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON . PUNTO_7
     (25) PUNTO_7 -> .
@@ -2254,9 +2269,9 @@ state 173
     VOID            reduce using rule 25 (PUNTO_7 -> .)
     MAIN            reduce using rule 25 (PUNTO_7 -> .)
 
-    PUNTO_7                        shift and go to state 176
+    PUNTO_7                        shift and go to state 178
 
-state 174
+state 175
 
     (85) CONDITION -> IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS PUNTO_24 BODY ELSE_CONDITION SEMICOLON PUNTO_25 .
 
@@ -2267,16 +2282,27 @@ state 174
     RIGHT_BRACE     reduce using rule 85 (CONDITION -> IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS PUNTO_24 BODY ELSE_CONDITION SEMICOLON PUNTO_25 .)
 
 
-state 175
+state 176
 
     (90) ELSE_CONDITION -> ELSE PUNTO_26 BODY . PUNTO_27
     (91) PUNTO_27 -> .
 
     SEMICOLON       reduce using rule 91 (PUNTO_27 -> .)
 
-    PUNTO_27                       shift and go to state 177
+    PUNTO_27                       shift and go to state 179
 
-state 176
+state 177
+
+    (92) CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29 .
+
+    ID              reduce using rule 92 (CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29 .)
+    IF              reduce using rule 92 (CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29 .)
+    DO              reduce using rule 92 (CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29 .)
+    PRINT           reduce using rule 92 (CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29 .)
+    RIGHT_BRACE     reduce using rule 92 (CYCLE -> DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29 .)
+
+
+state 178
 
     (22) FUNCS -> VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7 .
 
@@ -2284,7 +2310,7 @@ state 176
     MAIN            reduce using rule 22 (FUNCS -> VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7 .)
 
 
-state 177
+state 179
 
     (90) ELSE_CONDITION -> ELSE PUNTO_26 BODY PUNTO_27 .
 
