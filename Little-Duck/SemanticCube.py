@@ -6,6 +6,8 @@ class SemanticCube:
             ('int', 'float', '='): 'float',
             ('float', 'int', '='): 'float',
             ('float', 'float', '='): 'float',
+            ('int', 'bool', '='): 'bool',
+            ('float', 'bool', '='): 'bool',
             ('int', 'int', '+'): 'int',
             ('int', 'float', '+'): 'float',
             ('float', 'int', '+'): 'float',

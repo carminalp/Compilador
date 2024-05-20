@@ -8,10 +8,8 @@ main
 { 
     if ( a + b > c * d) {
         a = b + d;
-    } else {
-        a = d - c;
     };
-    b = a * c + d;
+    b = a * c;
 }
 
 end 

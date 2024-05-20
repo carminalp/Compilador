@@ -9,17 +9,11 @@ previamente definidas.
 
 @author: Carmina López Palacios
 """
-# RECUERDAMEEEEEEE
-# BORRAR!!!!!!
-def print_stack(stack, message="Contenido de la pila:"):
-    print(message)
-    for elemento in stack:
-        print(elemento)
 
 import ply.yacc as yacc
 from lexer import tokens
 from FuncDirectory import FuncDirectory
-from semanticActions import semanticOperations, semanticAssign, semanticPrint
+from semanticActions import semanticOperations, semanticAssign, semanticPrint, semanticExpressions, semanticConditionIf, fillGotoF, semanticConditionElse, fillGoto
 from cteDirectory import ConstantDirectory
 
 # Initialization of stack 
@@ -27,6 +21,7 @@ PilaO = [] # Pila Operandos
 POper = [] # Pila Operadores
 Quad = [] # Fila cuadroplos
 AVAIL = iter(range(2302,3200)) # set of Temporal spaces 
+PJumps = []
 
 # Create an instance of cte Directory
 const_directory = ConstantDirectory()
@@ -53,7 +48,6 @@ def p_punto_1(p):
     # Inside of this method validates if the id func already exists
     dir_func.add_function(p[-1],'NP')
     dir_func.set_current_function(p[-1])
-    # *BORRAR* Set global_name
     dir_func.set_current_global(p[-1])
 
 #-------------------------
@@ -321,30 +315,37 @@ def p_punto_18(p):
     "PUNTO_18 :"
     if POper[-1] == '=':
         semanticAssign(PilaO, POper, Quad, AVAIL)
-    print(Quad)
 
 #----------------#
 ## <EXPRESIÓN> ##
 #---------------#
 def p_expresion(p):
     '''EXPRESION : EXP MAS_EXPRESIONES'''
-    p[0] = ('EXPRESION', p[1], p[2])
+    p[0] = (p[1], p[2])
 
 # <MAS_EXPRESIONES>
 def p_mas_expresiones(p):
-    '''MAS_EXPRESIONES : epsilon
-                       | OPERADORES PUNTO_13 EXP'''
+    '''MAS_EXPRESIONES : OPERADORES PUNTO_13 EXP PUNTO_13_1 
+                       | epsilon'''
     if len(p) > 2:
-        p[0] = ('MAS_EXPRESIONES', p[1], p[3])
-    else:
+        p[0] = (p[1], p[3])
         p[0] = None
 
 # -------------------------
 # ---- NEURALGIC POINT ----
-# save operator  
+# 13) save operator  
 def p_punto_13(p):
     "PUNTO_13 :"
     POper.append(p[-1])
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 13.1) See if there's a > or < or != at Poper
+def p_punto_13_1(p):
+    "PUNTO_13_1 :"
+    if POper[-1] == '>' or POper[-1]  == '<' or POper[-1]  == '!=':
+        semanticExpressions(PilaO, POper, Quad, AVAIL)
+
 
 # <OPERADORES>
 def p_operadores(p):
@@ -358,23 +359,23 @@ def p_operadores(p):
 #---------#
 def p_exp(p):
     '''EXP : TERMINO PUNTO_14 MAS_EXP'''
-    p[0] = ('EXP', p[1], p[3])
+    p[0] = p[1], p[3]
 
 # -------------------------
 # ---- NEURALGIC POINT ----
 # See if there's a + or -  at Poper
 def p_punto_14(p):
     "PUNTO_14 :"
-    if POper[-1] == '+' or POper[-1]  == '-':
-        semanticOperations(PilaO, POper, Quad, AVAIL)
-    print(Quad) # BORRAR
+    if POper: # See if poper isn't empty
+        if POper[-1] == '+' or POper[-1]  == '-':
+            semanticOperations(PilaO, POper, Quad, AVAIL)
 
 # <MAS_EXP>
 def p_mas_exp(p):
     '''MAS_EXP : OPERADORES_EXP PUNTO_12 EXP
                | epsilon'''
     if len(p) > 2:
-        p[0] = ('MAS_EXP', p[1], p[3])
+        p[0] = p[1], p[3]
     else:
         p[0] = None
 
@@ -396,23 +397,23 @@ def p_operadores_exp(p):
 #-------------#
 def p_termino(p):
     '''TERMINO : FACTOR PUNTO_15 MAS_TERMINO'''
-    p[0] = ('TERMINO', p[1], p[3])
+    p[0] = (p[1], p[3])
 
 # -------------------------
 # ---- NEURALGIC POINT ----
 # See if there's a * or / at Poper
 def p_punto_15(p):
     "PUNTO_15 :"
-    if POper[-1] == '*' or POper[-1]  == '/':
-        semanticOperations(PilaO, POper, Quad, AVAIL)
-    print(Quad)
+    if POper: # See if poper isn't empty
+        if POper[-1] == '*' or POper[-1]  == '/':
+            semanticOperations(PilaO, POper, Quad, AVAIL)
 
 # <MAS_TERMINO>
 def p_mas_termino(p):
     '''MAS_TERMINO : epsilon
                    | OPERADORES_TER PUNTO_11 TERMINO'''
     if len(p) > 2:
-        p[0] = ('MAS_TERMINO', p[1], p[3])
+        p[0] = (p[1], p[3])
     else:
         p[0] = None
 
@@ -436,9 +437,9 @@ def p_factor(p):
     '''FACTOR : OPERADORES_FACTOR ID_CTE
               | LEFT_PARENTHESIS PUNTO_16 EXPRESION RIGHT_PARENTHESIS PUNTO_17'''
     if len(p) >= 4:
-        p[0] = ('FACTOR', p[3])
+        p[0] = p[3]
     else:
-        p[0] = ('FACTOR', p[1], p[2])
+        p[0] = p[1], p[2]
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -465,7 +466,6 @@ def p_id_cte(p):
 # add CTE to directory
 def p_punto_cte(p):
     "PUNTO_CTE :"
-    print(p[-1])
     const_type = const_directory.determine_const_type(p[-1])
     const_directory.add_constant(p[-1], const_type)
 
@@ -493,7 +493,7 @@ def p_operadores_factor(p):
                          | MINUS
                          | epsilon'''
     if len(p) == 2:
-        p[0] = ('OPERADORES_FACTOR', p[1])
+        p[0] = p[1]
     else:
         p[0] = None
 
@@ -510,17 +510,47 @@ def p_cte(p):
 ## <CONDITION> ##
 #---------------#
 def p_condition(p):
-    '''CONDITION : IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS BODY ELSE_CONDITION SEMICOLON'''
-    p[0] = ('CONDITION', p[3], p[5], p[6])
+    '''CONDITION : IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS PUNTO_24 BODY ELSE_CONDITION SEMICOLON PUNTO_25'''
+    p[0] = ('CONDITION', p[3], p[6], p[7])
+    print("Else", p[7])
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 24) GotoF 
+def p_punto_24(p):
+    "PUNTO_24 :"
+    semanticConditionIf(PilaO, POper, Quad, AVAIL, PJumps)
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 25) Fill Quadruples GotoF
+def p_punto_25(p):
+    "PUNTO_25 :"
+    if p[-2] == None:
+        fillGotoF(Quad, PJumps)
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 26) Goto 
+def p_punto_26(p):
+    "PUNTO_26 :"
+    semanticConditionElse(PilaO, POper, Quad, AVAIL, PJumps)  
 
 # <ELSE_CONDITION>
 def p_else(p):
     '''ELSE_CONDITION : epsilon
-                      | ELSE BODY'''
-    if len(p) == 3:
-        p[0] = ('ELSE_CONDITION', p[2])
+                      | ELSE PUNTO_26 BODY PUNTO_27'''
+    if len(p) >= 3:
+        p[0] = p[3]
     else:
         p[0] = None
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 27) Fill Quadruples Goto
+def p_punto_27(p):
+    "PUNTO_27 :"
+    fillGoto(Quad, PJumps)
+    #fillGotoF(Quad, PJumps)
 
 #-----------#
 ## <CYCLE> ##
@@ -564,7 +594,6 @@ def p_lista_exp(p):
 #----------------#
 def p_print_stmt(p):
     '''PRINT_STMT : PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON'''
-    print(p[3])
     p[0] = ('PRINT_STMT', p[4])
 
 # -------------------------
@@ -595,7 +624,6 @@ def p_punto_22(p):
     "PUNTO_22 :"
     if POper[-1] == 'print':
         semanticPrint(PilaO, POper, Quad, AVAIL)
-        print(Quad)
 
 
 # <MAS_PRINT>
@@ -641,6 +669,13 @@ with open(input_file, 'r') as file:
 
 # Analiza la entrada
 parsed_result = parse_input(data)
+
+# Print Quad
+def print_quadruples(quadruples):
+    for i, quad in enumerate(quadruples):
+        print(f"{i + 1}. {quad}")
+
+print_quadruples(Quad)
 
 # print(parsed_result)
 # dir_func.print_directory()

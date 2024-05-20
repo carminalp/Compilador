@@ -2,6 +2,8 @@ from SemanticCube import SemanticCube
 from Quadruple import Quadruple
 
 semantic_cube = SemanticCube()
+cont = 0
+
 """
     If any operand were a temporal space, return it to AVAIL
 
@@ -21,6 +23,8 @@ def return_to_avail_if_temporal(operand):
     # Quad is the Quadruple 
 """
 def semanticOperations(PilaO, POper, Quad, AVAIL):
+    global cont
+
     # Pop of the operator, right and left operands
     right_operand, right_type = PilaO.pop()
     left_operand, left_type = PilaO.pop()
@@ -34,6 +38,7 @@ def semanticOperations(PilaO, POper, Quad, AVAIL):
         result = next(AVAIL)
         quad = Quadruple(operator, left_operand, right_operand, result)
         Quad.append(quad)
+        cont += 1
         PilaO.append((result, result_type))
 
         return_to_avail_if_temporal(right_operand)
@@ -43,11 +48,14 @@ def semanticOperations(PilaO, POper, Quad, AVAIL):
         raise ValueError("Type mismatch error")
 
 def semanticAssign(PilaO, POper, Quad, AVAIL):
+    global cont
+
     # Pop of the operator, right and left operands
     right_operand, right_type = PilaO.pop()
     left_operand, left_type = PilaO.pop()
     operator = POper.pop()
     
+    # PENDIENTE DE VALIDAR
     # Evaluate the result type with the semantic cube
     result_type = semantic_cube.get_result_type(left_type, right_type, operator)
     
@@ -55,6 +63,7 @@ def semanticAssign(PilaO, POper, Quad, AVAIL):
         # Take the next temporary result
         quad = Quadruple(operator, right_operand , None , left_operand)
         Quad.append(quad)
+        cont += 1
 
         return_to_avail_if_temporal(right_operand)
         return_to_avail_if_temporal(left_operand)
@@ -63,10 +72,76 @@ def semanticAssign(PilaO, POper, Quad, AVAIL):
         raise ValueError("Type mismatch error")
 
 def semanticPrint(PilaO, POper, Quad, AVAIL): 
+    global cont
+
     # Pop of the operator, right and left operands
     cte_string, cte_type = PilaO.pop()
     operator = POper.pop()
     
     quad = Quadruple(operator, None , None , cte_string)
     Quad.append(quad)
-        
+    cont += 1
+
+def semanticExpressions(PilaO, POper, Quad, AVAIL):
+    global cont
+
+    # Pop of the operator, right and left operands
+    right_operand, right_type = PilaO.pop()
+    left_operand, left_type = PilaO.pop()
+    operator = POper.pop()
+
+    # Evaluate the result type with the semantic cube
+    result_type = semantic_cube.get_result_type(left_type, right_type, operator)
+
+    if result_type != ValueError:
+        result = next(AVAIL)
+        # Take the next temporary result
+        quad = Quadruple(operator, left_operand, right_operand, result)
+        Quad.append(quad)
+        cont += 1
+
+        PilaO.append((result, result_type))
+
+        return_to_avail_if_temporal(right_operand)
+        return_to_avail_if_temporal(left_operand)
+
+    else:
+        raise ValueError("Type mismatch error") 
+
+def semanticConditionIf(PilaO, POper, Quad, AVAIL, PJumps):
+    global cont
+
+    # Pop of the operator, right and left operands
+    exp, exp_type = PilaO.pop()
+
+    if (exp_type != 'bool'):
+        raise ValueError("Type mismatch error")
+    else: 
+        result = exp
+        quad = Quadruple('GotoF', result, None, None)
+        Quad.append(quad)
+        PJumps.append(cont)
+        cont += 1
+
+def fillGotoF(Quad, PJumps):
+    global cont
+    #result = PJumps.pop()
+    if PJumps:
+        end = PJumps.pop()
+        Quad[end].result = cont + 1
+
+def semanticConditionElse(PilaO, POper, Quad, AVAIL, PJumps):
+    global cont
+    quad = Quadruple('Goto', None, None, None)
+    Quad.append(quad)
+    cont += 1
+    #print(cont)
+    fillGotoF(Quad, PJumps)
+    PJumps.append(cont-1)
+
+def fillGoto(Quad, PJumps):
+    global cont
+    if PJumps:
+        print(cont)
+        false = PJumps.pop()
+        Quad[false].result = cont + 1
