@@ -114,3 +114,15 @@ class FuncDirectory:
             raise ValueError("No hay tabla de variables para eliminar")
         
         self.functions[func_name]['varTab'] = None
+    
+    def get_current_type(self, name):
+        varTable = self.functions[self.currentFunc]['varTab'].variableTable
+        varTableGlobal = self.functions[self.globalName]['varTab'].variableTable
+        
+        if name in varTableGlobal:
+            return varTableGlobal[name]['type']
+        
+        elif name in varTable:
+            return varTable[name]['type']
+        else:
+            raise ValueError("No current variable")

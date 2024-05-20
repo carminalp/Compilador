@@ -28,10 +28,9 @@ const_directory = ConstantDirectory()
 
 # Formal grammar
 # Using syntax Backus-Naur Form (BNF)
-
-#--------------#
-## <Programa> ##
-#--------------#
+#--------------------------------------------------------------------------------------------------------#
+##                                     <Programa>                                                       ##
+#--------------------------------------------------------------------------------------------------------#
 # 1) Create an instance of Functon Directory
 dir_func = FuncDirectory()
 
@@ -55,6 +54,8 @@ def p_punto_1(p):
 # Set current function to global
 def p_punto_current(p):
     "PUNTO_CURRENT :"
+    global global_name
+
     global_name = dir_func.get_current_global()
     dir_func.set_current_function(global_name)
 
@@ -98,9 +99,9 @@ def p_punto_2(p):
     #2) Create variable table
     dir_func.create_variable_table()
 
-#----------#
-## <VARS> ##
-#----------#
+#--------------------------------------------------------------------------------------------------------#
+##                                        <VARS>                                                        ##
+#--------------------------------------------------------------------------------------------------------#
 def p_vars(p):
     '''VARS : VAR PUNTO_2 LISTA_VAR'''
     p[0] = ('VARS', p[3])
@@ -148,28 +149,26 @@ def p_mas_id(p):
     else:
         p[0] = None
 
-#----------#
-## <Type> ##
-#----------#
+#--------------------------------------------------------------------------------------------------------#
+##                                           <Type>                                                      ##
+#--------------------------------------------------------------------------------------------------------#
 def p_type(p):
     '''TYPE : INT
             | FLOAT'''
     p[0] = p[1]
 
-#-----------#
-## <FUNCS> ##
-#-----------#
+#--------------------------------------------------------------------------------------------------------#
+##                                          <FUNCS>                                                      ##
+#--------------------------------------------------------------------------------------------------------#
 def p_funcs(p):
     '''FUNCS : VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7'''
     p[0] = ('FUNCS', p[2], p[6], p[9], p[10])
-    print("Directorio función")
 
 #-------------------------
 # ---- NEURALGIC POINT ----
 # 4) To add new function to DirFunc
 def p_punto_4(p):
     "PUNTO_4 :"
-    
     # 4) Add new function 'ID'
     # Inside of this method validates if the id func already exists
     dir_func.add_function(p[-1],p[-2]) 
@@ -180,8 +179,6 @@ def p_punto_4(p):
 # 5) To create a varTable and link it to current Func
 def p_punto_5(p):
     "PUNTO_5 :"
-    
-    #5) Create variable table
     dir_func.create_variable_table()
     
 
@@ -190,13 +187,7 @@ def p_punto_5(p):
 # 7) Delete var table and clear PilaO, POper and Quad
 def p_punto_7(p):
     "PUNTO_7 :"
-    
-    #7) Delete variables
     dir_func.delete_variable_table(p[-11])
-    # Delete stack
-    PilaO.clear()
-    POper.clear()
-    Quad.clear()
 
 
 # <PARAMETROS>
@@ -240,9 +231,9 @@ def p_vars_func(p):
     else:
         p[0] = None
  
-#----------#
-## <BODY> ##
-#----------#
+#--------------------------------------------------------------------------------------------------------#
+##                                            <BODY>                                                    ##
+#--------------------------------------------------------------------------------------------------------#
 def p_body(p):
     '''BODY : LEFT_BRACE DEC_STATEMENTS RIGHT_BRACE'''
     p[0] = ('BODY', p[2])
@@ -270,9 +261,9 @@ def p_mas_staments(p):
     else:
         p[0] = None
 
-#---------------#
-## <STATEMENT> ##
-#---------------#
+#--------------------------------------------------------------------------------------------------------#
+##                                          <STATEMENT>                                                  ##
+#--------------------------------------------------------------------------------------------------------#
 def p_statement(p):
     '''STATEMENT : ASSIGN
                  | CONDITION
@@ -282,9 +273,9 @@ def p_statement(p):
     '''
     p[0] = ('STATEMENT', p[1])
 
-#------------#
-## <ASSIGN> ##
-#------------#
+#--------------------------------------------------------------------------------------------------------#
+##                                         <ASSIGN>                                                     ##
+#--------------------------------------------------------------------------------------------------------#
 def p_assign(p):
     'ASSIGN : ID PUNTO_8 EQUAL PUNTO_9 EXPRESION PUNTO_18 SEMICOLON'
     p[0] = ('ASSIGN', p[1], p[5])
@@ -296,7 +287,8 @@ def p_assign(p):
 def p_punto_8(p):
     "PUNTO_8 :"
     var_name = p[-1] 
-    var_type = dir_func.get_current_function_vars()[var_name]['type']
+    var_type = dir_func.get_current_type(var_name)
+
     PilaO.append((var_name, var_type))
 
 # -------------------------
@@ -305,8 +297,6 @@ def p_punto_8(p):
 def p_punto_9(p):
     "PUNTO_9 :"
     POper.append(p[-1])
-    #var_name, var_type = PilaO.pop()
-    #print(f"Assignment: {var_name} {POper.pop()}")
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -316,9 +306,9 @@ def p_punto_18(p):
     if POper[-1] == '=':
         semanticAssign(PilaO, POper, Quad, AVAIL)
 
-#----------------#
-## <EXPRESIÓN> ##
-#---------------#
+#--------------------------------------------------------------------------------------------------------#
+##                                          <EXPRESIÓN>                                                 ##
+#--------------------------------------------------------------------------------------------------------#
 def p_expresion(p):
     '''EXPRESION : EXP MAS_EXPRESIONES'''
     p[0] = (p[1], p[2])
@@ -354,9 +344,9 @@ def p_operadores(p):
                   | NOT_EQUAL'''
     p[0] = p[1]
 
-#---------#
-## <EXP> ##
-#---------#
+#--------------------------------------------------------------------------------------------------------#
+##                                           <EXP>                                                      ##
+#--------------------------------------------------------------------------------------------------------#
 def p_exp(p):
     '''EXP : TERMINO PUNTO_14 MAS_EXP'''
     p[0] = p[1], p[3]
@@ -392,9 +382,9 @@ def p_operadores_exp(p):
                       | MINUS'''
     p[0] = p[1]
 
-#--------------#
+#--------------------------------------------------------------------------------------------------------#
 ## <TERMINO> ##
-#-------------#
+#--------------------------------------------------------------------------------------------------------#
 def p_termino(p):
     '''TERMINO : FACTOR PUNTO_15 MAS_TERMINO'''
     p[0] = (p[1], p[3])
@@ -430,9 +420,9 @@ def p_operadores_ter(p):
                       | DIVISION'''
     p[0] = p[1]
 
-#------------#
+#--------------------------------------------------------------------------------------------------------#
 ## <FACTOR> ##
-#------------#
+#--------------------------------------------------------------------------------------------------------#
 def p_factor(p):
     '''FACTOR : OPERADORES_FACTOR ID_CTE
               | LEFT_PARENTHESIS PUNTO_16 EXPRESION RIGHT_PARENTHESIS PUNTO_17'''
@@ -475,7 +465,7 @@ def p_punto_cte(p):
 def p_punto_10(p):
     "PUNTO_10 :"
     var_name = p[-1] 
-    var_type = dir_func.get_current_function_vars()[var_name]['type']
+    var_type = dir_func.get_current_type(var_name)
     PilaO.append((var_name, var_type))
 
 # -------------------------
@@ -497,18 +487,18 @@ def p_operadores_factor(p):
     else:
         p[0] = None
 
-#---------#
+#--------------------------------------------------------------------------------------------------------#
 ## <CTE> ##
-#---------#
+#--------------------------------------------------------------------------------------------------------#
 def p_cte(p):
     '''CTE : CTE_INT
            | CTE_FLOAT'''
     p[0] = p[1]
     
 
-#---------------#
+#--------------------------------------------------------------------------------------------------------#
 ## <CONDITION> ##
-#---------------#
+#--------------------------------------------------------------------------------------------------------#
 def p_condition(p):
     '''CONDITION : IF LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS PUNTO_24 BODY ELSE_CONDITION SEMICOLON PUNTO_25'''
     p[0] = ('CONDITION', p[3], p[6], p[7])
@@ -551,9 +541,9 @@ def p_punto_27(p):
     fillGoto(Quad, PJumps)
     #fillGotoF(Quad, PJumps)
 
-#-----------#
+#--------------------------------------------------------------------------------------------------------#
 ## <CYCLE> ##
-#-----------#
+#--------------------------------------------------------------------------------------------------------#
 def p_cycle(p):
     '''CYCLE : DO PUNTO_28 BODY WHILE LEFT_PARENTHESIS EXPRESION RIGHT_PARENTHESIS SEMICOLON PUNTO_29'''
     p[0] = ('CYCLE', p[2], p[5])
@@ -572,9 +562,9 @@ def p_punto_29(p):
     "PUNTO_29 :"
     semanticCycle(PilaO, Quad, PJumps)
 
-#-----------#
+#--------------------------------------------------------------------------------------------------------#
 ## <F_CALL> ##
-#-----------#
+#--------------------------------------------------------------------------------------------------------#
 def p_f_call(p):
     '''F_CALL : ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON'''
     p[0] = ('F_CALL', p[1], p[3])
@@ -602,9 +592,9 @@ def p_lista_exp(p):
     else:
         p[0] = None
 
-#-----------------#
-## <PRINT_STMT>  ##
-#----------------#
+#--------------------------------------------------------------------------------------------------------#
+##                                          <PRINT_STMT>                                                 ##
+#--------------------------------------------------------------------------------------------------------#
 def p_print_stmt(p):
     '''PRINT_STMT : PRINT PUNTO_20 LEFT_PARENTHESIS PARAMETROS_PRINT RIGHT_PARENTHESIS SEMICOLON'''
     p[0] = ('PRINT_STMT', p[4])
@@ -657,7 +647,9 @@ def p_punto_23(p):
     POper.append('print')
 
 
-# Epsilon
+#--------------------------------------------------------------------------------------------------------#
+##                                          <EPSILON>                                                   ##
+#-------------------------------------------------------------------------------------------------------#
 def p_epsilon(p):
     'epsilon :'
     pass
@@ -686,7 +678,7 @@ parsed_result = parse_input(data)
 # Print Quad
 def print_quadruples(quadruples):
     for i, quad in enumerate(quadruples):
-        print(f"{i + 1}. {quad}")
+        print(f"{i}. {quad}")
 
 print_quadruples(Quad)
 

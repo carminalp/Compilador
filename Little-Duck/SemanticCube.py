@@ -6,8 +6,6 @@ class SemanticCube:
             ('int', 'float', '='): 'float',
             ('float', 'int', '='): 'float',
             ('float', 'float', '='): 'float',
-            ('int', 'bool', '='): 'bool',
-            ('float', 'bool', '='): 'bool',
             ('int', 'int', '+'): 'int',
             ('int', 'float', '+'): 'float',
             ('float', 'int', '+'): 'float',
@@ -65,4 +63,4 @@ class SemanticCube:
         if key in self.semanticDictionary:
             return self.semanticDictionary[key]
         else:
-             raise ValueError('Error: operación incorrecta')
+             raise ValueError(f"Type mismatch error between '{op1_type}' {operator} '{op2_type}'")

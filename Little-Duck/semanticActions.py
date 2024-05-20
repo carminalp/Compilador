@@ -44,9 +44,6 @@ def semanticOperations(PilaO, POper, Quad, AVAIL):
         return_to_avail_if_temporal(right_operand)
         return_to_avail_if_temporal(left_operand)
 
-    else:
-        raise ValueError("Type mismatch error")
-
 def semanticAssign(PilaO, POper, Quad, AVAIL):
     global cont
 
@@ -55,7 +52,6 @@ def semanticAssign(PilaO, POper, Quad, AVAIL):
     left_operand, left_type = PilaO.pop()
     operator = POper.pop()
     
-    # PENDIENTE DE VALIDAR
     # Evaluate the result type with the semantic cube
     result_type = semantic_cube.get_result_type(left_type, right_type, operator)
     
@@ -126,7 +122,7 @@ def fillGotoF(Quad, PJumps):
     global cont
     if PJumps:
         end = PJumps.pop()
-        Quad[end].result = cont + 1
+        Quad[end].result = cont
 
 def semanticConditionElse(PilaO, POper, Quad, AVAIL, PJumps):
     global cont
@@ -141,7 +137,7 @@ def fillGoto(Quad, PJumps):
     if PJumps:
         # PREGUNTAR
         false = PJumps.pop()
-        Quad[false].result = cont + 1
+        Quad[false].result = cont
 
 def semanticCycleDo(PJumps):
     PJumps.append(cont)
@@ -156,6 +152,7 @@ def semanticCycle(PilaO, Quad, PJumps):
     else: 
         result = condition
         returnTo = PJumps.pop()
-        quad = Quadruple('GotoV', result, None, returnTo + 1)
+        quad = Quadruple('GotoV', result, None, returnTo)
         Quad.append(quad)
         cont += 1
+
