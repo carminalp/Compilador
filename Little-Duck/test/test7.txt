@@ -1,36 +1,18 @@
-program prueba; 
-    var exam1, exam2, exam3: float;
-    void avg(exam4: float, exam5: float, exam6: int)
-    [
-        var resultado : float;
-        {
-            resultado = (exam4 + exam5 + exam6)/3;
-        }
-    ];
+program nadota;
+var
+    a, b, c, e, h: int;
 
-    void alpha(exw: float, exq: float, exr: int)
-    [
-        {
-            if(exq > exw){
-                print(exr);
+main {
+    if (a > e) {
+		b = h;
+	} else {
+		c = a;
+	};
+    do {
+        a = a - b;
+        print("OLA");
+        print(a + b, "OLA2");
+    } while (a < b + c);
+    a = a + b;
+} end
 
-            };
-        }
-    ]; 
-
-    void resta(f1: float, f2: float, f3: float)
-    [
-        var menos : float;
-        {
-            menos = f1 + f2 - f3;
-            do {
-                exam2 = exam3 - 1;
-                print("Lalo");
-            } while (f1 > f3+f2);
-        }
-    ];
-
-    main {
-        avg(98.3, -96.2, -89);
-    }
-end

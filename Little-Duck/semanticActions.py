@@ -11,7 +11,7 @@ cont = 0
     # operand is a variable with the operand
 """
 def return_to_avail_if_temporal(operand):
-    if isinstance(operand, int) and operand >= 3200 and operand <= 2302:
+    if isinstance(operand, int) and operand >= 7000 and operand <= 4001:
         AVAIL.append(operand)
 
 """

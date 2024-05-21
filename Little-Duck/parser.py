@@ -20,7 +20,7 @@ from cteDirectory import ConstantDirectory
 PilaO = [] # Pila Operandos
 POper = [] # Pila Operadores
 Quad = [] # Fila cuadroplos
-AVAIL = iter(range(2302,3200)) # set of Temporal spaces 
+AVAIL = iter(range(4001,7000)) # set of Temporal spaces 
 PJumps = []
 
 # Create an instance of cte Directory
@@ -608,17 +608,26 @@ def p_punto_20(p):
 
 # <PARAMETROS_PRINT>
 def p_parametros_print(p):
-    '''PARAMETROS_PRINT : CTE_STRING PUNTO_21 PUNTO_22 MAS_PRINT
+    '''PARAMETROS_PRINT : CTE_STRING PUNTO_CTE_STR PUNTO_21 PUNTO_22 MAS_PRINT
                         | EXPRESION PUNTO_22 MAS_PRINT'''
     p[0] = (p[1], p[2])                    
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# add CTE_STRING to directory
+def p_punto_cte_str(p):
+    "PUNTO_CTE_STR :"
+    const_type = const_directory.determine_const_type(p[-1])
+    const_directory.add_constant(p[-1], const_type)
 
 # -------------------------
 # ---- NEURALGIC POINT ----
 # 21) push cte string
 def p_punto_21(p):
     "PUNTO_21 :"
-    cte_string = p[-1] 
-    PilaO.append((cte_string, 'string'))
+    cte_address = const_directory.get_constant(p[-2])['address']
+    cte_type = const_directory.get_constant(p[-2])['type']
+    PilaO.append((cte_address, cte_type))
 
 # -------------------------
 # ---- NEURALGIC POINT ----

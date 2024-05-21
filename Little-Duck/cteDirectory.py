@@ -5,8 +5,9 @@ class ConstantDirectory:
     """
     def __init__(self):
         self.constant_directory = {}
-        self.next_int_address = 800  # Initialize memory address for integers starting from 800
-        self.next_float_address = 901 # Initialize memory address for floats starting from 901
+        self.next_int_address = 10001  # Initialize memory address for integers starting from 800
+        self.next_float_address = 11001 # Initialize memory address for floats starting from 901
+        self.next_string_address = 12001 # Initialize memory address for strings starting from 
 
     """
         Get a new memory address based on the constant type.
@@ -17,13 +18,17 @@ class ConstantDirectory:
         Returns a new memory address for the specified constant type.
     """
     def get_new_address(self, constant_type):
-        if constant_type == 'int':
+        if constant_type == 'int' and self.next_int_address <= 11000:
             address = self.next_int_address
             self.next_int_address += 1
-        elif constant_type == 'float':
+        elif constant_type == 'float' and self.next_float_address <= 12000:
             address = self.next_float_address
             self.next_float_address += 1
-        
+        elif constant_type == 'string' and self.next_string_address <= 13001:
+            address = self.next_string_address
+            self.next_string_address += 1  
+        else:
+            raise ValueError("No more constant type") 
         return address
 
     """
@@ -57,6 +62,8 @@ class ConstantDirectory:
             return 'int'
         elif isinstance(constant, float):
             return 'float'
+        elif isinstance(constant, str):
+            return 'string'
         else:
             raise ValueError("Unknown constant type")
 

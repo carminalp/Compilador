@@ -3,6 +3,7 @@ class VariableTable:
     def __init__(self):
         # Initializes the dictionary 
         self.variableTable = {}
+        
 
     """
     Adds a new variable to the table
