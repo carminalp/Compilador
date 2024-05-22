@@ -31,6 +31,8 @@ program prueba;
     ];
 
     main {
+        alpha(3.3, 2.1, 2);
         avg(98.3, -96.2, -89);
+        exam2 = 4;
     }
 end

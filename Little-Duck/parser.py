@@ -13,7 +13,7 @@ previamente definidas.
 import ply.yacc as yacc
 from lexer import tokens
 from FuncDirectory import FuncDirectory
-from semanticActions import semanticOperations, semanticAssign, semanticPrint, semanticExpressions, semanticConditionIf, fillGotoF, semanticConditionElse, fillGoto, semanticCycleDo, semanticCycle
+from semanticActions import verify_parameters, semantic_operations, semantic_assign, semantic_print, semantic_expressions, semantic_condition_if, fill_GotoFF, semantic_condition_else, fill_GotoF, semantic_cycle_do, semantic_cycle, search_parameter, goto_function, goto_call_function, fill_Goto_Function
 from cteDirectory import ConstantDirectory
 
 # Initialization of stack 
@@ -22,6 +22,7 @@ POper = [] # Pila Operadores
 Quad = [] # Fila cuadroplos
 AVAIL = iter(range(4001,7000)) # set of Temporal spaces 
 PJumps = []
+PilaParametros = []
 
 # Create an instance of cte Directory
 const_directory = ConstantDirectory()
@@ -161,7 +162,7 @@ def p_type(p):
 ##                                          <FUNCS>                                                      ##
 #--------------------------------------------------------------------------------------------------------#
 def p_funcs(p):
-    '''FUNCS : VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7'''
+    '''FUNCS : VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC PUNTO_32 BODY PUNTO_33 RIGHT_BRACKET PUNTO_35 SEMICOLON PUNTO_7'''
     p[0] = ('FUNCS', p[2], p[6], p[9], p[10])
 
 #-------------------------
@@ -180,15 +181,37 @@ def p_punto_4(p):
 def p_punto_5(p):
     "PUNTO_5 :"
     dir_func.create_variable_table()
-    
 
 #-------------------------
 # ---- NEURALGIC POINT ----
 # 7) Delete var table and clear PilaO, POper and Quad
 def p_punto_7(p):
     "PUNTO_7 :"
-    dir_func.delete_variable_table(p[-11])
+    dir_func.delete_variable_table(p[-14])
 
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 33) Record the current number of the Quad
+def p_punto_32(p):
+    "PUNTO_32 :"
+    global quad_start
+
+    quad_start = len(Quad)
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 34) Set start_quad if the body of the function generates quads
+def p_punto_33(p):
+    "PUNTO_33 :" 
+    if len(Quad) > quad_start:
+        dir_func.set_start_quad(quad_start)
+
+# -------------------------
+# ---- NEURALGIC POINT ----
+# 35) Generate go to quad
+def p_punto_35(p):
+    "PUNTO_35 :"
+    goto_function(Quad, PJumps, dir_func)
 
 # <PARAMETROS>
 def p_parametros(p):
@@ -207,6 +230,7 @@ def p_punto_6(p):
     # 6) Add variables to var table
     # Inside of this method validates if the variable already exists
     dir_func.add_variable_to_current_func(p[-3], p[-1], 1)
+    dir_func.add_params_to_current_func(p[-1])
 
 # <DEC_PARAMETROS>
 def p_dec_parametros(p):
@@ -304,14 +328,18 @@ def p_punto_9(p):
 def p_punto_18(p):
     "PUNTO_18 :"
     if POper[-1] == '=':
-        semanticAssign(PilaO, POper, Quad, AVAIL)
+        semantic_assign(PilaO, POper, Quad, AVAIL)
 
 #--------------------------------------------------------------------------------------------------------#
 ##                                          <EXPRESIÓN>                                                 ##
 #--------------------------------------------------------------------------------------------------------#
 def p_expresion(p):
     '''EXPRESION : EXP MAS_EXPRESIONES'''
-    p[0] = (p[1], p[2])
+    if p[2] is None:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[2])
+    
 
 # <MAS_EXPRESIONES>
 def p_mas_expresiones(p):
@@ -319,6 +347,7 @@ def p_mas_expresiones(p):
                        | epsilon'''
     if len(p) > 2:
         p[0] = (p[1], p[3])
+    else: 
         p[0] = None
 
 # -------------------------
@@ -334,7 +363,7 @@ def p_punto_13(p):
 def p_punto_13_1(p):
     "PUNTO_13_1 :"
     if POper[-1] == '>' or POper[-1]  == '<' or POper[-1]  == '!=':
-        semanticExpressions(PilaO, POper, Quad, AVAIL)
+        semantic_expressions(PilaO, POper, Quad, AVAIL)
 
 
 # <OPERADORES>
@@ -349,7 +378,10 @@ def p_operadores(p):
 #--------------------------------------------------------------------------------------------------------#
 def p_exp(p):
     '''EXP : TERMINO PUNTO_14 MAS_EXP'''
-    p[0] = p[1], p[3]
+    if p[3] is None:
+        p[0] = p[1]
+    else:
+        p[0] = p[1], p[3]
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -358,7 +390,7 @@ def p_punto_14(p):
     "PUNTO_14 :"
     if POper: # See if poper isn't empty
         if POper[-1] == '+' or POper[-1]  == '-':
-            semanticOperations(PilaO, POper, Quad, AVAIL)
+            semantic_operations(PilaO, POper, Quad, AVAIL)
 
 # <MAS_EXP>
 def p_mas_exp(p):
@@ -387,7 +419,10 @@ def p_operadores_exp(p):
 #--------------------------------------------------------------------------------------------------------#
 def p_termino(p):
     '''TERMINO : FACTOR PUNTO_15 MAS_TERMINO'''
-    p[0] = (p[1], p[3])
+    if p[3] is None:
+        p[0] = p[1]
+    else:
+        p[0] = (p[1], p[3]) 
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -396,7 +431,7 @@ def p_punto_15(p):
     "PUNTO_15 :"
     if POper: # See if poper isn't empty
         if POper[-1] == '*' or POper[-1]  == '/':
-            semanticOperations(PilaO, POper, Quad, AVAIL)
+            semantic_operations(PilaO, POper, Quad, AVAIL)
 
 # <MAS_TERMINO>
 def p_mas_termino(p):
@@ -508,7 +543,7 @@ def p_condition(p):
 # 24) GotoF 
 def p_punto_24(p):
     "PUNTO_24 :"
-    semanticConditionIf(PilaO, POper, Quad, AVAIL, PJumps)
+    semantic_condition_if(PilaO, POper, Quad, AVAIL, PJumps)
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -516,14 +551,14 @@ def p_punto_24(p):
 def p_punto_25(p):
     "PUNTO_25 :"
     if p[-2] == None:
-        fillGotoF(Quad, PJumps)
+        fill_GotoFF(Quad, PJumps)
 
 # -------------------------
 # ---- NEURALGIC POINT ----
 # 26) Goto 
 def p_punto_26(p):
     "PUNTO_26 :"
-    semanticConditionElse(PilaO, POper, Quad, AVAIL, PJumps)  
+    semantic_condition_else(PilaO, POper, Quad, AVAIL, PJumps)  
 
 # <ELSE_CONDITION>
 def p_else(p):
@@ -538,8 +573,8 @@ def p_else(p):
 # 27) Fill Quadruples Goto
 def p_punto_27(p):
     "PUNTO_27 :"
-    fillGoto(Quad, PJumps)
-    #fillGotoF(Quad, PJumps)
+    fill_GotoF(Quad, PJumps)
+    #fill_GotoFF(Quad, PJumps)
 
 #--------------------------------------------------------------------------------------------------------#
 ## <CYCLE> ##
@@ -553,42 +588,65 @@ def p_cycle(p):
 # 28) Add 'migajita de pan'
 def p_punto_28(p):
     "PUNTO_28 :"
-    semanticCycleDo(PJumps)
+    semantic_cycle_do(PJumps)
 
 # -------------------------
 # ---- NEURALGIC POINT ----
 # 29) go to V
 def p_punto_29(p):
     "PUNTO_29 :"
-    semanticCycle(PilaO, Quad, PJumps)
+    semantic_cycle(PilaO, Quad, PJumps)
 
 #--------------------------------------------------------------------------------------------------------#
 ## <F_CALL> ##
 #--------------------------------------------------------------------------------------------------------#
 def p_f_call(p):
-    '''F_CALL : ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON'''
+    '''F_CALL : ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS PUNTO_31 SEMICOLON PUNTO_34'''
     p[0] = ('F_CALL', p[1], p[3])
 
 # <EXPRESIONES>
 def p_expresiones(p):
-    '''EXPRESIONES : epsilon
-                   | EXPRESIONES_F'''
+    '''EXPRESIONES : EXPRESIONES_F
+                   | epsilon'''
     if len(p) == 2:
-        p[0] = ('EXPRESIONES', p[1])
+        p[0] = p[1]
     else:
         p[0] = None
 
 # <EXPRESIONES_F>
 def p_expresiones_f(p):
-    '''EXPRESIONES_F : EXPRESION LISTA_EXP'''
-    p[0] = ('EXPRESIONES_F', p[1], p[2])
+    '''EXPRESIONES_F : EXPRESION PUNTO_30 LISTA_EXP'''
+    p[0] = p[1], p[2]
+
+#-------------------------
+# ---- NEURALGIC POINT ----
+# 30) To append de direction of the parameters and type
+def p_punto_30(p):
+    "PUNTO_30 :" 
+    search_parameter(const_directory, dir_func, p[-1][1], PilaParametros)
+      
+#-------------------------
+# ---- NEURALGIC POINT ----
+# 31) Verify if the parameters are the correct ones
+def p_punto_31(p):
+    "PUNTO_31 :" 
+    verify_parameters(PilaParametros, dir_func, Quad, p[-4]);
+
+#-------------------------
+# ---- NEURALGIC POINT ----
+# 32) Add quadruple goTo
+def p_punto_34(p):
+    "PUNTO_34 :" 
+    goto_call_function(dir_func, p[-6], Quad, PJumps)
+    fill_Goto_Function(Quad, PJumps, dir_func,  p[-6])
+    PilaParametros.clear()
 
 # <LISTA_EXP>
 def p_lista_exp(p):
     '''LISTA_EXP : epsilon
                  | COMMA EXPRESIONES_F'''
     if len(p) > 2:
-        p[0] = ('LISTA_EXP', p[2])
+        p[0] = p[2]
     else:
         p[0] = None
 
@@ -635,7 +693,7 @@ def p_punto_21(p):
 def p_punto_22(p):
     "PUNTO_22 :"
     if POper[-1] == 'print':
-        semanticPrint(PilaO, POper, Quad, AVAIL)
+        semantic_print(PilaO, POper, Quad, AVAIL)
 
 
 # <MAS_PRINT>
@@ -654,7 +712,6 @@ def p_mas_print(p):
 def p_punto_23(p):
     "PUNTO_23 :"
     POper.append('print')
-
 
 #--------------------------------------------------------------------------------------------------------#
 ##                                          <EPSILON>                                                   ##
@@ -690,6 +747,4 @@ def print_quadruples(quadruples):
         print(f"{i}. {quad}")
 
 print_quadruples(Quad)
-
 # print(parsed_result)
-# dir_func.print_directory()
