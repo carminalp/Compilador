@@ -1,8 +1,28 @@
-from SemanticCube import SemanticCube
-from Quadruple import Quadruple
+from Compi.SemanticCube import SemanticCube
+from Compi.Quadruple import Quadruple
 
 semantic_cube = SemanticCube()
 cont = 0
+
+# Memory address temp
+AVAIL_INT = iter(range(4001,5000)) # set of Temporal spaces 
+AVAIL_FLOAT = iter(range(5001,6000)) # set of float Temporal spaces 
+AVAIL_BOOL= iter(range(6001,7000)) # set of Bool Temporal spaces 
+
+operator_index = {
+    '=': 0,
+    '+': 1,
+    '-': 2,
+    '*': 3,
+    '/': 4,
+    '!=': 5,
+    '<': 6,
+    '>': 7,
+    'Goto': 8,
+    'GotoF': 9, 
+    'GotoV': 10,
+    'print': 11
+}
 
 """
     If any operand were a temporal space, return it to AVAIL
@@ -11,8 +31,30 @@ cont = 0
     # operand is a variable with the operand
 """
 def return_to_avail_if_temporal(operand):
-    if isinstance(operand, int) and operand >= 7000 and operand <= 4001:
-        AVAIL.append(operand)
+    if isinstance(operand, int):
+        if 4001 <= operand < 5000:
+            global AVAIL_INT
+            AVAIL_INT = iter([operand] + list(AVAIL_INT))
+        elif 5001 <= operand < 6000:
+            global AVAIL_FLOAT
+            AVAIL_FLOAT = iter([operand] + list(AVAIL_FLOAT))
+        elif 6001 <= operand < 7000:
+            global AVAIL_BOOL
+            AVAIL_BOOL = iter([operand] + list(AVAIL_BOOL))
+
+"""
+    Get the next available temporal space based on the result type
+
+    Parameters:
+    - result_type: Type of the result (int, float, bool)
+"""
+def get_next_avail(result_type):
+    if result_type == 'int':
+        return next(AVAIL_INT)
+    elif result_type == 'float':
+        return next(AVAIL_FLOAT)
+    elif result_type == 'bool':
+        return next(AVAIL_BOOL)
 
 """
     Adds a new quadruple
@@ -22,7 +64,7 @@ def return_to_avail_if_temporal(operand):
     # POper is a queue with the operator's 
     # Quad is the Quadruple 
 """
-def semantic_operations(PilaO, POper, Quad, AVAIL):
+def semantic_operations(PilaO, POper, Quad):
     global cont
 
     # Pop of the operator, right and left operands
@@ -35,8 +77,8 @@ def semantic_operations(PilaO, POper, Quad, AVAIL):
     
     if result_type != ValueError:
         # Take the next temporary result
-        result = next(AVAIL)
-        quad = Quadruple(operator, left_operand, right_operand, result)
+        result = get_next_avail(result_type)
+        quad = Quadruple(operator_index[operator], left_operand, right_operand, result)
         Quad.append(quad)
         cont += 1
         PilaO.append((result, result_type))
@@ -51,9 +93,8 @@ def semantic_operations(PilaO, POper, Quad, AVAIL):
     - PilaO: Stack with operands and their types
     - POper: Stack with operators
     - Quad: List of quadruples
-    - AVAIL: Iterator for available temporals
 """
-def semantic_assign(PilaO, POper, Quad, AVAIL):
+def semantic_assign(PilaO, POper, Quad):
     global cont
 
     # Pop of the operator, right and left operands
@@ -65,8 +106,7 @@ def semantic_assign(PilaO, POper, Quad, AVAIL):
     result_type = semantic_cube.get_result_type(left_type, right_type, operator)
     
     if result_type != ValueError:
-        # Take the next temporary result
-        quad = Quadruple(operator, right_operand , None , left_operand)
+        quad = Quadruple(operator_index[operator], right_operand , -1 , left_operand)
         Quad.append(quad)
         cont += 1
 
@@ -83,16 +123,15 @@ def semantic_assign(PilaO, POper, Quad, AVAIL):
     - PilaO: Stack with operands and their types
     - POper: Stack with operators
     - Quad: List of quadruples
-    - AVAIL: Iterator for available temporals
 """
-def semantic_print(PilaO, POper, Quad, AVAIL): 
+def semantic_print(PilaO, POper, Quad): 
     global cont
 
     # Pop of the operator, right and left operands
     cte_string, cte_type = PilaO.pop()
     operator = POper.pop()
     
-    quad = Quadruple(operator, None , None , cte_string)
+    quad = Quadruple(operator_index[operator], -1 , -1 , cte_string)
     Quad.append(quad)
     cont += 1
 
@@ -103,9 +142,8 @@ def semantic_print(PilaO, POper, Quad, AVAIL):
     - PilaO: Stack with operands and their types
     - POper: Stack with operators
     - Quad: List of quadruples
-    - AVAIL: Iterator for available temporals
 """
-def semantic_expressions(PilaO, POper, Quad, AVAIL):
+def semantic_expressions(PilaO, POper, Quad):
     global cont
 
     # Pop of the operator, right and left operands
@@ -117,9 +155,9 @@ def semantic_expressions(PilaO, POper, Quad, AVAIL):
     result_type = semantic_cube.get_result_type(left_type, right_type, operator)
 
     if result_type != ValueError:
-        result = next(AVAIL)
+        result = get_next_avail(result_type)
         # Take the next temporary result
-        quad = Quadruple(operator, left_operand, right_operand, result)
+        quad = Quadruple(operator_index[operator], left_operand, right_operand, result)
         Quad.append(quad)
         cont += 1
 
@@ -138,10 +176,9 @@ def semantic_expressions(PilaO, POper, Quad, AVAIL):
     - PilaO: Stack with operands and their types
     - POper: Stack with operators
     - Quad: List of quadruples
-    - AVAIL: Iterator for available temporals
     - PJumps: Stack for jumps
 """
-def semantic_condition_if(PilaO, POper, Quad, AVAIL, PJumps):
+def semantic_condition_if(PilaO, POper, Quad, PJumps):
     global cont
 
     exp, exp_type = PilaO.pop()
@@ -150,7 +187,7 @@ def semantic_condition_if(PilaO, POper, Quad, AVAIL, PJumps):
         raise ValueError("Type mismatch error")
     else: 
         result = exp
-        quad = Quadruple('GotoF', result, None, None)
+        quad = Quadruple(operator_index['GotoF'], result, -1, None)
         Quad.append(quad)
         PJumps.append(cont)
         cont += 1
@@ -175,12 +212,11 @@ def fill_GotoFF(Quad, PJumps):
     - PilaO: Stack with operands and their types
     - POper: Stack with operators
     - Quad: List of quadruples
-    - AVAIL: Iterator for available temporals
     - PJumps: Stack for jumps
 """
-def semantic_condition_else(PilaO, POper, Quad, AVAIL, PJumps):
+def semantic_condition_else(PilaO, POper, Quad, PJumps):
     global cont
-    quad = Quadruple('Goto', None, None, None)
+    quad = Quadruple(operator_index['Goto'], -1, -1, None)
     Quad.append(quad)
     cont += 1
     fill_GotoFF(Quad, PJumps)
@@ -227,87 +263,6 @@ def semantic_cycle(PilaO, Quad, PJumps):
     else: 
         result = condition
         returnTo = PJumps.pop()
-        quad = Quadruple('GotoV', result, None, returnTo)
+        quad = Quadruple(operator_index['GotoV'], result, -1, returnTo)
         Quad.append(quad)
         cont += 1
-
-"""
-    Search and store parameters(address and type), 
-    either variables or constants.
-
-    Parameters:
-    - const_directory: Constant directory
-    - dir_func: Function directory
-    - parameter: The parameter to search for
-    - PParametros: Stack for parameters
-"""
-def search_parameter(const_directory, dir_func, parameter, PParametros):
-    try:
-        variable_address = dir_func.get_current_address(parameter)
-        variable_type = dir_func.get_current_type(parameter)
-        PParametros.append((variable_address, variable_type))
-    except ValueError:
-        cte_address = const_directory.get_constant(parameter)['address']
-        cte_type = const_directory.get_constant(parameter)['type']
-        PParametros.append((cte_address, cte_type))
-
-"""
-    Verify that the parameters on the stack match the function parameters in the directory.
-
-    Parameters:
-    - PilaParametros: Stack with the parameters to verify
-    - dirFunc: Function directory
-    - func_id: The identifier of the function being called
-"""
-def verify_parameters(PilaParametros, dirFunc, Quad, name):
-    global cont
-
-    expected_params = dirFunc.get_parameters(name)
-
-    if len(PilaParametros) != len(expected_params):
-        raise ValueError("Parameter count mismatch")
-
-    for i in range(len(expected_params)):
-        param = PilaParametros[i]
-        expected_type = expected_params[i]
-
-        if param[1] != expected_type:
-            raise ValueError(f"Type mismatch for parameter {i+1}: expected {expected_type}, got {param_type}")
-
-        quad = Quadruple("param", param[0], None, None)
-        Quad.append(quad)
-        cont += 1
-
-    quad = Quadruple("F_CALL", name, len(expected_params), None)
-    Quad.append(quad)
-    cont += 1
-
-def goto_call_function(dir_func, idFunc, Quad, PJumps):
-    global cont
-
-    indexQuad = dir_func.get_start_quad(idFunc)
-    
-    quad = Quadruple("Goto", None, None, indexQuad)
-    Quad.append(quad)
-    PJumps.append(cont)
-    cont += 1
-
-def goto_function(Quad, PJumps, dir_func):
-    global cont
-
-    quad = Quadruple("Goto", None, None, None)
-    Quad.append(quad)
-    dir_func.set_goto_quad(cont)
-    cont += 1
-
-"""
-    Complete the Goto quadruple of function.
-
-    Parameters:
-    - Quad: List of quadruples
-    - PJumps: Stack for jumps
-"""
-def fill_Goto_Function(Quad, PJumps, dir_func, name):
-    global cont
-    goto_body = dir_func.get_goto_quad(name)
-    Quad[goto_body].result = cont

@@ -3,9 +3,8 @@ class SemanticCube:
         # Initialize the semantic cube (Hashmap) with definitions for type operations
         self.semanticDictionary = {
             ('int', 'int', '='): 'int',
-            ('int', 'float', '='): 'float',
-            ('float', 'int', '='): 'float',
             ('float', 'float', '='): 'float',
+            ('int', 'float', '='): 'float',
             ('int', 'int', '+'): 'int',
             ('int', 'float', '+'): 'float',
             ('float', 'int', '+'): 'float',
@@ -22,10 +21,6 @@ class SemanticCube:
             ('int', 'float', '/'): 'float',
             ('float', 'int', '/'): 'float',
             ('float', 'float', '/'): 'float',
-            ('int', 'int', '=='): 'bool',
-            ('int', 'float', '=='): 'bool',
-            ('float', 'int', '=='): 'bool',
-            ('float', 'float', '=='): 'bool',
             ('int', 'int', '!='): 'bool',
             ('int', 'float', '!='): 'bool',
             ('float', 'int', '!='): 'bool',
@@ -38,14 +33,6 @@ class SemanticCube:
             ('int', 'float', '>'): 'bool',
             ('float', 'int', '>'): 'bool',
             ('float', 'float', '>'): 'bool',
-            ('int', 'int', '<='): 'bool',
-            ('int', 'float', '<='): 'bool',
-            ('float', 'int', '<='): 'bool',
-            ('float', 'float', '<='): 'bool',
-            ('int', 'int', '>='): 'bool',
-            ('int', 'float', '>='): 'bool',
-            ('float', 'int', '>='): 'bool',
-            ('float', 'float', '>='): 'bool',
         }
     
     """

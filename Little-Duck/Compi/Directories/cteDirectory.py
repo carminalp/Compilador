@@ -1,13 +1,9 @@
 class ConstantDirectory:
-    """
-        Constructor
-        Initialize the ConstantDirectory with separate address spaces for integers and floats.
-    """
     def __init__(self):
         self.constant_directory = {}
-        self.next_int_address = 10001  # Initialize memory address for integers starting from 800
-        self.next_float_address = 11001 # Initialize memory address for floats starting from 901
-        self.next_string_address = 12001 # Initialize memory address for strings starting from 
+        self.AVAIL_INT = iter(range(10001, 11001))  # Available addresses for integers
+        self.AVAIL_FLOAT = iter(range(11001, 12001))  # Available addresses for floats
+        self.AVAIL_STRING = iter(range(12001, 13001))  # Available addresses for strings
 
     """
         Get a new memory address based on the constant type.
@@ -18,27 +14,25 @@ class ConstantDirectory:
         Returns a new memory address for the specified constant type.
     """
     def get_new_address(self, constant_type):
-        if constant_type == 'int' and self.next_int_address <= 11000:
-            address = self.next_int_address
-            self.next_int_address += 1
-        elif constant_type == 'float' and self.next_float_address <= 12000:
-            address = self.next_float_address
-            self.next_float_address += 1
-        elif constant_type == 'string' and self.next_string_address <= 13001:
-            address = self.next_string_address
-            self.next_string_address += 1  
-        else:
-            raise ValueError("No more constant type") 
-        return address
+        try:
+            if constant_type == 'int':
+                address = next(self.AVAIL_INT)
+            elif constant_type == 'float':
+                address = next(self.AVAIL_FLOAT)
+            elif constant_type == 'string':
+                address = next(self.AVAIL_STRING)
+            else:
+                raise ValueError("Unknown constant type")
+            return address
+        except StopIteration:
+            raise ValueError("No more addresses available for type: " + constant_type)
 
     """
-        Add a constant to the memory directory with its type and memory address.
+        Add a constant to the directory with its type and memory address.
 
         Parameters:
         # constant is the constant value to be added.
         # constant_type is a string indicating the type of the constant ('int' or 'float')
-
-        Returns the memory address assigned to the constant.
     """
     def add_constant(self, constant, constant_type):
         if constant not in self.constant_directory:
@@ -80,3 +74,17 @@ class ConstantDirectory:
             return self.constant_directory[constant]
         else:
             return None
+
+    """
+        Get all constants with their addresses.
+
+        Returns a dictionary of all constants and their addresses.
+    """
+    def get_all_constants(self):
+        all_constants = {}
+
+        for constant, info in self.constant_directory.items():
+            address = info['address']
+            all_constants[constant] = address
+            
+        return all_constants

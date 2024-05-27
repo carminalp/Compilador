@@ -4,7 +4,7 @@ program prueba;
     [
         var resultado : float;
         {
-            resultado = (exam4 + exam5 + exam6)/3;
+            resultado = (exam4 + exam5)/3;
         }
     ];
 
@@ -18,21 +18,9 @@ program prueba;
         }
     ]; 
 
-    void resta(f1: float, f2: float, f3: float)
-    [
-        var menos : float;
-        {
-            menos = f1 + f2 - f3;
-            do {
-                exam2 = exam3 - 1;
-                print("Lalo");
-            } while (f1 > f3+f2);
-        }
-    ];
-
-    main {
+    main {  
+        avg(exam3, -96.2, -89);
         alpha(3.3, 2.1, 2);
-        avg(98.3, -96.2, -89);
-        exam2 = 4;
+        exam2 = 4.0;
     }
 end

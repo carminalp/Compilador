@@ -11,16 +11,15 @@ previamente definidas.
 """
 
 import ply.yacc as yacc
-from lexer import tokens
-from FuncDirectory import FuncDirectory
-from semanticActions import verify_parameters, semantic_operations, semantic_assign, semantic_print, semantic_expressions, semantic_condition_if, fill_GotoFF, semantic_condition_else, fill_GotoF, semantic_cycle_do, semantic_cycle, search_parameter, goto_function, goto_call_function, fill_Goto_Function
-from cteDirectory import ConstantDirectory
+from Compi.lexer import tokens
+from Compi.Directories.FuncDirectory import FuncDirectory
+from Compi.IntermediateCodeActions import *
+from Compi.Directories.cteDirectory import ConstantDirectory
 
 # Initialization of stack 
 PilaO = [] # Pila Operandos
 POper = [] # Pila Operadores
 Quad = [] # Fila cuadroplos
-AVAIL = iter(range(4001,7000)) # set of Temporal spaces 
 PJumps = []
 PilaParametros = []
 
@@ -116,7 +115,7 @@ def p_punto_3(p):
     # Inside of this method validates if the variable already exists
     var_names = p[-3]
     for var_name in var_names:
-        dir_func.add_variable_to_current_func(var_name, p[-1], 1)
+        dir_func.add_variable_to_current_func(var_name, p[-1])
 
 # <LISTA_VAR>
 def p_lista_var(p):
@@ -162,7 +161,7 @@ def p_type(p):
 ##                                          <FUNCS>                                                      ##
 #--------------------------------------------------------------------------------------------------------#
 def p_funcs(p):
-    '''FUNCS : VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC PUNTO_32 BODY PUNTO_33 RIGHT_BRACKET PUNTO_35 SEMICOLON PUNTO_7'''
+    '''FUNCS : VOID ID PUNTO_4 LEFT_PARENTHESIS PUNTO_5 PARAMETROS RIGHT_PARENTHESIS LEFT_BRACKET VARS_FUNC BODY RIGHT_BRACKET SEMICOLON PUNTO_7'''
     p[0] = ('FUNCS', p[2], p[6], p[9], p[10])
 
 #-------------------------
@@ -187,31 +186,7 @@ def p_punto_5(p):
 # 7) Delete var table and clear PilaO, POper and Quad
 def p_punto_7(p):
     "PUNTO_7 :"
-    dir_func.delete_variable_table(p[-14])
-
-# -------------------------
-# ---- NEURALGIC POINT ----
-# 33) Record the current number of the Quad
-def p_punto_32(p):
-    "PUNTO_32 :"
-    global quad_start
-
-    quad_start = len(Quad)
-
-# -------------------------
-# ---- NEURALGIC POINT ----
-# 34) Set start_quad if the body of the function generates quads
-def p_punto_33(p):
-    "PUNTO_33 :" 
-    if len(Quad) > quad_start:
-        dir_func.set_start_quad(quad_start)
-
-# -------------------------
-# ---- NEURALGIC POINT ----
-# 35) Generate go to quad
-def p_punto_35(p):
-    "PUNTO_35 :"
-    goto_function(Quad, PJumps, dir_func)
+    dir_func.delete_variable_table(p[-11])
 
 # <PARAMETROS>
 def p_parametros(p):
@@ -310,10 +285,11 @@ def p_assign(p):
 # save id to be assign  
 def p_punto_8(p):
     "PUNTO_8 :"
-    var_name = p[-1] 
+    var_name = p[-1]
+    var_address = dir_func.get_current_address(p[-1])
     var_type = dir_func.get_current_type(var_name)
 
-    PilaO.append((var_name, var_type))
+    PilaO.append((var_address, var_type))
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -328,7 +304,7 @@ def p_punto_9(p):
 def p_punto_18(p):
     "PUNTO_18 :"
     if POper[-1] == '=':
-        semantic_assign(PilaO, POper, Quad, AVAIL)
+        semantic_assign(PilaO, POper, Quad)
 
 #--------------------------------------------------------------------------------------------------------#
 ##                                          <EXPRESIÓN>                                                 ##
@@ -363,7 +339,7 @@ def p_punto_13(p):
 def p_punto_13_1(p):
     "PUNTO_13_1 :"
     if POper[-1] == '>' or POper[-1]  == '<' or POper[-1]  == '!=':
-        semantic_expressions(PilaO, POper, Quad, AVAIL)
+        semantic_expressions(PilaO, POper, Quad )
 
 
 # <OPERADORES>
@@ -390,7 +366,7 @@ def p_punto_14(p):
     "PUNTO_14 :"
     if POper: # See if poper isn't empty
         if POper[-1] == '+' or POper[-1]  == '-':
-            semantic_operations(PilaO, POper, Quad, AVAIL)
+            semantic_operations(PilaO, POper, Quad )
 
 # <MAS_EXP>
 def p_mas_exp(p):
@@ -431,7 +407,7 @@ def p_punto_15(p):
     "PUNTO_15 :"
     if POper: # See if poper isn't empty
         if POper[-1] == '*' or POper[-1]  == '/':
-            semantic_operations(PilaO, POper, Quad, AVAIL)
+            semantic_operations(PilaO, POper, Quad )
 
 # <MAS_TERMINO>
 def p_mas_termino(p):
@@ -499,9 +475,10 @@ def p_punto_cte(p):
 # 10) save id
 def p_punto_10(p):
     "PUNTO_10 :"
-    var_name = p[-1] 
+    var_name = p[-1]
+    var_address = dir_func.get_current_address(p[-1])
     var_type = dir_func.get_current_type(var_name)
-    PilaO.append((var_name, var_type))
+    PilaO.append((var_address, var_type))
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -543,7 +520,7 @@ def p_condition(p):
 # 24) GotoF 
 def p_punto_24(p):
     "PUNTO_24 :"
-    semantic_condition_if(PilaO, POper, Quad, AVAIL, PJumps)
+    semantic_condition_if(PilaO, POper, Quad , PJumps)
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -558,7 +535,7 @@ def p_punto_25(p):
 # 26) Goto 
 def p_punto_26(p):
     "PUNTO_26 :"
-    semantic_condition_else(PilaO, POper, Quad, AVAIL, PJumps)  
+    semantic_condition_else(PilaO, POper, Quad , PJumps)  
 
 # <ELSE_CONDITION>
 def p_else(p):
@@ -601,7 +578,7 @@ def p_punto_29(p):
 ## <F_CALL> ##
 #--------------------------------------------------------------------------------------------------------#
 def p_f_call(p):
-    '''F_CALL : ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS PUNTO_31 SEMICOLON PUNTO_34'''
+    '''F_CALL : ID LEFT_PARENTHESIS EXPRESIONES RIGHT_PARENTHESIS SEMICOLON'''
     p[0] = ('F_CALL', p[1], p[3])
 
 # <EXPRESIONES>
@@ -615,31 +592,8 @@ def p_expresiones(p):
 
 # <EXPRESIONES_F>
 def p_expresiones_f(p):
-    '''EXPRESIONES_F : EXPRESION PUNTO_30 LISTA_EXP'''
+    '''EXPRESIONES_F : EXPRESION LISTA_EXP'''
     p[0] = p[1], p[2]
-
-#-------------------------
-# ---- NEURALGIC POINT ----
-# 30) To append de direction of the parameters and type
-def p_punto_30(p):
-    "PUNTO_30 :" 
-    search_parameter(const_directory, dir_func, p[-1][1], PilaParametros)
-      
-#-------------------------
-# ---- NEURALGIC POINT ----
-# 31) Verify if the parameters are the correct ones
-def p_punto_31(p):
-    "PUNTO_31 :" 
-    verify_parameters(PilaParametros, dir_func, Quad, p[-4]);
-
-#-------------------------
-# ---- NEURALGIC POINT ----
-# 32) Add quadruple goTo
-def p_punto_34(p):
-    "PUNTO_34 :" 
-    goto_call_function(dir_func, p[-6], Quad, PJumps)
-    fill_Goto_Function(Quad, PJumps, dir_func,  p[-6])
-    PilaParametros.clear()
 
 # <LISTA_EXP>
 def p_lista_exp(p):
@@ -693,7 +647,7 @@ def p_punto_21(p):
 def p_punto_22(p):
     "PUNTO_22 :"
     if POper[-1] == 'print':
-        semantic_print(PilaO, POper, Quad, AVAIL)
+        semantic_print(PilaO, POper, Quad )
 
 
 # <MAS_PRINT>
@@ -722,29 +676,28 @@ def p_epsilon(p):
 
 # Error rule for syntax errors
 def p_error(p):
-    print("Error sintáxis")
+    raise ValueError("Error sintáxis")
 
 # Define el parser
 parser = yacc.yacc()
 
-# Función para analizar la entrada
+# Función para analizar la entrada y devolver el directorio de constantes y los cuádruplos
 def parse_input(input_data):
-    return parser.parse(input_data)
+    global PilaO, POper, Quad, PJumps, PilaParametros, const_directory, dir_func
 
-# Archivo de entrada
-input_file = 'test/test7.txt'
+    # Resetear las estructuras globales
+    PilaO = [] 
+    POper = [] 
+    Quad = [] 
+    PJumps = []
+    PilaParametros = []
+    const_directory = ConstantDirectory()
+    dir_func = FuncDirectory()
 
-# Abre el archivo de entrada y lee su contenido
-with open(input_file, 'r') as file:
-    data = file.read()
+    parser.parse(input_data)
+    return const_directory.get_all_constants(), Quad
 
-# Analiza la entrada
-parsed_result = parse_input(data)
-
-# Print Quad
-def print_quadruples(quadruples):
-    for i, quad in enumerate(quadruples):
-        print(f"{i}. {quad}")
-
-print_quadruples(Quad)
-# print(parsed_result)
+# Función de compilación que se integrará con el IDE
+def compile_code(source_code):
+    cte_directory, quadruples = parse_input(source_code)
+    return cte_directory, quadruples

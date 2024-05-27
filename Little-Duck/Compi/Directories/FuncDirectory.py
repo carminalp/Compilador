@@ -1,13 +1,18 @@
-from VariableTable import VariableTable
+from Compi.Directories.VariableTable import VariableTable
 
 class FuncDirectory:
     # Constructor 
     def __init__(self):
-        # initializes an empty dictionary to store functions
+        # initializes 
         self.functions = {}
-        # sets the current function to None (because initially there's no active function)
         self.currentFunc = None
         self.globalName = None
+        # Global memory counters using iterators
+        self.AVAIL_GLOBAL_INT = iter(range(1002, 2000))
+        self.AVAIL_GLOBAL_FLOAT = iter(range(2001, 3000))
+        # Local memory counters using iterators
+        self.AVAIL_LOCAL_INT = iter(range(7001, 8000))
+        self.AVAIL_LOCAL_FLOAT = iter(range(8001, 9000))
 
     """
     Adds a new function to the directory.
@@ -17,12 +22,10 @@ class FuncDirectory:
 
     """
     def add_function(self, name, tipo):
-        # Search if the name already exist
         if name not in self.functions:
-            # Initialize the function without a variable table
             self.functions[name] = {'tipo': tipo, 'varTab': None, 'start_quad': None, 'goto_quad': None, 'parameters': None}
         else:
-            raise ValueError("Error Semántica: multiple declaración de función")
+            raise ValueError(f"Multiple declaration of the function {name}")
         
     
     """
@@ -32,13 +35,17 @@ class FuncDirectory:
     # name is a string with the name of the function to be set as current.      
     """
     def set_current_function(self, name):
-        # Set de current function name
         self.currentFunc = name
 
     def get_current_function(self):
-        # Set de current function name
         return self.currentFunc
 
+    """
+    Sets the global name to the globalName variable.
+
+    Parameters:
+    # name is a string with the name of the program.      
+    """
     def set_current_global(self, name):   
         self.globalName = name
 
@@ -52,10 +59,7 @@ class FuncDirectory:
     # func_name is a string with the name of the function to create a variable table for.
     """
     def create_variable_table(self): 
-        # Validate if the function doesn't have a variable table 
-        if self.functions[self.currentFunc]['varTab'] is None:
-            # Create and link the variable table with the specified function
-            self.functions[self.currentFunc]['varTab'] = VariableTable()
+        self.functions[self.currentFunc]['varTab'] = VariableTable()
         
         
     """
@@ -66,20 +70,42 @@ class FuncDirectory:
     # var_type is a string with the type of the variable.
     # value is a any (int|float) with the initial value of the variable. Defaults to None.
     """
-    def add_variable_to_current_func(self, var_name, var_type, memDirection, value=None):
-        # Access to the variable table of the current function (KEY) 
-        # Remember: self.functions is the dictonary (for functions)
-        # current_vars is an instance of the VariableTable class
+    def add_variable_to_current_func(self, var_name, var_type, value=None):
         current_vars = self.functions[self.currentFunc]['varTab']
         
-        # If the function isn't global, validate if the variable already exists
         if self.currentFunc != self.globalName:
             global_vars = self.functions[self.globalName]['varTab'].variableTable
             if var_name in global_vars:
                 raise ValueError(f"Variable '{var_name}' ya definida en el ámbito global")
 
-        # Add the values of the variable to the variable table
+        is_global = self.currentFunc == self.globalName
+        memDirection = self.get_next_memory_address(var_type, is_global)
         current_vars.add_variable(var_name, var_type, memDirection, value)
+
+    """
+    Get the next available memory address based on the variable type and scope.
+
+    Parameters:
+    - var_type: The type of the variable ('int' or 'float').
+    - is_global: Boolean indicating if the variable is global.
+
+    Returns the next available memory address for the variable.
+    """
+    def get_next_memory_address(self, var_type, is_global):
+        try:
+            if is_global:
+                if var_type == 'int':
+                    address = next(self.AVAIL_GLOBAL_INT)
+                elif var_type == 'float':
+                    address = next(self.AVAIL_GLOBAL_FLOAT)
+            else:
+                if var_type == 'int':
+                    address = next(self.AVAIL_LOCAL_INT)
+                elif var_type == 'float':
+                    address = next(self.AVAIL_LOCAL_FLOAT)
+            return address
+        except StopIteration:
+            raise MemoryError("Exceeded maximum memory allocation for " + ("global" if is_global else "local") + f" {var_type} variables")
 
     """
     Adds the type of params of the function
@@ -100,11 +126,9 @@ class FuncDirectory:
     Returns a variable table of the current function.
     """
     def get_current_function_vars(self):
-        # Validate if there's a current function name selected
         if self.currentFunc is None:
             raise ValueError("No current function set")
         
-        # Rertuns the variable table
         return self.functions[self.currentFunc]['varTab'].variableTable
     
     """
@@ -114,10 +138,6 @@ class FuncDirectory:
     # func_name is a string with  the name of the function
     """
     def delete_variable_table(self, func_name):       
-        # Validate if the function has a variable table to delete
-        if self.functions[func_name]['varTab'] is None:
-            raise ValueError("No hay tabla de variables para eliminar")
-        
         self.functions[func_name]['varTab'] = None
     
     """
@@ -136,7 +156,7 @@ class FuncDirectory:
         elif name in varTable:
             return varTable[name]['type']
         else:
-            raise ValueError("No current variable")
+            raise NameError(f"The {name} variable is not defined")
 
     """
     Get the address of the variables
@@ -154,7 +174,8 @@ class FuncDirectory:
         elif name in varTable:
             return varTable[name]['direction']
         else:
-            raise ValueError("No current variable")
+            raise NameError(f"The {name} variable is not defined")
+
 
     """
     Get the parameters of the function
@@ -163,59 +184,3 @@ class FuncDirectory:
     """
     def get_parameters(self, name):
         return self.functions[name]['parameters']
-    
-    """
-    Set the index of the start quadruple of the function
-
-    Parameters:
-    # index is a int with the number of the start quadruple of the function
-    """
-    def set_start_quad(self, index):
-        self.functions[self.currentFunc]['start_quad'] = index
-
-    """
-    Get the index of the start quadruple of the function
-
-    Parameters:
-    # name is a string with  the name of the variable to search the type
-    """        
-    def get_start_quad(self, name):
-        if name in self.functions:
-            return self.functions[name]['start_quad']
-        return None
-
-    """
-    Set the index of the start quadruple of the function
-
-    Parameters:
-    # index is a int with the number of the start quadruple of the function
-    """
-    def set_goto_quad(self, index):
-        self.functions[self.currentFunc]['goto_quad'] = index
-
-    """
-    Get the index of the start quadruple of the function
-
-    Parameters:
-    # name is a string with  the name of the variable to search the type
-    """        
-    def get_goto_quad(self, name):
-        if name in self.functions:
-            return self.functions[name]['goto_quad']
-        return None
-
-    # Borrar
-    def print_directory(self):
-        for func_name, func_data in self.functions.items():
-            print(f"Función '{func_name}': Tipo = {func_data['tipo']} Quad = {func_data['start_quad']}")
-            if func_data['parameters']:
-                print(f"  Parámetros: {', '.join(func_data['parameters'])}")
-            else:
-                print("  Sin parámetros")
-            var_table = func_data['varTab']
-            if var_table:
-                for var_name, var_info in var_table.variableTable.items():
-                    print(f"  Tabla Variables '{var_name}': Tipo = {var_info['type']}, Valor = {var_info['value']}, Address = {var_info['direction']}")
-            else:
-                print(" Sin variables")
-                

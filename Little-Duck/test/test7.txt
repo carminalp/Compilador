@@ -1,38 +1,15 @@
-program prueba; 
-    var exam1, exam2, exam3: float;
-    void avg(exam4: float, exam5: float, exam6: int)
-    [
-        var resultado : float;
-        {
-            resultado = (exam4 + exam5 + exam6)/3;
-        }
-    ];
+program fibonacci;
 
-    void alpha(exw: float, exq: float, exr: int)
-    [
-        {
-            if(exq > exw){
-                print(exr);
+var 
+    a, b, c, d, e, f: int;
+    i : float;
 
-            };
-        }
-    ]; 
-
-    void resta(f1: float, f2: float, f3: float)
-    [
-        var menos : float;
-        {
-            menos = f1 + f2 - f3;
-            do {
-                exam2 = exam3 - 1;
-                print("Lalo");
-            } while (f1 > f3+f2);
-        }
-    ];
-
-    main {  
-        avg(98.3, -96.2, -89);
-        alpha(3.3, 2.1, 2);
-        exam2 = 4;
-    }
+main 
+{ 
+    a = 3;
+    print(a);
+    b = 4;
+    x = b / 3;
+    print(x);
+}
 end

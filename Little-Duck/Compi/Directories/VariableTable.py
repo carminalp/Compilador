@@ -1,7 +1,5 @@
 class VariableTable:
-    # Constructor 
     def __init__(self):
-        # Initializes the dictionary 
         self.variableTable = {}
         
 
