@@ -1,101 +1,16 @@
-program funcion_Ciclo;
-var 
-    total: float;
+program test;
 
-void funcionCiclo(num_1: float, num_2: int) [
-    var 
-        kk: float;
-    {
-        num_1 = 50;
-        num_2 = 10.0;
+    var i, n, square : int;
 
-    }
-];
+    main {
+        n = 10;  
 
-void funcionCiclo2() [
-    var 
-        total: float;
-    {
-        num_1 = 50;
-        num_2 = 10.0;
-
+        i = 0;  
+               
         do {
-            total = num_1 + 1;
-        } while (num_1 > total);
+            square = i * i;
+            print(square, " ");
+            i = i + 1;
+        } while (i < n);
     }
-];
-
-void funcionCiclo3() [
-    var 
-        total: float;
-    {
-        num_1 = 50;
-        num_2 = 10.0;
-
-        do {
-            total = num_1 + 1;
-        } while (num_1 > total);
-    }
-];
-
-void funcionCiclo4() [
-    var 
-        total: float;
-    {
-        num_1 = 50;
-        num_2 = 10.0;
-
-        do {
-            total = num_1 + 1;
-        } while (num_1 > total);
-    }
-];
-
-void funcionCiclo5() [
-    var 
-        total: float;
-    {
-        num_1 = 50;
-        num_2 = 10.0;
-
-        do {
-            total = num_1 + 1;
-        } while (num_1 > total);
-    }
-];
-
-void funcionCiclo6() [
-    var 
-        total: float;
-    {
-        num_1 = 50;
-        num_2 = 10.0;
-
-        do {
-            total = num_1 + 1;
-        } while (num_1 > total);
-    }
-];
-
-void funcionCiclo7() [
-    var 
-        total: float;
-    {
-        num_1 = 50;
-        num_2 = 10.0;
-
-        do {
-            total = num_1 + 1;
-        } while (num_1 > total);
-    }
-];
-
-main 
-{
-
-    funcionCiclo(5.0, 6);
-
-    print("Funcion ciclo");
-}
-
 end

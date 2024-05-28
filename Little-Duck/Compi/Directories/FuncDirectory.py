@@ -23,7 +23,7 @@ class FuncDirectory:
     """
     def add_function(self, name, tipo):
         if name not in self.functions:
-            self.functions[name] = {'tipo': tipo, 'varTab': None, 'start_quad': None, 'goto_quad': None, 'parameters': None}
+            self.functions[name] = {'tipo': tipo, 'varTab': None, 'parameters': None}
         else:
             raise ValueError(f"Multiple declaration of the function {name}")
         
@@ -59,7 +59,8 @@ class FuncDirectory:
     # func_name is a string with the name of the function to create a variable table for.
     """
     def create_variable_table(self): 
-        self.functions[self.currentFunc]['varTab'] = VariableTable()
+        if self.functions[self.currentFunc]['varTab'] is None:
+            self.functions[self.currentFunc]['varTab'] = VariableTable()
         
         
     """
@@ -70,7 +71,7 @@ class FuncDirectory:
     # var_type is a string with the type of the variable.
     # value is a any (int|float) with the initial value of the variable. Defaults to None.
     """
-    def add_variable_to_current_func(self, var_name, var_type, value=None):
+    def add_variable_to_current_func(self, var_name, var_type):
         current_vars = self.functions[self.currentFunc]['varTab']
         
         if self.currentFunc != self.globalName:
@@ -80,7 +81,7 @@ class FuncDirectory:
 
         is_global = self.currentFunc == self.globalName
         memDirection = self.get_next_memory_address(var_type, is_global)
-        current_vars.add_variable(var_name, var_type, memDirection, value)
+        current_vars.add_variable(var_name, var_type, memDirection)
 
     """
     Get the next available memory address based on the variable type and scope.
@@ -170,9 +171,8 @@ class FuncDirectory:
         
         if name in varTableGlobal:
             return varTableGlobal[name]['direction']
-        
         elif name in varTable:
-            return varTable[name]['direction']
+            return varTable[name]['direction']     
         else:
             raise NameError(f"The {name} variable is not defined")
 
@@ -184,3 +184,25 @@ class FuncDirectory:
     """
     def get_parameters(self, name):
         return self.functions[name]['parameters']
+    
+    # Method to reset the dictionary and other attributes to their initial state
+    def reset(self):
+        self.functions = {}
+        self.currentFunc = None
+        self.globalName = None
+
+        self.AVAIL_GLOBAL_INT = iter(range(1002, 2000))
+        self.AVAIL_GLOBAL_FLOAT = iter(range(2001, 3000))
+ 
+        self.AVAIL_LOCAL_INT = iter(range(7001, 8000))
+        self.AVAIL_LOCAL_FLOAT = iter(range(8001, 9000))
+
+    def print_directory(self):
+         for func_name, func_data in self.functions.items():
+             print(f"Función '{func_name}': Tipo = {func_data['tipo']}")
+             var_table = func_data['varTab']
+             if var_table:
+                 for var_name, var_info in var_table.variableTable.items():
+                     print(f"  Tabla Variables '{var_name}': Tipo = {var_info['type']}, Valor = {var_info['value']}, Adress = {var_info['direction']}")
+             else:
+                 print("  Sin variables")

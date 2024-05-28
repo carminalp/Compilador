@@ -66,7 +66,10 @@ class Memory:
     def get_value(self, address):
         segment, base_address = self.get_memory_segment(address)
         index = address - base_address
-        return segment[index]
+        if len(segment) <= index:
+            return None
+        else:
+            return segment[index]
 
     """
         Initialize memory with constants from a constant directory.
@@ -75,5 +78,5 @@ class Memory:
         - constant_directory is a dictionary where keys are values and values are the memory addresses
     """
     def initialize_constants(self, constant_directory):
-        for value, address in constant_directory.items():
+        for (value, constant_type), address in constant_directory.items():
             self.set_value(address, value)

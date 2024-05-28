@@ -1,17 +1,27 @@
-program alex;
+program fibonacci;
 
 var 
-    yogurt, con, carmina: int;
-    sandwich: float;
+	a,b,c,d: int;
+	e: float;
+	
 
 main 
 { 
-   yogurt = 307;
-   con = 1;
-   carmina = 0;
-   sandwich = con + 3;
+	a = 3;
+	b = 2;
+	c = 5;
+	d = 0;
 
-   carmina = sandwich + yogurt;
+    	if (a + b < c){
+        	a = b + c;
+        do {
+            a = a - 1;
+        } while (a > b+c);
+    	}
+    	else {
+        	a = b + c * d;
+        	b = a - d;
+    	};  
 }
 
 end 

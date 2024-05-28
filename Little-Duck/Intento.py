@@ -1,3 +1,10 @@
+# Importar las funciones necesarias
+from Compi.parser import compile_code
+from VM.virtualMachine import execute_quadruples
+from VM.Memory import Memory
+
+# Definir el código fuente como un string
+source_code = """
 program test;
 
     var i, j, n, square, input : int;
@@ -32,3 +39,28 @@ program test;
         };
     }
 end
+
+"""
+
+# Función para compilar y ejecutar el código fuente
+def compile_and_run(source_code):
+    try:
+        # Enviar el código fuente a la función de compilación
+        cte_directory, quadruples = compile_code(source_code)
+            
+        # Inicializar la memoria con el directorio de constantes
+        memory = Memory()
+        memory.initialize_constants(cte_directory)
+        
+        # Ejecutar los cuádruplos y obtener el array de salida
+        output = execute_quadruples(quadruples, memory)
+        
+        # Imprimir la salida
+        for line in output:
+            print(line)
+            
+    except Exception as e:
+        print(f"Error: {e}")
+
+# Llamar a la función con el código fuente definido
+compile_and_run(source_code)

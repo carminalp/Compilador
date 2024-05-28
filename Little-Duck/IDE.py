@@ -17,7 +17,7 @@ def compile_and_run():
         try:
             # Send the source code to compile
             cte_directory, quadruples = compile_code(source_code)
-            
+        
             # Initialize memory with contants directory
             memory = Memory()
             memory.initialize_constants(cte_directory)

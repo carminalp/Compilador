@@ -259,7 +259,7 @@ def semantic_cycle(PilaO, Quad, PJumps):
     condition, condition_type = PilaO.pop()
 
     if (condition_type != 'bool'):
-        raise ValueError("Type mismatch error")
+        raise ValueError("Type mismatch error (it's not bool)")
     else: 
         result = condition
         returnTo = PJumps.pop()

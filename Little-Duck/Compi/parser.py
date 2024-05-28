@@ -58,6 +58,7 @@ def p_punto_current(p):
 
     global_name = dir_func.get_current_global()
     dir_func.set_current_function(global_name)
+    
 
 # <DEC_VARS>
 def p_dec_vars(p):
@@ -204,7 +205,7 @@ def p_punto_6(p):
     "PUNTO_6 :"
     # 6) Add variables to var table
     # Inside of this method validates if the variable already exists
-    dir_func.add_variable_to_current_func(p[-3], p[-1], 1)
+    dir_func.add_variable_to_current_func(p[-3], p[-1])
     dir_func.add_params_to_current_func(p[-1])
 
 # <DEC_PARAMETROS>
@@ -286,7 +287,7 @@ def p_assign(p):
 def p_punto_8(p):
     "PUNTO_8 :"
     var_name = p[-1]
-    var_address = dir_func.get_current_address(p[-1])
+    var_address = dir_func.get_current_address(var_name)
     var_type = dir_func.get_current_type(var_name)
 
     PilaO.append((var_address, var_type))
@@ -311,10 +312,7 @@ def p_punto_18(p):
 #--------------------------------------------------------------------------------------------------------#
 def p_expresion(p):
     '''EXPRESION : EXP MAS_EXPRESIONES'''
-    if p[2] is None:
-        p[0] = p[1]
-    else:
-        p[0] = (p[1], p[2])
+    p[0] = (p[1], p[2])
     
 
 # <MAS_EXPRESIONES>
@@ -354,10 +352,7 @@ def p_operadores(p):
 #--------------------------------------------------------------------------------------------------------#
 def p_exp(p):
     '''EXP : TERMINO PUNTO_14 MAS_EXP'''
-    if p[3] is None:
-        p[0] = p[1]
-    else:
-        p[0] = p[1], p[3]
+    p[0] = p[1], p[3]
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -395,10 +390,7 @@ def p_operadores_exp(p):
 #--------------------------------------------------------------------------------------------------------#
 def p_termino(p):
     '''TERMINO : FACTOR PUNTO_15 MAS_TERMINO'''
-    if p[3] is None:
-        p[0] = p[1]
-    else:
-        p[0] = (p[1], p[3]) 
+    p[0] = (p[1], p[3])
 
 # -------------------------
 # ---- NEURALGIC POINT ----
@@ -593,7 +585,7 @@ def p_expresiones(p):
 # <EXPRESIONES_F>
 def p_expresiones_f(p):
     '''EXPRESIONES_F : EXPRESION LISTA_EXP'''
-    p[0] = p[1], p[2]
+    p[0] = ('EXPRESIONES_F', p[1], p[2])
 
 # <LISTA_EXP>
 def p_lista_exp(p):
@@ -676,7 +668,7 @@ def p_epsilon(p):
 
 # Error rule for syntax errors
 def p_error(p):
-    raise ValueError("Error sintáxis")
+    raise ValueError("Syntax Error")
 
 # Define el parser
 parser = yacc.yacc()
@@ -691,9 +683,8 @@ def parse_input(input_data):
     Quad = [] 
     PJumps = []
     PilaParametros = []
-    const_directory = ConstantDirectory()
+    Const_directory = ConstantDirectory()
     dir_func = FuncDirectory()
-
     parser.parse(input_data)
     return const_directory.get_all_constants(), Quad
 

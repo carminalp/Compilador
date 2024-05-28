@@ -1,6 +1,0 @@
-program nadota;
-
-main {
-
-} end
-
