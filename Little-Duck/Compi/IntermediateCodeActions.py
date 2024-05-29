@@ -126,7 +126,6 @@ def semantic_assign(PilaO, POper, Quad):
 """
 def semantic_print(PilaO, POper, Quad): 
     global cont
-
     # Pop of the operator, right and left operands
     cte_string, cte_type = PilaO.pop()
     operator = POper.pop()
@@ -266,3 +265,10 @@ def semantic_cycle(PilaO, Quad, PJumps):
         quad = Quadruple(operator_index['GotoV'], result, -1, returnTo)
         Quad.append(quad)
         cont += 1
+
+def reset_globals():
+    global cont, AVAIL_INT, AVAIL_FLOAT, AVAIL_BOOL
+    cont = 0
+    AVAIL_INT = iter(range(4001, 5000)) 
+    AVAIL_FLOAT = iter(range(5001, 6000)) 
+    AVAIL_BOOL = iter(range(6001, 7000)) 

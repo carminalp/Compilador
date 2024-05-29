@@ -685,7 +685,14 @@ def parse_input(input_data):
     PilaParametros = []
     Const_directory = ConstantDirectory()
     dir_func = FuncDirectory()
-    parser.parse(input_data)
+    reset_globals()
+
+    try:
+        # Realiza el parsing del input
+        parser.parse(input_data)
+    except Exception as e:
+        print(f"Error durante la ejecución: {e}")
+
     return const_directory.get_all_constants(), Quad
 
 # Función de compilación que se integrará con el IDE
